@@ -48,7 +48,6 @@ namespace AlgoritmProjekt.Characters
             }
         }
 
-
         float DistanceToWaypoint
         {
             get { return Vector2.Distance(pos, waypoints.Peek()); }
@@ -67,10 +66,16 @@ namespace AlgoritmProjekt.Characters
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(enemyTexture, pos, null, Color.Red, 0, new Vector2(16, 16), 1, SpriteEffects.None, 1);
+
+            foreach(Vector2 w in waypoints)
+            {
+                spriteBatch.Draw(enemyTexture, new Vector2(w.X, w.Y), null, Color.Blue, 0, new Vector2(16, 16), 1, SpriteEffects.None, 1);
+            }
         }
 
         public void FindPath(Point targetPoint, TileGrid grid)
         {
+            waypoints.Clear();
             pathfinder = new Pathfinder(grid);
             startPoint = EnemyPoint;
             endPoint = targetPoint;
@@ -87,21 +92,21 @@ namespace AlgoritmProjekt.Characters
                         newPath.Add(pathPos);
                         waypoints.Enqueue(pathPos);
                     }
-                    SetWaypoints(waypoints);
+                    //SetWaypoints(waypoints);
                     break;
                 }
             }
 
-            if (waypoints2.Count > 0)
+            if(waypoints.Count > 0)
             {
                 if (DistanceToWaypoint < 1f)
                 {
-                    pos = waypoints2.Peek();
-                    waypoints2.Dequeue();
+                    pos = waypoints.Peek();
+                    waypoints.Dequeue();
                 }
                 else
                 {
-                    Vector2 direction = waypoints2.Peek() - pos;
+                    Vector2 direction = waypoints.Peek() - pos;
                     direction.Normalize();
 
                     velocity = Vector2.Multiply(direction, speed);
