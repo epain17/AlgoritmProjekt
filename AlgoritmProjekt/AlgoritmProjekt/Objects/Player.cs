@@ -19,20 +19,23 @@ namespace AlgoritmProjekt.Characters
             ShotGun,
             MachineGun,
         }
-        public WeaponType weaponState = WeaponType.MachineGun;
-
+        public WeaponType weaponState = WeaponType.ShotGun;
+        public float RecoilPower;
         public void HandleWeaponStates()
         {
             switch (weaponState)
             {
                 case WeaponType.Pistol:
                     shotInterval += 0.5f;
+                    RecoilPower = 2.5f;
                     break;
                 case WeaponType.ShotGun:
-                    shotInterval += 0.15f;
+                    shotInterval += 0.25f;
+                    RecoilPower = 10;
                     break;
                 case WeaponType.MachineGun:
                     shotInterval += 2;
+                    RecoilPower = 5;
                     break;
             }
         }

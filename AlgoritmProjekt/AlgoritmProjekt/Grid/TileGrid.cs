@@ -21,8 +21,8 @@ namespace AlgoritmProjekt.Grid
 
         public TileGrid(Texture2D tileTex)
         {
-            width = 20;
-            height = 15;
+            width = 60;
+            height = 35;
             tileSize = 32;
             this.tileTex = tileTex;
             

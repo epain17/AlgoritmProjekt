@@ -65,12 +65,12 @@ namespace AlgoritmProjekt.Characters
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(enemyTexture, pos, null, Color.Red, 0, new Vector2(16, 16), 1, SpriteEffects.None, 1);
-
             foreach(Vector2 w in waypoints)
             {
-                spriteBatch.Draw(enemyTexture, new Vector2(w.X, w.Y), null, Color.Blue, 0, new Vector2(16, 16), 1, SpriteEffects.None, 1);
+                spriteBatch.Draw(enemyTexture, new Vector2(w.X, w.Y), null, Color.LimeGreen, 0, new Vector2(16, 16), 1, SpriteEffects.None, 1);
             }
+            spriteBatch.Draw(enemyTexture, pos, null, Color.Red, 0, new Vector2(16, 16), 1, SpriteEffects.None, 1);
+
         }
 
         public void FindPath(Point targetPoint, TileGrid grid)

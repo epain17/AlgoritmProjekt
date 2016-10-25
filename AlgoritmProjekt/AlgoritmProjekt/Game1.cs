@@ -86,10 +86,10 @@ namespace AlgoritmProjekt
                 cameraRecoil = player.pos;
                 recoil = player.pos - new Vector2(KeyMouseReader.mouseState.Position.X, KeyMouseReader.mouseState.Position.Y);
                 recoil.Normalize();
-                float recoilPower = 2.5f;
-                player.pos += recoil * recoilPower;
+                
+                player.pos += recoil * player.RecoilPower;
 
-                cameraRecoil += recoil * (recoilPower * 3);
+                cameraRecoil += recoil * (player.RecoilPower * 3);
                 camera.Update(cameraRecoil);
             }
             else
