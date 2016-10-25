@@ -35,39 +35,39 @@ namespace AlgoritmProjekt
             Content.RootDirectory = "Content";
         }
 
-        
+
         protected override void Initialize()
         {
             IsMouseVisible = true;
             base.Initialize();
         }
 
-       
+
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             grid = new TileGrid(createRectangle(32, 32, GraphicsDevice));
-            player = new Player(createRectangle(32, 32, GraphicsDevice), new Vector2(300, 200), createRectangle(5,5, GraphicsDevice));
+            player = new Player(createRectangle(32, 32, GraphicsDevice), new Vector2(300, 200), createRectangle(5, 5, GraphicsDevice));
             enemy = new Enemy(createRectangle(32, 32, GraphicsDevice), new Vector2(64, 64));
             camera = new Camera(new Rectangle(0, 0, Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), new Rectangle(0, 0, Window.ClientBounds.Width * 2, Window.ClientBounds.Height * 2));
         }
 
-     
+
         protected override void UnloadContent()
         {
         }
 
-      
+
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
             KeyMouseReader.Update();
-            foreach(Wall w in grid.GetWalls)
+            foreach (Wall w in grid.GetWalls)
             {
                 int n = player.Collision(w);
-                if(n > 0)
+                if (n > 0)
                 {
                     player.HandelCollision(w, n);
                 }
@@ -79,7 +79,7 @@ namespace AlgoritmProjekt
             base.Update(gameTime);
         }
 
-     
+
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
@@ -101,32 +101,31 @@ namespace AlgoritmProjekt
 
         public void FindPath()
         {
-            waypoints.Clear();
+        
+                waypoints.Clear();
 
-            pathfinder = new Pathfinder(grid);
-            startPoint = enemy.EnemyPoint;
-            endPoint = player.PlayerPoint;
+                pathfinder = new Pathfinder(grid);
+                startPoint = enemy.EnemyPoint;
+                endPoint = player.PlayerPoint;
 
-            //Console.WriteLine("player" + player.Point);
-            //Console.WriteLine("enemy" + enemy.Point);
-
-            newPath.Clear();
-            path = pathfinder.FindPath(startPoint, endPoint);
-            if (path != null)
-            {
-                foreach (Vector2 point in path)
+                newPath.Clear();
+                path = pathfinder.FindPath(startPoint, endPoint);
+                if (path != null)
                 {
-                    foreach (Vector2 pathpos in path)
+                    foreach (Vector2 point in path)
                     {
-                        pathPos = new Vector2(pathpos.X, pathpos.Y);
-                        newPath.Add(pathPos);
-                        waypoints.Enqueue(pathPos);
+                        foreach (Vector2 pathpos in path)
+                        {
+                            pathPos = new Vector2(pathpos.X, pathpos.Y);
+                            newPath.Add(pathPos);
+                            waypoints.Enqueue(pathPos);
+                        }
+                        enemy.SetWaypoints(waypoints);
+                        break;
                     }
-                    enemy.SetWaypoints(waypoints);
-                    break;
                 }
             }
-        }
+        
 
         Texture2D createRectangle(int width, int height, GraphicsDevice graphicsDevice)
         {

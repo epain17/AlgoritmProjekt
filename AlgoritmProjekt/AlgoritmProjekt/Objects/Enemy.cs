@@ -11,7 +11,7 @@ namespace AlgoritmProjekt.Characters
     class Enemy:GameObject
     {
         Queue<Vector2> waypoints = new Queue<Vector2>();
-        Vector2 pos, velocity, dist;
+        Vector2 pos, velocity;
         Texture2D enemyTexture;
         Point enemyPoint;
         float speed;
@@ -25,7 +25,7 @@ namespace AlgoritmProjekt.Characters
 
         public Point EnemyPoint
         {
-            get { return enemyPoint = new Point((int)pos.X / 32, (int)pos.Y / 32); }
+            get { return enemyPoint = new Point((int)pos.X/32, (int)pos.Y/32); }
         }
 
         public void SetWaypoints(Queue<Vector2> waypoints)
@@ -38,10 +38,6 @@ namespace AlgoritmProjekt.Characters
             }
         }
 
-        Vector2 Dist
-        {
-            get { return dist = new Vector2(waypoints.Peek().X + 16, waypoints.Peek().Y + 16);}
-        }
 
         float DistanceToWaypoint
         {
