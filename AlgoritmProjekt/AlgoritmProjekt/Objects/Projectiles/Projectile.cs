@@ -19,18 +19,23 @@ namespace AlgoritmProjekt.Objects.Projectiles
 
         bool killMe = false;
 
+        public bool DeadShot
+        {
+            get { return killMe; }
+            set { killMe = value; }
+        }
 
         public Projectile(Texture2D texture, Vector2 position, Vector2 targetVect)
         {
             this.texture = texture;
             this.position = position;
+            lifeTime = 200;
             speed = 5f;
             Shoot(targetVect);
         }
 
         public void Update()
         {
-            ++lifeSpan;
             position += (velocity * speed);
             LifeCycle();
         }
@@ -48,7 +53,8 @@ namespace AlgoritmProjekt.Objects.Projectiles
 
         void LifeCycle()
         {
-            if(lifeSpan > lifeTime)
+            ++lifeSpan;
+            if (lifeSpan > lifeTime)
             {
                 killMe = true;
             }

@@ -19,7 +19,7 @@ namespace AlgoritmProjekt.Characters
             ShotGun,
             MachineGun,
         }
-        public WeaponType weaponState = WeaponType.Pistol;
+        public WeaponType weaponState = WeaponType.MachineGun;
 
         public void HandleWeaponStates()
         {
@@ -175,6 +175,12 @@ namespace AlgoritmProjekt.Characters
             foreach (Projectile projectile in projectiles)
             {
                 projectile.Update();
+            }
+
+            for (int i = projectiles.Count - 1; i >= 0; --i)
+            {
+                if (projectiles[i].DeadShot)
+                    projectiles.RemoveAt(i);
             }
         }
 
