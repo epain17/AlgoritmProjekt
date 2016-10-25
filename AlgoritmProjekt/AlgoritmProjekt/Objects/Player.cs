@@ -13,58 +13,48 @@ namespace AlgoritmProjekt.Characters
 {
     class Player : GameObject
     {
+        public enum WeaponType
+        {
+            Pistol,
+            ShotGun,
+            MachineGun,
+        }
+        public WeaponType weaponState = WeaponType.ShotGun;
+
+        public void HandleWeaponStates()
+        {
+            switch (weaponState)
+            {
+                case WeaponType.Pistol:
+                    shotInterval += 0.5f;
+                    break;
+                case WeaponType.ShotGun:
+                    shotInterval += 0.15f;
+                    break;
+                case WeaponType.MachineGun:
+                    shotInterval += 2;
+                    break;
+            }
+        }
+
         Texture2D texture, projeTexture;
 
         public Vector2 pos;
         Vector2 velocity;
-        Rectangle hitBox; 
+        Rectangle hitBox;
         Point point;
         int size;
+
+        float shotInterval = 10;
 
         List<Projectile> projectiles = new List<Projectile>();
 
         public Point PlayerPoint
         {
-            get { return point = new Point((int)pos.X/32, (int)pos.Y/32);}
+            get { return point = new Point((int)pos.X / 32, (int)pos.Y / 32); }
         }
 
-        bool movePlayerRight(Keys key)
-        {
-            if (KeyMouseReader.keyState.IsKeyDown(key))
-            {
-                return true;
-            }
-            return false;
-        }
-
-        bool movePlayerLeft(Keys key)
-        {
-            if (KeyMouseReader.keyState.IsKeyDown(key))
-            {
-                return true;
-            }
-            return false;
-        }
-
-        bool movePlayerUp(Keys key)
-        {
-            if (KeyMouseReader.keyState.IsKeyDown(key))
-            {
-                return true;
-            }
-            return false;
-        }
-
-        bool movePlayerDown(Keys key)
-        {
-            if (KeyMouseReader.keyState.IsKeyDown(key))
-            {
-                return true;
-            }
-            return false;
-        }
-
-        bool shooting(Keys key)
+        bool isKeyDown(Keys key)
         {
             if (KeyMouseReader.keyState.IsKeyDown(key))
             {
@@ -160,7 +150,8 @@ namespace AlgoritmProjekt.Characters
 
         public override void Update()
         {
-            HandlePlayerInteractions(Keys.Down, Keys.Left, Keys.Right, Keys.Up, Keys.Space);
+            HandleWeaponStates();
+            HandlePlayerInteractions(Keys.S, Keys.A, Keys.D, Keys.W, Keys.Space);
             pos += velocity;
             foreach (Projectile projectile in projectiles)
             {
@@ -170,7 +161,7 @@ namespace AlgoritmProjekt.Characters
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, pos, null, Color.Brown, 0, new Vector2(16, 16), 1, SpriteEffects.None, 1);
+            spriteBatch.Draw(texture, pos, null, Color.Blue, 0, new Vector2(16, 16), 1, SpriteEffects.None, 1);
             foreach (Projectile projectile in projectiles)
             {
                 projectile.Draw(spriteBatch);
@@ -181,31 +172,45 @@ namespace AlgoritmProjekt.Characters
         {
             velocity = Vector2.Zero;
 
-            if (movePlayerLeft(leftKey))
+            if (isKeyDown(leftKey))
             {
-                velocity.X = -5;
+                velocity.X = -3;
             }
 
-            if (movePlayerRight(rightKey))
+            if (isKeyDown(rightKey))
             {
-                velocity.X = 5;
+                velocity.X = 3;
             }
 
-            if (movePlayerDown(downKey))
+            if (isKeyDown(downKey))
             {
-                velocity.Y = 5;
+                velocity.Y = 3;
             }
 
-            if (movePlayerUp(upKey))
+            if (isKeyDown(upKey))
             {
-                velocity.Y = -5;
+                velocity.Y = -3;
             }
 
-            if (shooting(shotKey))
+            if (isKeyDown(shotKey))
             {
-                projectiles.Add(new Projectile(projeTexture, pos, new Vector2(KeyMouseReader.mouseState.Position.X, KeyMouseReader.mouseState.Position.Y)));
+                if (shotInterval > 10)
+                {
+                    shotInterval = 0;
+                    if (weaponState == WeaponType.ShotGun)
+                    {
+                        Random rand = new Random();
+                        projectiles.Add(new Projectile(projeTexture, pos, new Vector2(KeyMouseReader.mouseState.Position.X + rand.Next(-35, 45), KeyMouseReader.mouseState.Position.Y + rand.Next(-15, 15))));
+                        projectiles.Add(new Projectile(projeTexture, pos, new Vector2(KeyMouseReader.mouseState.Position.X + rand.Next(-35, 45), KeyMouseReader.mouseState.Position.Y + rand.Next(-15, 15))));
+                        projectiles.Add(new Projectile(projeTexture, pos, new Vector2(KeyMouseReader.mouseState.Position.X + rand.Next(-35, 45), KeyMouseReader.mouseState.Position.Y + rand.Next(-15, 15))));
+                        projectiles.Add(new Projectile(projeTexture, pos, new Vector2(KeyMouseReader.mouseState.Position.X + rand.Next(-35, 45), KeyMouseReader.mouseState.Position.Y + rand.Next(-15, 15))));
+                
+                    }
+                    else
+                        projectiles.Add(new Projectile(projeTexture, pos, new Vector2(KeyMouseReader.mouseState.Position.X, KeyMouseReader.mouseState.Position.Y)));
+                }
             }
-                                       
+
         }
     }
 }
