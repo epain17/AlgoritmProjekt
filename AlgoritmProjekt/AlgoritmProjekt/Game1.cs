@@ -61,6 +61,7 @@ namespace AlgoritmProjekt
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             KeyMouseReader.Update();
+            player.Update();
             foreach (Wall w in grid.GetWalls)
             {
                 int n = player.Collision(w);
@@ -69,7 +70,6 @@ namespace AlgoritmProjekt
                     player.HandelCollision(w, n);
                 }
             }
-            player.Update();
             foreach (Enemy enemy in enemies)
             {
                 enemy.Update(player.PlayerPoint, grid);
@@ -87,13 +87,13 @@ namespace AlgoritmProjekt
                 recoil = player.pos - new Vector2(KeyMouseReader.mouseState.Position.X, KeyMouseReader.mouseState.Position.Y);
                 recoil.Normalize();
                 float recoilPower = 2.5f;
-                //player.pos += recoil * recoilPower;
+                player.pos += recoil * recoilPower;
 
                 cameraRecoil += recoil * (recoilPower * 3);
                 camera.Update(cameraRecoil);
             }
-            //else
-            //    camera.Update(player.pos);
+            else
+                camera.Update(player.pos);
         }
 
         protected override void Draw(GameTime gameTime)
@@ -117,7 +117,7 @@ namespace AlgoritmProjekt
         {
             Texture2D texture = new Texture2D(graphicsDevice, width, height);
             Color[] data = new Color[width * height];
-
+            
             // Colour the entire texture transparent first.             
             for (int i = 0; i < data.Length; i++)
             {
