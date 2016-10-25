@@ -88,12 +88,12 @@ namespace AlgoritmProjekt
             enemy.Draw(spriteBatch);
             player.Draw(spriteBatch);
 
-            //foreach (Vector2 v in waypoints)
-            //{
-                
-            //    spriteBatch.Draw(createRectangle(32, 32, GraphicsDevice), new Vector2(v.X, v.Y), null, Color.OrangeRed, 0, new Vector2(16, 16), 1, SpriteEffects.None, 1);
+            foreach (Vector2 v in waypoints)
+            {
 
-            //}
+                spriteBatch.Draw(createRectangle(32, 32, GraphicsDevice), new Vector2(v.X, v.Y), null, Color.OrangeRed, 0, new Vector2(16, 16), 1, SpriteEffects.None, 1);
+
+            }
             spriteBatch.End();
 
             base.Draw(gameTime);
