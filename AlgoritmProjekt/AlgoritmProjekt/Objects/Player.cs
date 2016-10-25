@@ -19,7 +19,7 @@ namespace AlgoritmProjekt.Characters
             ShotGun,
             MachineGun,
         }
-        public WeaponType weaponState = WeaponType.ShotGun;
+        public WeaponType weaponState = WeaponType.Pistol;
 
         public void HandleWeaponStates()
         {
@@ -34,6 +34,24 @@ namespace AlgoritmProjekt.Characters
                 case WeaponType.MachineGun:
                     shotInterval += 2;
                     break;
+            }
+        }
+        bool shot = false;
+
+        public bool ShotsFired
+        {
+            get { return shot; }
+            set { shot = value; }
+        }
+
+        void firingTime()
+        {
+            float timer = 0;
+            while(ShotsFired)
+            {
+                timer += 0.1f;
+                if (timer > 100)
+                    ShotsFired = false;
             }
         }
 
@@ -150,6 +168,7 @@ namespace AlgoritmProjekt.Characters
 
         public override void Update()
         {
+            firingTime();
             HandleWeaponStates();
             HandlePlayerInteractions(Keys.S, Keys.A, Keys.D, Keys.W, Keys.Space);
             pos += velocity;
@@ -196,6 +215,7 @@ namespace AlgoritmProjekt.Characters
             {
                 if (shotInterval > 10)
                 {
+                    shot = true;
                     shotInterval = 0;
                     if (weaponState == WeaponType.ShotGun)
                     {

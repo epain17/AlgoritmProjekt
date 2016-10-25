@@ -24,7 +24,7 @@ namespace AlgoritmProjekt.Objects.Projectiles
         {
             this.texture = texture;
             this.position = position;
-            speed = 3.5f;
+            speed = 5f;
             Shoot(targetVect);
         }
 

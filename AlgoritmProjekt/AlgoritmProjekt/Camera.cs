@@ -31,8 +31,6 @@ namespace AlgoritmProjekt
             translationMatrix = Matrix.CreateTranslation(translationX, translationY, 0);
             CameraPos.X = translationX;
             CameraPos.Y = translationY;
-
-            //Constants.StoreCameraPos = CameraPos;
         }
     }
 }

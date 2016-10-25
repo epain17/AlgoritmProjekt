@@ -9,10 +9,9 @@ using System.Text;
 
 namespace AlgoritmProjekt.Characters
 {
-    class Enemy:GameObject
+    class Enemy : GameObject
     {
-        Queue<Vector2> waypoints = new Queue<Vector2>();
-        Vector2 pos, velocity, dist;
+        Vector2 pos, velocity;
         Texture2D enemyTexture;
         Point enemyPoint;
         float speed;
@@ -21,11 +20,13 @@ namespace AlgoritmProjekt.Characters
         public Vector2 pathPos;
         Point startPoint, endPoint;
 
+        Queue<Vector2> waypoints = new Queue<Vector2>();
         Queue<Vector2> waypoints2 = new Queue<Vector2>();
         List<Vector2> newPath = new List<Vector2>();
         List<Vector2> path = new List<Vector2>();
 
-        public Enemy(Texture2D texture, Vector2 pos) : base(texture, pos)
+        public Enemy(Texture2D texture, Vector2 pos)
+            : base(texture, pos)
         {
             this.enemyTexture = texture;
             this.pos = pos;
@@ -47,10 +48,6 @@ namespace AlgoritmProjekt.Characters
             }
         }
 
-        Vector2 Dist
-        {
-            get { return dist = new Vector2(waypoints.Peek().X + 16, waypoints.Peek().Y + 16);}
-        }
 
         float DistanceToWaypoint
         {
@@ -59,29 +56,12 @@ namespace AlgoritmProjekt.Characters
 
         public Point GetCurrentWaypoint
         {
-            get { return new Point((int)pos.X/ 32, (int)pos.Y/ 32); }
+            get { return new Point((int)pos.X / 32, (int)pos.Y / 32); }
         }
 
         public void Update(Point targetPoint, TileGrid grid)
         {
             FindPath(targetPoint, grid);
-            if (waypoints2.Count > 0)
-            {
-                if (DistanceToWaypoint < 1f)
-                {
-                    pos = waypoints2.Peek();
-                    // currentPlayerPosition = waypoints.Peek();
-                    waypoints2.Dequeue();
-                }
-                else
-                {
-                    Vector2 direction = waypoints2.Peek() - pos;
-                    direction.Normalize();
-
-                    velocity = Vector2.Multiply(direction, speed);
-                    pos += velocity;
-                }
-            }
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -109,6 +89,23 @@ namespace AlgoritmProjekt.Characters
                     }
                     SetWaypoints(waypoints);
                     break;
+                }
+            }
+
+            if (waypoints2.Count > 0)
+            {
+                if (DistanceToWaypoint < 1f)
+                {
+                    pos = waypoints2.Peek();
+                    waypoints2.Dequeue();
+                }
+                else
+                {
+                    Vector2 direction = waypoints2.Peek() - pos;
+                    direction.Normalize();
+
+                    velocity = Vector2.Multiply(direction, speed);
+                    pos += velocity;
                 }
             }
         }

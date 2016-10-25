@@ -17,19 +17,15 @@ namespace AlgoritmProjekt
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Player player;
-        //Enemy enemy;
         TileGrid grid;
         Camera camera;
 
-        //Pathfinder pathfinder;
-        //public Vector2 pathPos;
-        //Point startPoint, endPoint;
-
-        //Queue<Vector2> waypoints = new Queue<Vector2>();
-        //List<Vector2> newPath = new List<Vector2>();
-        //List<Vector2> path = new List<Vector2>();
 
         List<Enemy> enemies = new List<Enemy>();
+        Vector2 cameraRecoil;
+        Vector2 recoil;
+
+        float timer = 0;
 
         public Game1()
         {
@@ -37,25 +33,22 @@ namespace AlgoritmProjekt
             Content.RootDirectory = "Content";
         }
 
-
         protected override void Initialize()
         {
             IsMouseVisible = true;
-            //enemies.Add(new Enemy(createRectangle(32, 32, GraphicsDevice), new Vector2(64, 64)));
 
             base.Initialize();
         }
-
 
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             grid = new TileGrid(createRectangle(32, 32, GraphicsDevice));
             player = new Player(createRectangle(32, 32, GraphicsDevice), new Vector2(300, 200), createRectangle(5, 5, GraphicsDevice));
-            for (int i = 0; i < 40; i++)
-            {
-                enemies.Add(new Enemy(createRectangle(32, 32, GraphicsDevice), new Vector2(64, 64)));
-            }
+
+            enemies.Add(new Enemy(createRectangle(32, 32, GraphicsDevice), new Vector2(64, 64)));
+            enemies.Add(new Enemy(createRectangle(32, 32, GraphicsDevice), new Vector2(32 * 8, 64)));
+
             camera = new Camera(new Rectangle(0, 0, Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), new Rectangle(0, 0, Window.ClientBounds.Width * 2, Window.ClientBounds.Height * 2));
         }
 
@@ -67,7 +60,6 @@ namespace AlgoritmProjekt
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
             KeyMouseReader.Update();
             foreach (Wall w in grid.GetWalls)
             {
@@ -82,12 +74,27 @@ namespace AlgoritmProjekt
             {
                 enemy.Update(player.PlayerPoint, grid);
             }
-            camera.Update(player.pos);
 
-            //FindPath();
+            HandleCamera();
             base.Update(gameTime);
         }
 
+        void HandleCamera()
+        {
+            if (player.ShotsFired)
+            {
+                cameraRecoil = player.pos;
+                recoil = player.pos - new Vector2(KeyMouseReader.mouseState.Position.X, KeyMouseReader.mouseState.Position.Y);
+                recoil.Normalize();
+                float recoilPower = 2.5f;
+                //player.pos += recoil * recoilPower;
+
+                cameraRecoil += recoil * (recoilPower * 3);
+                camera.Update(cameraRecoil);
+            }
+            //else
+            //    camera.Update(player.pos);
+        }
 
         protected override void Draw(GameTime gameTime)
         {
@@ -101,45 +108,10 @@ namespace AlgoritmProjekt
             }
             player.Draw(spriteBatch);
 
-            //foreach (Vector2 v in waypoints)
-            //{
-
-            //    spriteBatch.Draw(createRectangle(32, 32, GraphicsDevice), new Vector2(v.X, v.Y), null, Color.OrangeRed, 0, new Vector2(16, 16), 1, SpriteEffects.None, 1);
-
-            //}
             spriteBatch.End();
 
             base.Draw(gameTime);
         }
-
-        //public void FindPath()
-        //{
-        //    waypoints.Clear();
-
-        //    pathfinder = new Pathfinder(grid);
-        //    startPoint = enemy.EnemyPoint;
-        //    endPoint = player.PlayerPoint;
-
-        //    //Console.WriteLine("player" + player.Point);
-        //    //Console.WriteLine("enemy" + enemy.Point);
-
-        //    newPath.Clear();
-        //    path = pathfinder.FindPath(startPoint, endPoint);
-        //    if (path != null)
-        //    {
-        //        foreach (Vector2 point in path)
-        //        {
-        //            foreach (Vector2 pathpos in path)
-        //            {
-        //                pathPos = new Vector2(pathpos.X, pathpos.Y);
-        //                newPath.Add(pathPos);
-        //                waypoints.Enqueue(pathPos);
-        //            }
-        //            enemy.SetWaypoints(waypoints);
-        //            break;
-        //        }
-        //    }
-        ////}
 
         Texture2D createRectangle(int width, int height, GraphicsDevice graphicsDevice)
         {
