@@ -1,4 +1,5 @@
 ﻿using AlgoritmProjekt.Input;
+using AlgoritmProjekt.Objects.Projectiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -12,13 +13,15 @@ namespace AlgoritmProjekt.Characters
 {
     class Player : GameObject
     {
-        Texture2D texture;
+        Texture2D texture, projeTexture;
 
         public Vector2 pos;
         Vector2 velocity;
         Rectangle hitBox; 
         Point point;
         int size;
+
+        List<Projectile> projectiles = new List<Projectile>();
 
         public Point PlayerPoint
         {
@@ -53,6 +56,15 @@ namespace AlgoritmProjekt.Characters
         }
 
         bool movePlayerDown(Keys key)
+        {
+            if (KeyMouseReader.keyState.IsKeyDown(key))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        bool shooting(Keys key)
         {
             if (KeyMouseReader.keyState.IsKeyDown(key))
             {
@@ -137,26 +149,35 @@ namespace AlgoritmProjekt.Characters
             return 0;
         }
 
-        public Player(Texture2D texture, Vector2 position)
+        public Player(Texture2D texture, Vector2 position, Texture2D projeTexture)
             : base(texture, position)
         {
             this.texture = texture;
             this.pos = position;
+            this.projeTexture = projeTexture;
             size = 32;
         }
 
         public override void Update()
         {
-            HandlePlayerInteractions(Keys.Down, Keys.Left, Keys.Right, Keys.Up);
+            HandlePlayerInteractions(Keys.Down, Keys.Left, Keys.Right, Keys.Up, Keys.Space);
             pos += velocity;
+            foreach (Projectile projectile in projectiles)
+            {
+                projectile.Update();
+            }
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, pos, null, Color.Brown, 0, new Vector2(16, 16), 1, SpriteEffects.None, 1);
+            foreach (Projectile projectile in projectiles)
+            {
+                projectile.Draw(spriteBatch);
+            }
         }
 
-        void HandlePlayerInteractions(Keys downKey, Keys leftKey, Keys rightKey, Keys upKey)
+        void HandlePlayerInteractions(Keys downKey, Keys leftKey, Keys rightKey, Keys upKey, Keys shotKey)
         {
             velocity = Vector2.Zero;
 
@@ -178,7 +199,13 @@ namespace AlgoritmProjekt.Characters
             if (movePlayerUp(upKey))
             {
                 velocity.Y = -5;
-            }                                   
+            }
+
+            if (shooting(shotKey))
+            {
+                projectiles.Add(new Projectile(projeTexture, pos, new Vector2(KeyMouseReader.mouseState.Position.X, KeyMouseReader.mouseState.Position.Y)));
+            }
+                                       
         }
     }
 }

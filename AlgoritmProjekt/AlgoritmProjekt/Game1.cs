@@ -38,7 +38,7 @@ namespace AlgoritmProjekt
         
         protected override void Initialize()
         {
-
+            IsMouseVisible = true;
             base.Initialize();
         }
 
@@ -47,7 +47,7 @@ namespace AlgoritmProjekt
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             grid = new TileGrid(createRectangle(32, 32, GraphicsDevice));
-            player = new Player(createRectangle(32, 32, GraphicsDevice), new Vector2(300, 200));
+            player = new Player(createRectangle(32, 32, GraphicsDevice), new Vector2(300, 200), createRectangle(5,5, GraphicsDevice));
             enemy = new Enemy(createRectangle(32, 32, GraphicsDevice), new Vector2(64, 64));
             camera = new Camera(new Rectangle(0, 0, Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), new Rectangle(0, 0, Window.ClientBounds.Width * 2, Window.ClientBounds.Height * 2));
         }

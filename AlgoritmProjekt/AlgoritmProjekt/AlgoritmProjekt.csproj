@@ -45,6 +45,7 @@
     <Compile Include="Game1.cs" />
     <Compile Include="Grid\TileGrid.cs" />
     <Compile Include="Input\KeyMouseReader.cs" />
+    <Compile Include="Objects\Projectiles\Projectile.cs" />
     <Compile Include="Tiles\Wall.cs" />
     <Compile Include="Pathfinder.cs" />
     <Compile Include="Program.cs" />
