@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AlgoritmProjekt.Characters
 {
-    abstract class GameObject
+    class GameObject
     {
         Texture2D texture;
         Vector2 position;
@@ -19,9 +19,10 @@ namespace AlgoritmProjekt.Characters
             this.position = position;
         }
 
+        public virtual void Update()
+        {
 
-
-        public abstract void Update();
+        }
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {

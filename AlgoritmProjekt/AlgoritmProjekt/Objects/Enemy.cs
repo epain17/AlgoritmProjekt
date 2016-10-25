@@ -1,3 +1,4 @@
+using AlgoritmProjekt.Grid;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -16,6 +17,14 @@ namespace AlgoritmProjekt.Characters
         Point enemyPoint;
         float speed;
 
+        Pathfinder pathfinder;
+        public Vector2 pathPos;
+        Point startPoint, endPoint;
+
+        Queue<Vector2> waypoints2 = new Queue<Vector2>();
+        List<Vector2> newPath = new List<Vector2>();
+        List<Vector2> path = new List<Vector2>();
+
         public Enemy(Texture2D texture, Vector2 pos) : base(texture, pos)
         {
             this.enemyTexture = texture;
@@ -30,11 +39,11 @@ namespace AlgoritmProjekt.Characters
 
         public void SetWaypoints(Queue<Vector2> waypoints)
         {
-            this.waypoints.Clear();
+            waypoints2.Clear();
 
             foreach (var waypoint in waypoints)
             {
-                this.waypoints.Enqueue(waypoint);
+                this.waypoints2.Enqueue(waypoint);
             }
         }
 
@@ -53,20 +62,20 @@ namespace AlgoritmProjekt.Characters
             get { return new Point((int)pos.X/ 32, (int)pos.Y/ 32); }
         }
 
-        public override void Update()
+        public void Update(Point targetPoint, TileGrid grid)
         {
-
-            if (waypoints.Count > 0)
+            FindPath(targetPoint, grid);
+            if (waypoints2.Count > 0)
             {
                 if (DistanceToWaypoint < 1f)
                 {
-                    pos = waypoints.Peek();
+                    pos = waypoints2.Peek();
                     // currentPlayerPosition = waypoints.Peek();
-                    waypoints.Dequeue();
+                    waypoints2.Dequeue();
                 }
                 else
                 {
-                    Vector2 direction = waypoints.Peek() - pos;
+                    Vector2 direction = waypoints2.Peek() - pos;
                     direction.Normalize();
 
                     velocity = Vector2.Multiply(direction, speed);
@@ -78,6 +87,30 @@ namespace AlgoritmProjekt.Characters
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(enemyTexture, pos, null, Color.Red, 0, new Vector2(16, 16), 1, SpriteEffects.None, 1);
+        }
+
+        public void FindPath(Point targetPoint, TileGrid grid)
+        {
+            pathfinder = new Pathfinder(grid);
+            startPoint = EnemyPoint;
+            endPoint = targetPoint;
+
+            newPath.Clear();
+            path = pathfinder.FindPath(startPoint, endPoint);
+            if (path != null)
+            {
+                foreach (Vector2 point in path)
+                {
+                    foreach (Vector2 pathpos in path)
+                    {
+                        pathPos = new Vector2(pathpos.X, pathpos.Y);
+                        newPath.Add(pathPos);
+                        waypoints.Enqueue(pathPos);
+                    }
+                    SetWaypoints(waypoints);
+                    break;
+                }
+            }
         }
     }
 }
