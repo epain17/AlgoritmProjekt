@@ -22,7 +22,7 @@ namespace AlgoritmProjekt
             menu,
             gamePlay,
         }
-        public static GameState gameState = GameState.gamePlay;
+        public static GameState gameState = GameState.menu;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         GameManager gameManager;
