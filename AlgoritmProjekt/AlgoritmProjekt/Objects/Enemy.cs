@@ -89,9 +89,7 @@ namespace AlgoritmProjekt.Characters
                 {
                     Vector2 direction = waypoints.Peek() - position;
                     direction.Normalize();
-
                     velocity = Vector2.Multiply(direction, speed);
-                    //position += velocity;
                 }
             }
         }

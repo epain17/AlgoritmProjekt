@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System;
 using AlgoritmProjekt.Utility;
 using AlgoritmProjekt.Managers;
+using AlgoritmProjekt.Screens;
 
 namespace AlgoritmProjekt
 {
@@ -16,11 +17,17 @@ namespace AlgoritmProjekt
     /// </summary>
     public class Game1 : Game
     {
+        public enum GameState
+        {
+            menu,
+            gamePlay,
+        }
+        public static GameState gameState = GameState.gamePlay;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         GameManager gameManager;
-
-        //float timer = 0;
+        Menu menu;
+        SpriteFont font;
 
         public Game1()
         {
@@ -37,6 +44,8 @@ namespace AlgoritmProjekt
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             gameManager = new GameManager(Window, GraphicsDevice);
+            font = Content.Load<SpriteFont>("font");
+            menu = new Menu(font, new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2));
         }
 
         protected override void UnloadContent()
@@ -48,8 +57,15 @@ namespace AlgoritmProjekt
             //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             //    Exit();
             KeyMouseReader.Update();
-            gameManager.Update(gameTime);
-
+            switch (gameState)
+            {
+                case GameState.menu:
+                    menu.Update();
+                    break;
+                case GameState.gamePlay:
+                    gameManager.Update(gameTime);
+                    break;
+            }
             base.Update(gameTime);
         }
 
@@ -57,7 +73,17 @@ namespace AlgoritmProjekt
         {
             GraphicsDevice.Clear(Color.Black);
 
-            gameManager.Draw(spriteBatch);
+            switch (gameState)
+            {
+                case GameState.menu:
+                    spriteBatch.Begin();
+                    menu.Draw(spriteBatch);
+                    spriteBatch.End();
+                    break;
+                case GameState.gamePlay:
+                    gameManager.Draw(spriteBatch);
+                    break;
+            }
 
             base.Draw(gameTime);
         }

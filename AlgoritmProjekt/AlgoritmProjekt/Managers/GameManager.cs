@@ -18,7 +18,7 @@ namespace AlgoritmProjekt.Managers
         TileGrid grid;
         Camera camera;
         CrossHair xhair;
-        Texture2D xTex;
+
         List<Enemy> enemies = new List<Enemy>();
         Vector2 cameraRecoil;
         Vector2 recoil;
