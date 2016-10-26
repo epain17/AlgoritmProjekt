@@ -86,7 +86,7 @@ namespace AlgoritmProjekt
             if (player.ShotsFired)
             {
                 cameraRecoil = player.myPosition;
-                recoil = player.myPosition - new Vector2(KeyMouseReader.mouseState.Position.X, KeyMouseReader.mouseState.Position.Y);
+                recoil = player.myPosition - new Vector2(xhair.myPosition.X, xhair.myPosition.Y);
                 recoil.Normalize();
 
                 player.myPosition += recoil * player.RecoilPower;

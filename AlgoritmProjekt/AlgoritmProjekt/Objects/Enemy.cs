@@ -24,34 +24,24 @@ namespace AlgoritmProjekt.Characters
         List<Vector2> newPath = new List<Vector2>();
         List<Vector2> path = new List<Vector2>();
 
-        public Enemy(Texture2D texture, Vector2 position, int size)
-            : base(texture, position, size)
-        {
-            this.enemyTexture = texture;
-            this.position = position;
-            this.size = size;
-            speed = 0.8f;
-        }
-
-        public Point GetCurrentPoint
-        {
-            get { return enemyPoint = new Point((int)position.X / 32, (int)position.Y / 32); }
-        }
-
         //kan raderas när pathfindingen fungerar bra 
         public Queue<Vector2> Way
         {
             get { return waypoints; }
         }
 
-        public Point EnemyPoint
-        {
-            get { return enemyPoint = new Point((int)position.X / 32, (int)position.Y / 32); }
-        }
-
         float DistanceToWaypoint
         {
             get { return Vector2.Distance(position, waypoints.Peek()); }
+        }
+
+        public Enemy(Texture2D texture, Vector2 position, int size)
+            : base(texture, position, size)
+        {
+            this.enemyTexture = texture;
+            this.position = position;
+            this.size = size;
+            speed = 1.8f;
         }
 
         public void Update(Point targetPoint, TileGrid grid)
@@ -68,7 +58,7 @@ namespace AlgoritmProjekt.Characters
         {
             waypoints.Clear();
             pathfinder = new Pathfinder(grid);
-            startPoint = EnemyPoint;
+            startPoint = myPoint;
             endPoint = targetPoint;
 
             newPath.Clear();

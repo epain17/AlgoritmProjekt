@@ -36,7 +36,7 @@ namespace AlgoritmProjekt
 
         public Point myPoint
         {
-            get { return new Point((int)position.X / 32, (int)position.Y / 32); }
+            get { return new Point((int)position.X / size, (int)position.Y / size); }
         }
 
         public Tile(Texture2D texture, Vector2 position, int size)
@@ -45,6 +45,11 @@ namespace AlgoritmProjekt
             this.position = position;
             this.size = size;
             this.origin = new Vector2(size / 2, size / 2);
+        }
+
+        public virtual void Draw(SpriteBatch spritebatch)
+        {
+            spritebatch.Draw(texture, position, null, new Color(0.1f, 0.1f, 0.1f, 0.1f), 0, origin, 1, SpriteEffects.None, 1);
         }
 
         public void HandelCollision(Wall w, int n)
@@ -116,11 +121,6 @@ namespace AlgoritmProjekt
                 return 2;
             }
             return 0;
-        }
-
-        public virtual void Draw(SpriteBatch spritebatch)
-        {
-            spritebatch.Draw(texture, position, null, new Color(0.1f, 0.1f, 0.1f, 0.1f), 0, origin, 1, SpriteEffects.None, 1);
         }
     }
 }
