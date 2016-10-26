@@ -110,6 +110,7 @@ namespace AlgoritmProjekt
                 spriteBatch.Draw(createRectangle(3, 3, GraphicsDevice), enemy.EnemyPos, Color.Red);
             }
             player.Draw(spriteBatch);
+            spriteBatch.Draw(createRectangle(3, 3, GraphicsDevice), player.pos, Color.Red);
 
             foreach (Enemy enemy in enemies)
             {

@@ -32,15 +32,6 @@ namespace AlgoritmProjekt.Characters
             speed = 0.8f;
         }
 
-        //public bool CheckDirection(Point point)
-        //{
-            
-        //}
-
-        public Point GetCurrentPoint
-        {
-            get { return enemyPoint = new Point((int)pos.X / 32, (int)pos.Y / 32); }
-        }
 
         //kan raderas när pathfindingen fungerar bra 
         public Queue<Vector2> Way
@@ -60,6 +51,7 @@ namespace AlgoritmProjekt.Characters
 
         float DistanceToWaypoint
         {
+            
             get { return Vector2.Distance(pos, waypoints.Peek()); }
         }
 
@@ -109,6 +101,7 @@ namespace AlgoritmProjekt.Characters
 
             if (waypoints.Count > 0)
             {
+                Console.WriteLine(DistanceToWaypoint);
                 if (DistanceToWaypoint < 1f)
                 {
                     pos = waypoints.Peek();
