@@ -15,7 +15,7 @@ namespace AlgoritmProjekt.Objects.Projectiles
         Vector2 velocity;
         float speed;
         float lifeSpan, lifeTime;
-        int damage;
+        //int damage;
 
         bool killMe = false;
 

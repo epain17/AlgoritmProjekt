@@ -9,7 +9,7 @@ using System.Text;
 
 namespace AlgoritmProjekt.Characters
 {
-    class Enemy : GameObject
+    class Enemy : Tile
     {
         Vector2 pos, velocity;
         Texture2D enemyTexture;
@@ -24,18 +24,14 @@ namespace AlgoritmProjekt.Characters
         List<Vector2> newPath = new List<Vector2>();
         List<Vector2> path = new List<Vector2>();
 
-        public Enemy(Texture2D texture, Vector2 pos)
-            : base(texture, pos)
+        public Enemy(Texture2D texture, Vector2 pos, int size)
+            : base(texture, pos, size)
         {
             this.enemyTexture = texture;
             this.pos = pos;
+            this.size = size;
             speed = 0.8f;
         }
-
-        //public bool CheckDirection(Point point)
-        //{
-            
-        //}
 
         public Point GetCurrentPoint
         {
@@ -70,18 +66,7 @@ namespace AlgoritmProjekt.Characters
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(enemyTexture, pos, null, Color.Red, 0, new Vector2(16, 16), 1, SpriteEffects.None, 1);
-           
-            //foreach (Vector2 w in waypoints)
-            //{
-            //    if (waypoints.Count != 0)
-            //        spriteBatch.Draw(enemyTexture, new Vector2(w.X, w.Y), Color.Yellow);
-            //    //spriteBatch.Draw(enemyTexture, new Vector2(w.X, w.Y), null, new Color(0.01f, 0.2f, 0.1f, 0.1f), 0, new Vector2(16, 16), 1, SpriteEffects.None, 1);
-            //}
-           // spriteBatch.Draw(enemyTexture, pos, Color.Orange);
-
-
-
+            spriteBatch.Draw(enemyTexture, pos, null, Color.Red, 0, new Vector2(16, 16), 1, SpriteEffects.None, 1);           
         }
 
         public void FindPath(Point targetPoint, TileGrid grid)

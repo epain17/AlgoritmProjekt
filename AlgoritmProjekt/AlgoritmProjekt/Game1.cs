@@ -25,7 +25,7 @@ namespace AlgoritmProjekt
         Vector2 cameraRecoil;
         Vector2 recoil;
 
-        float timer = 0;
+        //float timer = 0;
 
         public Game1()
         {
@@ -43,11 +43,10 @@ namespace AlgoritmProjekt
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            grid = new TileGrid(createRectangle(32, 32, GraphicsDevice));
-            player = new Player(createRectangle(32, 32, GraphicsDevice), new Vector2(300, 200), createRectangle(5, 5, GraphicsDevice));
+            grid = new TileGrid(createRectangle(32, 32, GraphicsDevice), 32, 100, 50);
+            player = new Player(createRectangle(32, 32, GraphicsDevice), new Vector2(300, 200), createRectangle(5, 5, GraphicsDevice), 32);
 
-            enemies.Add(new Enemy(createRectangle(32, 32, GraphicsDevice), new Vector2(64, 64)));
-            //enemies.Add(new Enemy(createRectangle(32, 32, GraphicsDevice), new Vector2(32 * 8, 64)));
+            enemies.Add(new Enemy(createRectangle(32, 32, GraphicsDevice), new Vector2(64, 64), 32));
 
             camera = new Camera(new Rectangle(0, 0, Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), new Rectangle(0, 0, Window.ClientBounds.Width * 2, Window.ClientBounds.Height * 2));
         }
@@ -75,8 +74,6 @@ namespace AlgoritmProjekt
                 enemy.Update(player.PlayerPoint, grid);
             }
 
-
-
             HandleCamera();
             base.Update(gameTime);
         }
@@ -85,17 +82,17 @@ namespace AlgoritmProjekt
         {
             if (player.ShotsFired)
             {
-                cameraRecoil = player.pos;
-                recoil = player.pos - new Vector2(KeyMouseReader.mouseState.Position.X, KeyMouseReader.mouseState.Position.Y);
+                cameraRecoil = player.PlayerPos;
+                recoil = player.PlayerPos - new Vector2(KeyMouseReader.mouseState.Position.X, KeyMouseReader.mouseState.Position.Y);
                 recoil.Normalize();
 
-                player.pos += recoil * player.RecoilPower;
+                player.PlayerPos += recoil * player.RecoilPower;
 
                 cameraRecoil += recoil * (player.RecoilPower * 3);
                 camera.Update(cameraRecoil);
             }
             else
-                camera.Update(player.pos);
+                camera.Update(player.PlayerPos);
         }
 
         protected override void Draw(GameTime gameTime)
@@ -116,8 +113,6 @@ namespace AlgoritmProjekt
                 foreach (Vector2 v in enemy.Way)
                 {
                     spriteBatch.Draw(createRectangle(3, 3, GraphicsDevice), new Vector2(v.X, v.Y), Color.Yellow);
-
-
                 }
             }
 

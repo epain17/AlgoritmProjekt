@@ -40,18 +40,17 @@
   <ItemGroup>
     <Compile Include="Utility\Camera.cs" />
     <Compile Include="Objects\Enemy.cs" />
-    <Compile Include="Objects\GameObject.cs" />
     <Compile Include="Objects\Player.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Grid\TileGrid.cs" />
     <Compile Include="Utility\CrossHair.cs" />
     <Compile Include="Utility\KeyMouseReader.cs" />
     <Compile Include="Objects\Projectiles\Projectile.cs" />
-    <Compile Include="Tiles\Wall.cs" />
+    <Compile Include="Objects\Tiles\Wall.cs" />
     <Compile Include="Utility\Pathfinder.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tiles\Tile.cs" />
+    <Compile Include="Objects\Tiles\Tile.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

@@ -16,15 +16,15 @@ namespace AlgoritmProjekt.Grid
         Tile[,] tileGrid;
         Wall wall1, wall2, wall3, wall4;
         List<Wall> wallList = new List<Wall>();
-        int tileSize;
+        int size;
         Texture2D tileTex;
 
-        public TileGrid(Texture2D tileTex)
+        public TileGrid(Texture2D tileTex, int size, int columns, int rows)
         {
-            width = 60;
-            height = 35;
-            tileSize = 32;
             this.tileTex = tileTex;
+            this.size = size;
+            width = columns;
+            height = rows;
             
             CreateTileGrid();
             CreateWalls();
@@ -37,7 +37,7 @@ namespace AlgoritmProjekt.Grid
             {
                 for (int j = 0; j < height; j++)
                 {
-                    tileGrid[i, j] = new Tile(tileTex, new Vector2(0 + i * tileSize, 0 + j * tileSize), tileSize);
+                    tileGrid[i, j] = new Tile(tileTex, new Vector2(0 + i * size, 0 + j * size), size);
                 }
             }
         }
