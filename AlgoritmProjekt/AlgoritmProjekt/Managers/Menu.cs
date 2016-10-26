@@ -30,10 +30,11 @@ namespace AlgoritmProjekt.Screens
 
         public void Update()
         {
-            if (KeyMouseReader.KeyPressed(Keys.Up) && selected < 1 && selected > 0)
+            if (KeyMouseReader.KeyPressed(Keys.Up) && selected != 1)
                 selected++;
-            else if (KeyMouseReader.KeyPressed(Keys.Down) && selected > 1)
+            else if (KeyMouseReader.KeyPressed(Keys.Down) && selected != 0)
                 selected--;
+            Console.WriteLine(selected);
             HandleSelected();
         }
 
