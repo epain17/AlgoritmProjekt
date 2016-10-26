@@ -61,7 +61,7 @@ namespace AlgoritmProjekt.Grid
             {
                 foreach(Wall w in wallList)
                 {
-                    if(w.TilePoint == t.TilePoint)
+                    if(w.myPoint == t.myPoint)
                     {
                         t.Occupied = true;
                     }

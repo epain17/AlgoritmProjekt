@@ -19,7 +19,7 @@ namespace AlgoritmProjekt.Characters
             ShotGun,
             MachineGun,
         }
-        public WeaponType weaponState = WeaponType.ShotGun;
+        public WeaponType weaponState = WeaponType.MachineGun;
         public float RecoilPower;
         public void HandleWeaponStates()
         {
@@ -61,16 +61,10 @@ namespace AlgoritmProjekt.Characters
         Texture2D projeTexture;
 
         Vector2 velocity;
-        Point point;
 
         float shotInterval = 10;
 
         List<Projectile> projectiles = new List<Projectile>();
-
-        public Point PlayerPoint
-        {
-            get { return point = new Point((int)position.X / 32, (int)position.Y / 32); }
-        }
 
         bool isKeyDown(Keys key)
         {
@@ -79,12 +73,6 @@ namespace AlgoritmProjekt.Characters
                 return true;
             }
             return false;
-        }
-
-        public Vector2 PlayerPos
-        {
-            get { return position; }
-            set { position = value; }
         }
 
         public Player(Texture2D texture, Vector2 position, Texture2D projeTexture, int size)
@@ -96,11 +84,11 @@ namespace AlgoritmProjekt.Characters
             this.size = size;
         }
 
-        public void Update()
+        public void Update(Vector2 target)
         {
             firingTime();
             HandleWeaponStates();
-            HandlePlayerInteractions(Keys.S, Keys.A, Keys.D, Keys.W, Keys.Space);
+            HandlePlayerInteractions(Keys.S, Keys.A, Keys.D, Keys.W, Keys.Space, target);
             position += velocity;
             foreach (Projectile projectile in projectiles)
             {
@@ -123,7 +111,7 @@ namespace AlgoritmProjekt.Characters
             }
         }
 
-        void HandlePlayerInteractions(Keys downKey, Keys leftKey, Keys rightKey, Keys upKey, Keys shotKey)
+        void HandlePlayerInteractions(Keys downKey, Keys leftKey, Keys rightKey, Keys upKey, Keys shotKey, Vector2 target)
         {
             velocity = Vector2.Zero;
 
@@ -153,17 +141,18 @@ namespace AlgoritmProjekt.Characters
                 {
                     shot = true;
                     shotInterval = 0;
+                    Random rand = new Random();
+
                     if (weaponState == WeaponType.ShotGun)
                     {
-                        Random rand = new Random();
-                        projectiles.Add(new Projectile(projeTexture, position, new Vector2(KeyMouseReader.mouseState.Position.X + rand.Next(-35, 45), KeyMouseReader.mouseState.Position.Y + rand.Next(-15, 15))));
-                        projectiles.Add(new Projectile(projeTexture, position, new Vector2(KeyMouseReader.mouseState.Position.X + rand.Next(-35, 45), KeyMouseReader.mouseState.Position.Y + rand.Next(-15, 15))));
-                        projectiles.Add(new Projectile(projeTexture, position, new Vector2(KeyMouseReader.mouseState.Position.X + rand.Next(-35, 45), KeyMouseReader.mouseState.Position.Y + rand.Next(-15, 15))));
-                        projectiles.Add(new Projectile(projeTexture, position, new Vector2(KeyMouseReader.mouseState.Position.X + rand.Next(-35, 45), KeyMouseReader.mouseState.Position.Y + rand.Next(-15, 15))));
+                        projectiles.Add(new Projectile(projeTexture, position, new Vector2(target.X + rand.Next(-35, 45), target.Y + rand.Next(-15, 15))));
+                        projectiles.Add(new Projectile(projeTexture, position, new Vector2(target.X + rand.Next(-35, 45), target.Y + rand.Next(-15, 15))));
+                        projectiles.Add(new Projectile(projeTexture, position, new Vector2(target.X + rand.Next(-35, 45), target.Y + rand.Next(-15, 15))));
+                        projectiles.Add(new Projectile(projeTexture, position, new Vector2(target.X + rand.Next(-35, 45), target.Y + rand.Next(-15, 15))));
                 
                     }
                     else
-                        projectiles.Add(new Projectile(projeTexture, position, new Vector2(KeyMouseReader.mouseState.Position.X, KeyMouseReader.mouseState.Position.Y)));
+                        projectiles.Add(new Projectile(projeTexture, position, new Vector2(target.X + rand.Next(-15, 15), target.Y + rand.Next(-15, 15))));
                 }
             }
 

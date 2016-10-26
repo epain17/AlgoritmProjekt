@@ -17,12 +17,10 @@ namespace AlgoritmProjekt
         protected bool occupied = false;
         protected Vector2 origin;
 
-        public Tile(Texture2D texture, Vector2 position, int size)
+        public Vector2 myPosition
         {
-            this.texture = texture;
-            this.position = position;
-            this.size = size;
-            this.origin = new Vector2(size / 2, size / 2);
+            get { return position; }
+            set { position = value; }
         }
 
         public Rectangle HitBox
@@ -36,11 +34,18 @@ namespace AlgoritmProjekt
             set { occupied = value; }
         }
 
-        public virtual Point TilePoint
+        public Point myPoint
         {
-            get { return new Point((int)position.X, (int)position.Y); }
+            get { return new Point((int)position.X / 32, (int)position.Y / 32); }
         }
 
+        public Tile(Texture2D texture, Vector2 position, int size)
+        {
+            this.texture = texture;
+            this.position = position;
+            this.size = size;
+            this.origin = new Vector2(size / 2, size / 2);
+        }
 
         public void HandelCollision(Wall w, int n)
         {

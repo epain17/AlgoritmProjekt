@@ -11,7 +11,7 @@ namespace AlgoritmProjekt.Characters
 {
     class Enemy : Tile
     {
-        Vector2 pos, velocity;
+        Vector2 velocity;
         Texture2D enemyTexture;
         Point enemyPoint;
         float speed;
@@ -24,18 +24,18 @@ namespace AlgoritmProjekt.Characters
         List<Vector2> newPath = new List<Vector2>();
         List<Vector2> path = new List<Vector2>();
 
-        public Enemy(Texture2D texture, Vector2 pos, int size)
-            : base(texture, pos, size)
+        public Enemy(Texture2D texture, Vector2 position, int size)
+            : base(texture, position, size)
         {
             this.enemyTexture = texture;
-            this.pos = pos;
+            this.position = position;
             this.size = size;
             speed = 0.8f;
         }
 
         public Point GetCurrentPoint
         {
-            get { return enemyPoint = new Point((int)pos.X / 32, (int)pos.Y / 32); }
+            get { return enemyPoint = new Point((int)position.X / 32, (int)position.Y / 32); }
         }
 
         //kan raderas när pathfindingen fungerar bra 
@@ -44,19 +44,14 @@ namespace AlgoritmProjekt.Characters
             get { return waypoints; }
         }
 
-        public Vector2 EnemyPos
-        {
-            get { return pos; }
-        }
-
         public Point EnemyPoint
         {
-            get { return enemyPoint = new Point((int)pos.X / 32, (int)pos.Y / 32); }
+            get { return enemyPoint = new Point((int)position.X / 32, (int)position.Y / 32); }
         }
 
         float DistanceToWaypoint
         {
-            get { return Vector2.Distance(pos, waypoints.Peek()); }
+            get { return Vector2.Distance(position, waypoints.Peek()); }
         }
 
         public void Update(Point targetPoint, TileGrid grid)
@@ -66,7 +61,7 @@ namespace AlgoritmProjekt.Characters
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(enemyTexture, pos, null, Color.Red, 0, new Vector2(16, 16), 1, SpriteEffects.None, 1);           
+            spriteBatch.Draw(enemyTexture, position, null, Color.Red, 0, origin, 1, SpriteEffects.None, 1);           
         }
 
         public void FindPath(Point targetPoint, TileGrid grid)
@@ -96,16 +91,16 @@ namespace AlgoritmProjekt.Characters
             {
                 if (DistanceToWaypoint < 1f)
                 {
-                    pos = waypoints.Peek();
+                    position = waypoints.Peek();
                     waypoints.Dequeue();
                 }
                 else
                 {
-                    Vector2 direction = waypoints.Peek() - pos;
+                    Vector2 direction = waypoints.Peek() - position;
                     direction.Normalize();
 
                     velocity = Vector2.Multiply(direction, speed);
-                    pos += velocity;
+                    position += velocity;
                 }
             }
         }
