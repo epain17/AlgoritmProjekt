@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AlgoritmProjekt.Characters
 {
-    class Player : GameObject
+    class Player : Tile
     {
         public enum WeaponType
         {
@@ -19,7 +19,7 @@ namespace AlgoritmProjekt.Characters
             ShotGun,
             MachineGun,
         }
-        public WeaponType weaponState = WeaponType.ShotGun;
+        public WeaponType weaponState = WeaponType.MachineGun;
         public float RecoilPower;
         public void HandleWeaponStates()
         {
@@ -58,22 +58,13 @@ namespace AlgoritmProjekt.Characters
             }
         }
 
-        Texture2D texture, projeTexture;
+        Texture2D projeTexture;
 
-        public Vector2 pos;
         Vector2 velocity;
-        Rectangle hitBox;
-        Point point;
-        int size;
 
         float shotInterval = 10;
 
         List<Projectile> projectiles = new List<Projectile>();
-
-        public Point PlayerPoint
-        {
-            get { return point = new Point((int)pos.X / 32, (int)pos.Y / 32); }
-        }
 
         bool isKeyDown(Keys key)
         {
@@ -84,97 +75,21 @@ namespace AlgoritmProjekt.Characters
             return false;
         }
 
-        public Rectangle HitBox
-        {
-            get { return hitBox = new Rectangle((int)pos.X, (int)pos.Y, size, size); }
-        }
-
-        public void HandelCollision(Wall w, int n)
-        {
-            //Top
-            if (n == 1)
-            {
-                pos.Y = pos.Y + 4;
-            }
-
-            //Bottom             
-            if (n == 2)
-            {
-                pos.Y = pos.Y - 4;
-            }
-
-            // Left            
-            if (n == 3)
-            {
-                pos.X = pos.X - 4;
-            }
-
-            // Right            
-            if (n == 4)
-            {
-                pos.X = pos.X + 4;
-            }
-
-        }
-
-        public virtual int Collision(Wall w)
-        {
-            Rectangle top = w.HitBox;
-            top.Height = 10;
-
-            Rectangle bottom = w.HitBox;
-            bottom.Height = 5;
-            bottom.Y = bottom.Y + w.HitBox.Height - 5;
-
-            Rectangle left = w.HitBox;
-            left.Width = 2;
-            left.Y = w.HitBox.Y + 10;
-            left.Height = w.HitBox.Height - 20;
-
-            Rectangle right = w.HitBox;
-            right.X = right.X + right.Width - 2;
-            right.Width = 2;
-            right.Y = w.HitBox.Y + 10;
-            right.Height = w.HitBox.Height - 20;
-
-
-
-            if (HitBox.Intersects(left))
-            {
-                return 3;
-            }
-
-            else if (HitBox.Intersects(right))
-            {
-                return 4;
-            }
-            if (HitBox.Intersects(top))
-            {
-                return 1;
-            }
-
-            if (HitBox.Intersects(bottom))
-            {
-                return 2;
-            }
-            return 0;
-        }
-
-        public Player(Texture2D texture, Vector2 position, Texture2D projeTexture)
-            : base(texture, position)
+        public Player(Texture2D texture, Vector2 position, Texture2D projeTexture, int size)
+            : base(texture, position, size)
         {
             this.texture = texture;
-            this.pos = position;
+            this.position = position;
             this.projeTexture = projeTexture;
-            size = 32;
+            this.size = size;
         }
 
-        public override void Update()
+        public void Update(Vector2 target)
         {
             firingTime();
             HandleWeaponStates();
-            HandlePlayerInteractions(Keys.S, Keys.A, Keys.D, Keys.W, Keys.Space);
-            pos += velocity;
+            HandlePlayerInteractions(Keys.S, Keys.A, Keys.D, Keys.W, Keys.Space, target);
+            position += velocity;
             foreach (Projectile projectile in projectiles)
             {
                 projectile.Update();
@@ -189,14 +104,14 @@ namespace AlgoritmProjekt.Characters
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, pos, null, Color.Blue, 0, new Vector2(16, 16), 1, SpriteEffects.None, 1);
+            spriteBatch.Draw(texture, position, null, Color.Blue, 0, origin, 1, SpriteEffects.None, 1);
             foreach (Projectile projectile in projectiles)
             {
                 projectile.Draw(spriteBatch);
             }
         }
 
-        void HandlePlayerInteractions(Keys downKey, Keys leftKey, Keys rightKey, Keys upKey, Keys shotKey)
+        void HandlePlayerInteractions(Keys downKey, Keys leftKey, Keys rightKey, Keys upKey, Keys shotKey, Vector2 target)
         {
             velocity = Vector2.Zero;
 
@@ -226,17 +141,18 @@ namespace AlgoritmProjekt.Characters
                 {
                     shot = true;
                     shotInterval = 0;
+                    Random rand = new Random();
+
                     if (weaponState == WeaponType.ShotGun)
                     {
-                        Random rand = new Random();
-                        projectiles.Add(new Projectile(projeTexture, pos, new Vector2(KeyMouseReader.mouseState.Position.X + rand.Next(-35, 45), KeyMouseReader.mouseState.Position.Y + rand.Next(-15, 15))));
-                        projectiles.Add(new Projectile(projeTexture, pos, new Vector2(KeyMouseReader.mouseState.Position.X + rand.Next(-35, 45), KeyMouseReader.mouseState.Position.Y + rand.Next(-15, 15))));
-                        projectiles.Add(new Projectile(projeTexture, pos, new Vector2(KeyMouseReader.mouseState.Position.X + rand.Next(-35, 45), KeyMouseReader.mouseState.Position.Y + rand.Next(-15, 15))));
-                        projectiles.Add(new Projectile(projeTexture, pos, new Vector2(KeyMouseReader.mouseState.Position.X + rand.Next(-35, 45), KeyMouseReader.mouseState.Position.Y + rand.Next(-15, 15))));
+                        projectiles.Add(new Projectile(projeTexture, position, new Vector2(target.X + rand.Next(-35, 45), target.Y + rand.Next(-15, 15))));
+                        projectiles.Add(new Projectile(projeTexture, position, new Vector2(target.X + rand.Next(-35, 45), target.Y + rand.Next(-15, 15))));
+                        projectiles.Add(new Projectile(projeTexture, position, new Vector2(target.X + rand.Next(-35, 45), target.Y + rand.Next(-15, 15))));
+                        projectiles.Add(new Projectile(projeTexture, position, new Vector2(target.X + rand.Next(-35, 45), target.Y + rand.Next(-15, 15))));
                 
                     }
                     else
-                        projectiles.Add(new Projectile(projeTexture, pos, new Vector2(KeyMouseReader.mouseState.Position.X, KeyMouseReader.mouseState.Position.Y)));
+                        projectiles.Add(new Projectile(projeTexture, position, new Vector2(target.X + rand.Next(-15, 15), target.Y + rand.Next(-15, 15))));
                 }
             }
 

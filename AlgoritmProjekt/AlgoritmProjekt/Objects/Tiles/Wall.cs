@@ -17,16 +17,7 @@ namespace AlgoritmProjekt
             this.texture = texture;
             this.position = position;
             this.size = size;
-        }
-
-        public override bool Occupied
-        {            
-            set { occupied = true; }
-        }
-
-        public override Point TilePoint
-        {
-            get { return new Point((int)position.X, (int)position.Y); }
+            this.occupied = true;
         }
 
         public override void Draw(SpriteBatch spritebatch)

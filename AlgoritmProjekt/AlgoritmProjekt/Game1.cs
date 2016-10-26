@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System;
+using AlgoritmProjekt.Utility;
 
 namespace AlgoritmProjekt
 {
@@ -19,13 +20,13 @@ namespace AlgoritmProjekt
         Player player;
         TileGrid grid;
         Camera camera;
-
-
+        CrossHair xhair;
+        Texture2D xTex;
         List<Enemy> enemies = new List<Enemy>();
         Vector2 cameraRecoil;
         Vector2 recoil;
 
-        float timer = 0;
+        //float timer = 0;
 
         public Game1()
         {
@@ -43,13 +44,14 @@ namespace AlgoritmProjekt
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            grid = new TileGrid(createRectangle(32, 32, GraphicsDevice));
-            player = new Player(createRectangle(32, 32, GraphicsDevice), new Vector2(300, 200), createRectangle(5, 5, GraphicsDevice));
+            grid = new TileGrid(createRectangle(32, 32, GraphicsDevice), 32, 100, 50);
+            player = new Player(createRectangle(32, 32, GraphicsDevice), new Vector2(300, 200), createRectangle(5, 5, GraphicsDevice), 32);
 
-            enemies.Add(new Enemy(createRectangle(32, 32, GraphicsDevice), new Vector2(64, 64)));
-            //enemies.Add(new Enemy(createRectangle(32, 32, GraphicsDevice), new Vector2(32 * 8, 64)));
+            enemies.Add(new Enemy(createRectangle(32, 32, GraphicsDevice), new Vector2(64, 64), 32));
 
             camera = new Camera(new Rectangle(0, 0, Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), new Rectangle(0, 0, Window.ClientBounds.Width * 2, Window.ClientBounds.Height * 2));
+            xTex = Content.Load<Texture2D>("xhair");
+            xhair = new CrossHair(createRectangle(32, 32, GraphicsDevice), new Vector2(200, 200), 32);
         }
 
         protected override void UnloadContent()
@@ -61,7 +63,7 @@ namespace AlgoritmProjekt
             //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             //    Exit();
             KeyMouseReader.Update();
-            player.Update();
+            player.Update(xhair.myPosition);
             foreach (Wall w in grid.GetWalls)
             {
                 int n = player.Collision(w);
@@ -72,11 +74,9 @@ namespace AlgoritmProjekt
             }
             foreach (Enemy enemy in enemies)
             {
-                enemy.Update(player.PlayerPoint, grid);
+                enemy.Update(player.myPoint, grid);
             }
-
-
-
+            xhair.Update(camera.CameraPos);
             HandleCamera();
             base.Update(gameTime);
         }
@@ -85,17 +85,17 @@ namespace AlgoritmProjekt
         {
             if (player.ShotsFired)
             {
-                cameraRecoil = player.pos;
-                recoil = player.pos - new Vector2(KeyMouseReader.mouseState.Position.X, KeyMouseReader.mouseState.Position.Y);
+                cameraRecoil = player.myPosition;
+                recoil = player.myPosition - new Vector2(KeyMouseReader.mouseState.Position.X, KeyMouseReader.mouseState.Position.Y);
                 recoil.Normalize();
 
-                player.pos += recoil * player.RecoilPower;
+                player.myPosition += recoil * player.RecoilPower;
 
                 cameraRecoil += recoil * (player.RecoilPower * 3);
                 camera.Update(cameraRecoil);
             }
             else
-                camera.Update(player.pos);
+                camera.Update(player.myPosition);
         }
 
         protected override void Draw(GameTime gameTime)
@@ -107,7 +107,7 @@ namespace AlgoritmProjekt
             foreach (Enemy enemy in enemies)
             {
                 enemy.Draw(spriteBatch);
-                spriteBatch.Draw(createRectangle(3, 3, GraphicsDevice), enemy.EnemyPos, Color.Red);
+                spriteBatch.Draw(createRectangle(3, 3, GraphicsDevice), enemy.myPosition, Color.Red);
             }
             player.Draw(spriteBatch);
             spriteBatch.Draw(createRectangle(3, 3, GraphicsDevice), player.pos, Color.Red);
@@ -117,11 +117,9 @@ namespace AlgoritmProjekt
                 foreach (Vector2 v in enemy.Way)
                 {
                     spriteBatch.Draw(createRectangle(3, 3, GraphicsDevice), new Vector2(v.X, v.Y), Color.Yellow);
-
-
                 }
             }
-
+            xhair.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);
