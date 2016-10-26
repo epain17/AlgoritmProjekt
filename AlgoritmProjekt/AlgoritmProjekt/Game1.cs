@@ -47,7 +47,7 @@ namespace AlgoritmProjekt
             player = new Player(createRectangle(32, 32, GraphicsDevice), new Vector2(300, 200), createRectangle(5, 5, GraphicsDevice));
 
             enemies.Add(new Enemy(createRectangle(32, 32, GraphicsDevice), new Vector2(64, 64)));
-            enemies.Add(new Enemy(createRectangle(32, 32, GraphicsDevice), new Vector2(32 * 8, 64)));
+            //enemies.Add(new Enemy(createRectangle(32, 32, GraphicsDevice), new Vector2(32 * 8, 64)));
 
             camera = new Camera(new Rectangle(0, 0, Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), new Rectangle(0, 0, Window.ClientBounds.Width * 2, Window.ClientBounds.Height * 2));
         }
@@ -75,6 +75,8 @@ namespace AlgoritmProjekt
                 enemy.Update(player.PlayerPoint, grid);
             }
 
+
+
             HandleCamera();
             base.Update(gameTime);
         }
@@ -86,7 +88,7 @@ namespace AlgoritmProjekt
                 cameraRecoil = player.pos;
                 recoil = player.pos - new Vector2(KeyMouseReader.mouseState.Position.X, KeyMouseReader.mouseState.Position.Y);
                 recoil.Normalize();
-                
+
                 player.pos += recoil * player.RecoilPower;
 
                 cameraRecoil += recoil * (player.RecoilPower * 3);
@@ -105,8 +107,19 @@ namespace AlgoritmProjekt
             foreach (Enemy enemy in enemies)
             {
                 enemy.Draw(spriteBatch);
+                spriteBatch.Draw(createRectangle(3, 3, GraphicsDevice), enemy.EnemyPos, Color.Red);
             }
             player.Draw(spriteBatch);
+
+            foreach (Enemy enemy in enemies)
+            {
+                foreach (Vector2 v in enemy.Way)
+                {
+                    spriteBatch.Draw(createRectangle(3, 3, GraphicsDevice), new Vector2(v.X, v.Y), Color.Yellow);
+
+
+                }
+            }
 
             spriteBatch.End();
 
@@ -117,7 +130,7 @@ namespace AlgoritmProjekt
         {
             Texture2D texture = new Texture2D(graphicsDevice, width, height);
             Color[] data = new Color[width * height];
-            
+
             // Colour the entire texture transparent first.             
             for (int i = 0; i < data.Length; i++)
             {

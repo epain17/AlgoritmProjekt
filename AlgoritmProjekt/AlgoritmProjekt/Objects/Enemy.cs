@@ -21,7 +21,6 @@ namespace AlgoritmProjekt.Characters
         Point startPoint, endPoint;
 
         Queue<Vector2> waypoints = new Queue<Vector2>();
-        Queue<Vector2> waypoints2 = new Queue<Vector2>();
         List<Vector2> newPath = new List<Vector2>();
         List<Vector2> path = new List<Vector2>();
 
@@ -33,29 +32,35 @@ namespace AlgoritmProjekt.Characters
             speed = 0.8f;
         }
 
+        //public bool CheckDirection(Point point)
+        //{
+            
+        //}
+
+        public Point GetCurrentPoint
+        {
+            get { return enemyPoint = new Point((int)pos.X / 32, (int)pos.Y / 32); }
+        }
+
+        //kan raderas när pathfindingen fungerar bra 
+        public Queue<Vector2> Way
+        {
+            get { return waypoints; }
+        }
+
+        public Vector2 EnemyPos
+        {
+            get { return pos; }
+        }
+
         public Point EnemyPoint
         {
             get { return enemyPoint = new Point((int)pos.X / 32, (int)pos.Y / 32); }
         }
 
-        public void SetWaypoints(Queue<Vector2> waypoints)
-        {
-            waypoints2.Clear();
-
-            foreach (var waypoint in waypoints)
-            {
-                this.waypoints2.Enqueue(waypoint);
-            }
-        }
-
         float DistanceToWaypoint
         {
             get { return Vector2.Distance(pos, waypoints.Peek()); }
-        }
-
-        public Point GetCurrentWaypoint
-        {
-            get { return new Point((int)pos.X / 32, (int)pos.Y / 32); }
         }
 
         public void Update(Point targetPoint, TileGrid grid)
@@ -65,11 +70,17 @@ namespace AlgoritmProjekt.Characters
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            foreach(Vector2 w in waypoints)
-            {
-                spriteBatch.Draw(enemyTexture, new Vector2(w.X, w.Y), null, new Color(0.01f, 0.2f, 0.1f, 0.1f), 0, new Vector2(16, 16), 1, SpriteEffects.None, 1);
-            }
             spriteBatch.Draw(enemyTexture, pos, null, Color.Red, 0, new Vector2(16, 16), 1, SpriteEffects.None, 1);
+           
+            //foreach (Vector2 w in waypoints)
+            //{
+            //    if (waypoints.Count != 0)
+            //        spriteBatch.Draw(enemyTexture, new Vector2(w.X, w.Y), Color.Yellow);
+            //    //spriteBatch.Draw(enemyTexture, new Vector2(w.X, w.Y), null, new Color(0.01f, 0.2f, 0.1f, 0.1f), 0, new Vector2(16, 16), 1, SpriteEffects.None, 1);
+            //}
+           // spriteBatch.Draw(enemyTexture, pos, Color.Orange);
+
+
 
         }
 
@@ -92,12 +103,11 @@ namespace AlgoritmProjekt.Characters
                         newPath.Add(pathPos);
                         waypoints.Enqueue(pathPos);
                     }
-                    //SetWaypoints(waypoints);
                     break;
                 }
             }
 
-            if(waypoints.Count > 0)
+            if (waypoints.Count > 0)
             {
                 if (DistanceToWaypoint < 1f)
                 {
