@@ -21,10 +21,8 @@ namespace AlgoritmProjekt
         {
             menu,
             gamePlay,
-            highscore,
         }
         public static GameState gameState = GameState.menu;
-        public static bool EXIT = false, RELOAD = false, LoadJsonLevel = true;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         GameManager gameManager;
@@ -54,20 +52,10 @@ namespace AlgoritmProjekt
         {
         }
 
-        void ReloadGame()
-        {
-            
-        }
-
         protected override void Update(GameTime gameTime)
         {
-            if (EXIT)
-                Exit();
-            if (RELOAD)
-            {
-                gameManager = new GameManager(Window, GraphicsDevice);
-                RELOAD = false;
-            }
+            //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            //    Exit();
             KeyMouseReader.Update();
             switch (gameState)
             {
@@ -76,8 +64,6 @@ namespace AlgoritmProjekt
                     break;
                 case GameState.gamePlay:
                     gameManager.Update(gameTime);
-                    if (KeyMouseReader.KeyPressed(Keys.Escape))
-                        gameState = GameState.menu;
                     break;
             }
             base.Update(gameTime);

@@ -8,6 +8,12 @@ using System.Threading.Tasks;
 
 namespace AlgoritmProjekt
 {
+    public class JsonObject
+    {
+        public string Name { get; set; }
+        public int PositionX { get; set; }
+        public int PositionY { get; set; }
+    }
     class Tile
     {
         protected Texture2D texture;
@@ -49,7 +55,7 @@ namespace AlgoritmProjekt
 
         public virtual void Draw(SpriteBatch spritebatch)
         {
-            spritebatch.Draw(texture, position, null, new Color(0.1f, 0.1f, 0.1f, 0.1f), 0, Vector2.Zero, 1, SpriteEffects.None, 1);
+            spritebatch.Draw(texture, position, null, new Color(0f, 0.1f, 0f), 0, Vector2.Zero, 1, SpriteEffects.None, 1);
         }
 
         public void HandelCollision(Wall w, int n)

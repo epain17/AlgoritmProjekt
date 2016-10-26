@@ -12,8 +12,8 @@ namespace AlgoritmProjekt.Screens
 {
     class Menu
     {
+        List<string> buttons = new List<string>();
         SpriteFont font;
-        string[] text = new string[2];
         Vector2 position;
         Color color;
         int selected = 0;
@@ -23,37 +23,43 @@ namespace AlgoritmProjekt.Screens
             this.font = font;
             this.position = position;
             this.color = Color.White;
-
-            text[0] = "Start";
-            text[1] = "Quit";
+            buttons.Add("Play");
+            buttons.Add("High Score");
+            buttons.Add("Quit");
         }
 
         public void Update()
         {
-            if (KeyMouseReader.KeyPressed(Keys.Up) && selected != 1)
-                selected++;
-            else if (KeyMouseReader.KeyPressed(Keys.Down) && selected != 0)
+            if (KeyMouseReader.KeyPressed(Keys.Up) && selected > 0)
                 selected--;
-            Console.WriteLine(selected);
-            HandleSelected();
-        }
+            else if (KeyMouseReader.KeyPressed(Keys.Down) && selected < buttons.Count - 1)
+                selected++;
 
-        private void HandleSelected()
-        {
-            for (int i = 0; i < 2; i++)
+            if (KeyMouseReader.KeyPressed(Keys.Enter) || KeyMouseReader.KeyPressed(Keys.Space))
             {
-                if (i == selected)
-                    color = Color.YellowGreen;
-                else
-                    color = Color.White;
+                switch (selected)
+                {
+                    case 0:
+                        Game1.RELOAD = true;
+                        Game1.LoadJsonLevel = true;
+                        Game1.gameState = Game1.GameState.gamePlay;
+                        break;
+                    case 1:
+
+                        break;
+                    case 2:
+                        Game1.EXIT = true;
+                        break;
+                }
             }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < buttons.Count; i++)
             {
-                spriteBatch.DrawString(font, text[i], new Vector2(position.X, position.Y + (i * 20)), color);
+                color = (i == selected) ? Color.LimeGreen : Color.Blue;
+                spriteBatch.DrawString(font, buttons[i], new Vector2(position.X - (font.MeasureString(buttons[i]).X / 2), position.Y + (i * 20)), color);
             }
         }
     }

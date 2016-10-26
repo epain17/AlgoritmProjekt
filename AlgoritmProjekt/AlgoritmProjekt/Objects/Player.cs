@@ -19,7 +19,7 @@ namespace AlgoritmProjekt.Characters
             ShotGun,
             MachineGun,
         }
-        public WeaponType weaponState = WeaponType.MachineGun;
+        public WeaponType weaponState = WeaponType.ShotGun;
         public float RecoilPower;
         public void HandleWeaponStates()
         {
@@ -160,11 +160,10 @@ namespace AlgoritmProjekt.Characters
 
                     if (weaponState == WeaponType.ShotGun)
                     {
-                        projectiles.Add(new Projectile(projeTexture, position, new Vector2(target.X + rand.Next(-35, 45), target.Y + rand.Next(-15, 15))));
-                        projectiles.Add(new Projectile(projeTexture, position, new Vector2(target.X + rand.Next(-35, 45), target.Y + rand.Next(-15, 15))));
-                        projectiles.Add(new Projectile(projeTexture, position, new Vector2(target.X + rand.Next(-35, 45), target.Y + rand.Next(-15, 15))));
-                        projectiles.Add(new Projectile(projeTexture, position, new Vector2(target.X + rand.Next(-35, 45), target.Y + rand.Next(-15, 15))));
-                
+                        for (int i = 0; i < 4; i++)
+                        {
+                            projectiles.Add(new Projectile(projeTexture, position, new Vector2(target.X + rand.Next(-35, 45), target.Y + rand.Next(-15, 15))));
+                        }
                     }
                     else
                         projectiles.Add(new Projectile(projeTexture, position, new Vector2(target.X + rand.Next(-15, 15), target.Y + rand.Next(-15, 15))));

@@ -14,28 +14,32 @@ namespace AlgoritmProjekt.Managers
 {
     class GameManager
     {
-        Player player;
         TileGrid grid;
         Camera camera;
         CrossHair xhair;
 
-        List<Enemy> enemies = new List<Enemy>();
         Vector2 cameraRecoil;
         Vector2 recoil;
         GraphicsDevice graphicsDevice;
+        Texture2D square, smallSquare;
+
+        int size = 32;
+        List<JsonObject> jsonTiles = new List<JsonObject>();
+        List<Enemy> enemies = new List<Enemy>();
+        List<Wall> walls = new List<Wall>();
+        Player player;
 
         public GameManager(GameWindow Window, GraphicsDevice graphicsDevice)
         {
             this.graphicsDevice = graphicsDevice;
-            grid = new TileGrid(createRectangle(32, 32, graphicsDevice), 32, 100, 50);
-            player = new Player(createRectangle(32, 32, graphicsDevice), new Vector2(300, 200), createRectangle(5, 5, graphicsDevice), 32);
+            square = createRectangle(size, size, graphicsDevice);
+            smallSquare = createRectangle(5, 5, graphicsDevice);
+            grid = new TileGrid(square, size, 100, 50);
 
-            enemies.Add(new Enemy(createRectangle(32, 32, graphicsDevice), new Vector2(64, 64), 32, 10));
-
-            camera = new Camera(new Rectangle(0, 0, Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), new Rectangle(0, 0, Window.ClientBounds.Width * 2, Window.ClientBounds.Height * 2));
-            xhair = new CrossHair(createRectangle(32, 32, graphicsDevice), new Vector2(200, 200), 32);
+            LoadLevel.LoadingLevel("SaveTest.json", ref jsonTiles, ref walls, ref enemies, ref player, ref square, ref smallSquare, size);
+            camera = new Camera(new Rectangle(0, 0, Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), new Rectangle(0, 0, Window.ClientBounds.Width * 4, Window.ClientBounds.Height * 4));
+            xhair = new CrossHair(square, new Vector2(200, 200), size);
         }
-
 
         public void Update(GameTime gameTime)
         {
@@ -53,8 +57,38 @@ namespace AlgoritmProjekt.Managers
                 enemy.Update(player.myPoint, grid);
                 player.CheckHit(enemy);
             }
-            xhair.Update(camera.CameraPos);
             HandleCamera();
+            xhair.Update(camera.CameraPos);
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, camera.TranslationMatrix);
+            grid.Draw(spriteBatch);
+
+            foreach (Enemy enemy in enemies)
+            {
+                enemy.Draw(spriteBatch);
+                //spriteBatch.Draw(createRectangle(3, 3, graphicsDevice), enemy.myPosition, Color.Red);
+            }
+            player.Draw(spriteBatch);
+            //spriteBatch.Draw(createRectangle(3, 3, graphicsDevice), player.myPosition, Color.Red);
+
+            foreach (Wall wall in walls)
+            {
+                wall.Draw(spriteBatch);
+            }
+
+            //foreach (Enemy enemy in enemies)
+            //{
+            //    foreach (Vector2 v in enemy.Way)
+            //    {
+            //        spriteBatch.Draw(createRectangle(3, 3, graphicsDevice), new Vector2(v.X, v.Y), Color.Yellow);
+            //    }
+            //}
+            xhair.Draw(spriteBatch);
+            spriteBatch.Draw(smallSquare, new Vector2(xhair.myPosition.X - 2.5f, xhair.myPosition.Y - 2.5f), Color.Red);
+            spriteBatch.End();
         }
 
         void HandleCamera()
@@ -72,30 +106,6 @@ namespace AlgoritmProjekt.Managers
             }
             else
                 camera.Update(player.myPosition);
-        }
-
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, camera.TranslationMatrix);
-            grid.Draw(spriteBatch);
-
-            foreach (Enemy enemy in enemies)
-            {
-                enemy.Draw(spriteBatch);
-                spriteBatch.Draw(createRectangle(3, 3, graphicsDevice), enemy.myPosition, Color.Red);
-            }
-            player.Draw(spriteBatch);
-            spriteBatch.Draw(createRectangle(3, 3, graphicsDevice), player.myPosition, Color.Red);
-
-            foreach (Enemy enemy in enemies)
-            {
-                foreach (Vector2 v in enemy.Way)
-                {
-                    spriteBatch.Draw(createRectangle(3, 3, graphicsDevice), new Vector2(v.X, v.Y), Color.Yellow);
-                }
-            }
-            xhair.Draw(spriteBatch);
-            spriteBatch.End();
         }
 
         Texture2D createRectangle(int width, int height, GraphicsDevice graphicsDevice)
