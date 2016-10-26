@@ -22,7 +22,7 @@ namespace AlgoritmProjekt
 
         public override void Draw(SpriteBatch spritebatch)
         {
-            spritebatch.Draw(texture, position, null, Color.DarkKhaki, 0, new Vector2(16, 16), 1, SpriteEffects.None, 1);
+            spritebatch.Draw(texture, position, null, Color.DarkKhaki, 0, Vector2.Zero, 1, SpriteEffects.None, 1);
 
         }
     }

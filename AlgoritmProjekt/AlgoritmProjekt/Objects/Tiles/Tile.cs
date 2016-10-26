@@ -49,7 +49,7 @@ namespace AlgoritmProjekt
 
         public virtual void Draw(SpriteBatch spritebatch)
         {
-            spritebatch.Draw(texture, position, null, new Color(0.1f, 0.1f, 0.1f, 0.1f), 0, origin, 1, SpriteEffects.None, 1);
+            spritebatch.Draw(texture, position, null, new Color(0.1f, 0.1f, 0.1f, 0.1f), 0, Vector2.Zero, 1, SpriteEffects.None, 1);
         }
 
         public void HandelCollision(Wall w, int n)

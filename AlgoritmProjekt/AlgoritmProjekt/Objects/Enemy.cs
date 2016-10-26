@@ -13,7 +13,6 @@ namespace AlgoritmProjekt.Characters
     {
         Vector2 velocity;
         Texture2D enemyTexture;
-        Point enemyPoint;
         float speed;
 
         Pathfinder pathfinder;
@@ -47,11 +46,13 @@ namespace AlgoritmProjekt.Characters
         public void Update(Point targetPoint, TileGrid grid)
         {
             FindPath(targetPoint, grid);
+            position += velocity;
+
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(enemyTexture, position, null, Color.Red, 0, origin, 1, SpriteEffects.None, 1);           
+            spriteBatch.Draw(enemyTexture, position, null, Color.Red, 0, Vector2.Zero, 1, SpriteEffects.None, 1);           
         }
 
         public void FindPath(Point targetPoint, TileGrid grid)
@@ -90,7 +91,7 @@ namespace AlgoritmProjekt.Characters
                     direction.Normalize();
 
                     velocity = Vector2.Multiply(direction, speed);
-                    position += velocity;
+                    //position += velocity;
                 }
             }
         }

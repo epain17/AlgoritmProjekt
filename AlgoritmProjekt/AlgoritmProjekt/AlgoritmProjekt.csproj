@@ -38,6 +38,10 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Managers\GameManager.cs" />
+    <Compile Include="Managers\ScreenManager.cs" />
+    <Compile Include="Screens\GamePlay.cs" />
+    <Compile Include="Screens\Menu.cs" />
     <Compile Include="Utility\Camera.cs" />
     <Compile Include="Objects\Enemy.cs" />
     <Compile Include="Objects\Player.cs" />
