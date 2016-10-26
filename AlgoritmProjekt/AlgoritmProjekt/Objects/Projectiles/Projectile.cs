@@ -59,5 +59,10 @@ namespace AlgoritmProjekt.Objects.Projectiles
                 killMe = true;
             }
         }
+
+        public void InstaKillMe()
+        {
+            killMe = true;
+        }
     }
 }
