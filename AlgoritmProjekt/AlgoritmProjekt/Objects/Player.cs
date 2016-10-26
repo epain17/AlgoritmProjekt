@@ -66,6 +66,20 @@ namespace AlgoritmProjekt.Characters
 
         List<Projectile> projectiles = new List<Projectile>();
 
+        public bool CheckHit(Enemy enemy)
+        {
+            for (int i = 0; i < projectiles.Count; i++)
+            {
+                if(projectiles[i].Hit(enemy) == true)
+                {
+                    enemy.HP--;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         bool isKeyDown(Keys key)
         {
             if (KeyMouseReader.keyState.IsKeyDown(key))
@@ -86,6 +100,7 @@ namespace AlgoritmProjekt.Characters
 
         public void Update(Vector2 target)
         {
+            
             firingTime();
             HandleWeaponStates();
             HandlePlayerInteractions(Keys.S, Keys.A, Keys.D, Keys.W, Keys.Space, target);

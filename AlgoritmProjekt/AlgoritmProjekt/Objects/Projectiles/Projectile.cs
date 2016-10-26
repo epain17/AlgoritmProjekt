@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using AlgoritmProjekt.Characters;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -49,6 +50,17 @@ namespace AlgoritmProjekt.Objects.Projectiles
         {
             velocity = targetVect - position;
             velocity.Normalize();
+        }
+
+        public bool Hit(Enemy enemy)
+        {
+            if(Vector2.Distance(enemy.myPosition, position) < 1f)
+            {
+                InstaKillMe();
+                return true;
+
+            }
+            return false;
         }
 
         void LifeCycle()

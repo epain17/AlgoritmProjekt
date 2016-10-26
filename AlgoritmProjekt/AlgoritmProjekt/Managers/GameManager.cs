@@ -30,7 +30,7 @@ namespace AlgoritmProjekt.Managers
             grid = new TileGrid(createRectangle(32, 32, graphicsDevice), 32, 100, 50);
             player = new Player(createRectangle(32, 32, graphicsDevice), new Vector2(300, 200), createRectangle(5, 5, graphicsDevice), 32);
 
-            enemies.Add(new Enemy(createRectangle(32, 32, graphicsDevice), new Vector2(64, 64), 32));
+            enemies.Add(new Enemy(createRectangle(32, 32, graphicsDevice), new Vector2(64, 64), 32, 10));
 
             camera = new Camera(new Rectangle(0, 0, Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), new Rectangle(0, 0, Window.ClientBounds.Width * 2, Window.ClientBounds.Height * 2));
             xhair = new CrossHair(createRectangle(32, 32, graphicsDevice), new Vector2(200, 200), 32);
@@ -51,6 +51,7 @@ namespace AlgoritmProjekt.Managers
             foreach (Enemy enemy in enemies)
             {
                 enemy.Update(player.myPoint, grid);
+                player.CheckHit(enemy);
             }
             xhair.Update(camera.CameraPos);
             HandleCamera();

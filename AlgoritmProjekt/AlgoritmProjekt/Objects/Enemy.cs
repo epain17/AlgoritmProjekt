@@ -14,6 +14,8 @@ namespace AlgoritmProjekt.Characters
         Vector2 velocity;
         Texture2D enemyTexture;
         float speed;
+        int hp;
+        bool alive;
 
         Pathfinder pathfinder;
         public Vector2 pathPos;
@@ -34,12 +36,20 @@ namespace AlgoritmProjekt.Characters
             get { return Vector2.Distance(position, waypoints.Peek()); }
         }
 
-        public Enemy(Texture2D texture, Vector2 position, int size)
+        public int HP
+        {
+            get { return hp; }
+            set { hp = value; }
+        }
+
+
+        public Enemy(Texture2D texture, Vector2 position, int size, int hp)
             : base(texture, position, size)
         {
             this.enemyTexture = texture;
-            this.position = position;
+            this.position = new Vector2(position.X + 16, position.Y + 16);
             this.size = size;
+            this.hp = hp;
             speed = 1.8f;
         }
 
@@ -52,7 +62,7 @@ namespace AlgoritmProjekt.Characters
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(enemyTexture, position, null, Color.Red, 0, Vector2.Zero, 1, SpriteEffects.None, 1);           
+            spriteBatch.Draw(enemyTexture, position, null, Color.Red, 0, origin, 1, SpriteEffects.None, 1);           
         }
 
         public void FindPath(Point targetPoint, TileGrid grid)

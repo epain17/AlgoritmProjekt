@@ -233,7 +233,7 @@ namespace AlgoritmProjekt
             List<Vector2> finalPath = new List<Vector2>();
             for (int i = closedList.Count - 1; i >= 0; i--)
             {
-                finalPath.Add(new Vector2(closedList[i].Position.X * 32, closedList[i].Position.Y * 32));
+                finalPath.Add(new Vector2((closedList[i].Position.X * 32)+ 16, (closedList[i].Position.Y * 32)+16));
             }
             return finalPath;
         }
