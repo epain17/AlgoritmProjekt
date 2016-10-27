@@ -25,6 +25,11 @@ namespace AlgoritmProjekt
         protected int hp;
         protected bool alive = true;
 
+        public int mySize
+        {
+            get { return size; }
+        }
+
         public Vector2 myPosition
         {
             get { return position; }

@@ -56,7 +56,7 @@ namespace AlgoritmProjekt.Managers
             player.Update(xhair.myPosition);
             HandleCamera();
             WhenPlayerShoots();
-
+            Collisions();
             RemoveDeadObjects();
         }
 
@@ -165,6 +165,7 @@ namespace AlgoritmProjekt.Managers
                 if (projectiles[i].DeadShot)
                     projectiles.RemoveAt(i);
             }
+
         }
 
         void HandleCamera()
@@ -182,6 +183,32 @@ namespace AlgoritmProjekt.Managers
             }
             else
                 camera.Update(player.myPosition);
+        }
+
+        private void Collisions()
+        {
+            foreach (Enemy enemy in enemies)
+            {
+                if (enemy != null)
+                {
+                    foreach (Projectile shot in projectiles)
+                    {
+                        if (shot.CheckMyCollision(enemy))
+                        {
+                            enemy.myHP--;
+                        }
+                    }
+                }
+            }
+            foreach (Wall wall in walls)
+            {
+                foreach (Projectile p in projectiles)
+                {
+                    if (wall.CheckMyCollision(p))
+                        p.DeadShot = true;
+                }
+            }
+
         }
 
         Texture2D createRectangle(int width, int height, GraphicsDevice graphicsDevice)

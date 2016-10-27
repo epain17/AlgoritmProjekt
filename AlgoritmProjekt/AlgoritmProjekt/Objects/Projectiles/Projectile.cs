@@ -58,7 +58,7 @@ namespace AlgoritmProjekt.Objects.Projectiles
 
         public override bool CheckMyCollision(Tile target)
         {
-            if(Vector2.Distance(target.myPosition, position) < 1f)
+            if(Vector2.Distance(target.myPosition, position) < mySize + target.mySize)
             {
                 InstaKillMe();
                 return true;
