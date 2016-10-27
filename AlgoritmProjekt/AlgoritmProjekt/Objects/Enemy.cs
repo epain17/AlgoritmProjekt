@@ -129,7 +129,7 @@ namespace AlgoritmProjekt.Characters
 
         protected float Range(Point point)
         {
-            Vector2 range = new Vector2(point.X * 32, point.Y*32);
+            Vector2 range = new Vector2(point.X * size, point.Y * size);
             return Vector2.Distance(this.position, range);
         }
     }
