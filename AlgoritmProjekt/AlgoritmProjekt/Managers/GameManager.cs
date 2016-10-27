@@ -25,7 +25,7 @@ namespace AlgoritmProjekt.Managers
         Texture2D square, smallSquare;
 
         int size = 32;
-        int spawnHP = 150;
+        int spawnHP = 30;
         List<JsonObject> jsonTiles = new List<JsonObject>();
         List<EnemySpawner> spawners = new List<EnemySpawner>();
         List<Enemy> enemies = new List<Enemy>();
@@ -64,28 +64,26 @@ namespace AlgoritmProjekt.Managers
             //        player.HandelCollision(w, n);
             //    }
             //}
+            Collisions();
+            RemoveDeadObjects();
+            HandleCamera();
+            xhair.Update(camera.CameraPos);
+        }
+
+        private void Collisions()
+        {
             foreach (Enemy enemy in enemies)
             {
                 enemy.Update(player.myPoint, grid);
-                player.CheckHit(enemy);
-            }
-            for (int i = enemies.Count - 1; i >= 0; --i)
-            {
-                if (!enemies[i].Alive)
-                    enemies.RemoveAt(i);
-            }
-            for (int i = spawners.Count - 1; i >= 0; --i)
-            {
-                if (!spawners[i].Alive)
-                    spawners.RemoveAt(i);
+                if (player.CheckHit(enemy))
+                    enemy.HP--;
             }
             foreach (EnemySpawner spawner in spawners)
             {
                 spawner.Update(ref enemies);
-                player.CheckHit(spawner);
+                if (player.CheckHit(spawner))
+                    spawner.HP--;
             }
-            HandleCamera();
-            xhair.Update(camera.CameraPos);
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -133,6 +131,22 @@ namespace AlgoritmProjekt.Managers
             spriteBatch.End();
         }
 
+        private void RemoveDeadObjects()
+        {
+            for (int i = enemies.Count - 1; i >= 0; --i)
+            {
+                if (!enemies[i].Alive)
+                {
+                    enemies.RemoveAt(i);
+                }
+            }
+            for (int i = spawners.Count - 1; i >= 0; --i)
+            {
+                if (!spawners[i].Alive)
+                    spawners.RemoveAt(i);
+            }
+        }
+
         void HandleCamera()
         {
             if (player.ShotsFired)
@@ -143,7 +157,7 @@ namespace AlgoritmProjekt.Managers
 
                 //player.myPosition += recoil * player.RecoilPower;
 
-                cameraRecoil += recoil * (player.RecoilPower * 3);
+                cameraRecoil += recoil * player.RecoilPower;
                 camera.Update(cameraRecoil);
             }
             else

@@ -22,6 +22,8 @@ namespace AlgoritmProjekt
         protected int size;
         protected bool occupied = false;
         protected Vector2 origin;
+        protected int hp;
+        protected bool alive = true;
 
         public Vector2 myPosition
         {
@@ -45,6 +47,17 @@ namespace AlgoritmProjekt
             get { return new Point((int)position.X / size, (int)position.Y / size); }
         }
 
+        public int HP
+        {
+            get { return hp; }
+            set { hp = value; }
+        }
+
+        public bool Alive
+        {
+            get { return alive; }
+        }
+
         public Tile(Texture2D texture, Vector2 position, int size)
         {
             this.texture = texture;
@@ -55,7 +68,7 @@ namespace AlgoritmProjekt
 
         public virtual void Draw(SpriteBatch spritebatch)
         {
-            spritebatch.Draw(texture, position, null, new Color(0f, 0.1f, 0f), 0, Vector2.Zero, 1, SpriteEffects.None, 1);
+            spritebatch.Draw(texture, position, null, new Color(0f, 0.1f, 0f), 0, origin, 1, SpriteEffects.None, 1);
         }
 
         public void HandelCollision(Wall w, int n)

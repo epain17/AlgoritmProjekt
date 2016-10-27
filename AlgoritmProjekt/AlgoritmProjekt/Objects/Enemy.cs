@@ -14,9 +14,7 @@ namespace AlgoritmProjekt.Characters
         Vector2 velocity;
         Texture2D enemyTexture;
         float speed;
-        int hp;
-        protected bool alive = true;
-
+        
         Pathfinder pathfinder;
         public Vector2 pathPos;
         Point startPoint, endPoint;
@@ -37,26 +35,15 @@ namespace AlgoritmProjekt.Characters
         {
             get { return Vector2.Distance(position, waypoints.Peek()); }
         }
-
-        public int HP
-        {
-            get { return hp; }
-            set { hp = value; }
-        }
-
-        public bool Alive
-        {
-            get { return alive; }
-        }
-
+        
         public Enemy(Texture2D texture, Vector2 position, int size, int hp)
             : base(texture, position, size)
         {
             this.enemyTexture = texture;
-            this.position = new Vector2(position.X + 16, position.Y + 16);
+            this.position = position;
             this.size = size;
             this.hp = hp;
-            speed = 2.8f;
+            speed = 2.5f;
         }
 
         public void Update(Point targetPoint, TileGrid grid)
@@ -101,8 +88,6 @@ namespace AlgoritmProjekt.Characters
                 }
 
             }
-
-
 
         }
 

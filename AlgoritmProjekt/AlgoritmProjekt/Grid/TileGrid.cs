@@ -73,7 +73,7 @@ namespace AlgoritmProjekt.Grid
         {
             for (int i = cellX; i < width; i++)
             {
-                for (int j = cellY; j < height; j++)
+                for (int j = cellY; j < height;)
                 {
                     if (tileGrid[i, j].Occupied == false && tileGrid[i, j] != null)
                     {

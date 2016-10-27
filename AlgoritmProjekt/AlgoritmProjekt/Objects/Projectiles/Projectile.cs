@@ -16,7 +16,6 @@ namespace AlgoritmProjekt.Objects.Projectiles
         Vector2 velocity;
         float speed;
         float lifeSpan, lifeTime;
-        //int damage;
 
         bool killMe = false;
 
@@ -36,7 +35,7 @@ namespace AlgoritmProjekt.Objects.Projectiles
             this.texture = texture;
             this.position = position;
             lifeTime = 200;
-            speed = 5f;
+            speed = 10f;
             Shoot(targetVect);
         }
 

@@ -19,66 +19,36 @@ namespace AlgoritmProjekt.Characters
             ShotGun,
             MachineGun,
         }
-        public WeaponType weaponState = WeaponType.MachineGun;
+        public WeaponType weaponState = WeaponType.Pistol;
+
+        List<Projectile> projectiles = new List<Projectile>();
         public float RecoilPower;
-        public void HandleWeaponStates()
-        {
-            switch (weaponState)
-            {
-                case WeaponType.Pistol:
-                    shotInterval += 0.5f;
-                    RecoilPower = 2.5f;
-                    break;
-                case WeaponType.ShotGun:
-                    shotInterval += 0.25f;
-                    RecoilPower = 10;
-                    break;
-                case WeaponType.MachineGun:
-                    shotInterval += 2;
-                    RecoilPower = 5;
-                    break;
-            }
-        }
+        Texture2D projeTexture;
+        float shotInterval = 0;
         bool shot = false;
 
-        public bool ShotsFired
-        {
-            get { return shot; }
-            set { shot = value; }
-        }
-
-        void firingTime()
-        {
-            float timer = 0;
-            while(ShotsFired)
-            {
-                timer += 0.1f;
-                if (timer > 100)
-                    ShotsFired = false;
-            }
-        }
-
-        Texture2D projeTexture;
 
         Vector2 velocity;
 
-        float shotInterval = 10;
 
-        List<Projectile> projectiles = new List<Projectile>();
-
-        public bool CheckHit(Enemy enemy)
+        public bool CheckHit(Tile enemy)
         {
             for (int i = 0; i < projectiles.Count; i++)
             {
-                if(Vector2.Distance(projectiles[i].Position, enemy.myPosition) < 32)
+                if(Vector2.Distance(projectiles[i].Position, enemy.myPosition) < (size))
                 {
                     projectiles[i].InstaKillMe();
-                    enemy.HP--;
                     return true;
                 }
             }
 
             return false;
+        }
+
+        public bool ShotsFired
+        {
+            get { return shot; }
+            set { shot = value; }
         }
 
         bool isKeyDown(Keys key)
@@ -101,11 +71,35 @@ namespace AlgoritmProjekt.Characters
 
         public void Update(Vector2 target)
         {
-            
-            firingTime();
-            HandleWeaponStates();
             HandlePlayerInteractions(Keys.S, Keys.A, Keys.D, Keys.W, Keys.Space, target);
+            HandleWeaponStates();
+            firingTimeFrame();
+            HandleProjectiles();
             position += velocity;
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(texture, position, null, Color.Blue, 0, origin, 1, SpriteEffects.None, 1);
+            foreach (Projectile projectile in projectiles)
+            {
+                projectile.Draw(spriteBatch);
+            }
+        }
+
+        private void firingTimeFrame()
+        {
+            float timer = 0;
+            while (ShotsFired)
+            {
+                timer += 0.1f;
+                if (timer > 100)
+                    ShotsFired = false;
+            }
+        }
+
+        private void HandleProjectiles()
+        {
             foreach (Projectile projectile in projectiles)
             {
                 projectile.Update();
@@ -118,16 +112,13 @@ namespace AlgoritmProjekt.Characters
             }
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        private void HandlePlayerInteractions(Keys downKey, Keys leftKey, Keys rightKey, Keys upKey, Keys shotKey, Vector2 target)
         {
-            spriteBatch.Draw(texture, position, null, Color.Blue, 0, origin, 1, SpriteEffects.None, 1);
-            foreach (Projectile projectile in projectiles)
-            {
-                projectile.Draw(spriteBatch);
-            }
+            Moving(downKey, leftKey, rightKey, upKey);
+            Shooting(shotKey, target);
         }
 
-        void HandlePlayerInteractions(Keys downKey, Keys leftKey, Keys rightKey, Keys upKey, Keys shotKey, Vector2 target)
+        private void Moving(Keys downKey, Keys leftKey, Keys rightKey, Keys upKey)
         {
             velocity = Vector2.Zero;
 
@@ -150,7 +141,10 @@ namespace AlgoritmProjekt.Characters
             {
                 velocity.Y = -3;
             }
+        }
 
+        private void Shooting(Keys shotKey, Vector2 target)
+        {
             if (isKeyDown(shotKey))
             {
                 if (shotInterval > 10)
@@ -161,16 +155,34 @@ namespace AlgoritmProjekt.Characters
 
                     if (weaponState == WeaponType.ShotGun)
                     {
-                        for (int i = 0; i < 4; i++)
+                        for (int i = 0; i < 5; i++)
                         {
-                            projectiles.Add(new Projectile(projeTexture, position, new Vector2(target.X + rand.Next(-35, 45), target.Y + rand.Next(-15, 15))));
+                            projectiles.Add(new Projectile(projeTexture, position, new Vector2(target.X + rand.Next(-25, 25), target.Y + rand.Next(-25, 25))));
                         }
                     }
                     else
                         projectiles.Add(new Projectile(projeTexture, position, new Vector2(target.X + rand.Next(-15, 15), target.Y + rand.Next(-15, 15))));
                 }
             }
+        }
 
+        private void HandleWeaponStates()
+        {
+            switch (weaponState)
+            {
+                case WeaponType.Pistol:
+                    shotInterval += 0.5f;
+                    RecoilPower = 2.5f;
+                    break;
+                case WeaponType.ShotGun:
+                    shotInterval += 0.25f;
+                    RecoilPower = 10;
+                    break;
+                case WeaponType.MachineGun:
+                    shotInterval += 2;
+                    RecoilPower = 5;
+                    break;
+            }
         }
     }
 }
