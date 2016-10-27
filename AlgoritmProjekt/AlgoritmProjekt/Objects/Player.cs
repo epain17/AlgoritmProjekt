@@ -19,7 +19,7 @@ namespace AlgoritmProjekt.Characters
             ShotGun,
             MachineGun,
         }
-        public WeaponType weaponState = WeaponType.ShotGun;
+        public WeaponType weaponState = WeaponType.MachineGun;
         public float RecoilPower;
         public void HandleWeaponStates()
         {
@@ -70,8 +70,9 @@ namespace AlgoritmProjekt.Characters
         {
             for (int i = 0; i < projectiles.Count; i++)
             {
-                if(projectiles[i].Hit(enemy) == true)
+                if(Vector2.Distance(projectiles[i].Position, enemy.myPosition) < 32)
                 {
+                    projectiles[i].InstaKillMe();
                     enemy.HP--;
                     return true;
                 }

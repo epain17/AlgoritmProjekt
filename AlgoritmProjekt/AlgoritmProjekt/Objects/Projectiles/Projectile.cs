@@ -26,6 +26,11 @@ namespace AlgoritmProjekt.Objects.Projectiles
             set { killMe = value; }
         }
 
+        public Vector2 Position
+        {
+            get { return position; }
+        }
+
         public Projectile(Texture2D texture, Vector2 position, Vector2 targetVect)
         {
             this.texture = texture;

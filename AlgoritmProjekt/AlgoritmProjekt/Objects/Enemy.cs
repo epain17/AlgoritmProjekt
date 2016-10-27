@@ -15,7 +15,7 @@ namespace AlgoritmProjekt.Characters
         Texture2D enemyTexture;
         float speed;
         int hp;
-        bool alive;
+        bool alive = true;
 
         Pathfinder pathfinder;
         public Vector2 pathPos;
@@ -42,6 +42,10 @@ namespace AlgoritmProjekt.Characters
             set { hp = value; }
         }
 
+        public bool Alive
+        {
+            get { return alive; }
+        }
 
         public Enemy(Texture2D texture, Vector2 position, int size, int hp)
             : base(texture, position, size)
@@ -50,14 +54,16 @@ namespace AlgoritmProjekt.Characters
             this.position = new Vector2(position.X + 16, position.Y + 16);
             this.size = size;
             this.hp = hp;
-            speed = 1.8f;
+            speed = 2.8f;
         }
 
         public void Update(Point targetPoint, TileGrid grid)
         {
+            // if closest node reached
             FindPath(targetPoint, grid);
             position += velocity;
-
+            if (HP <= 0)
+                alive = false;
         }
 
         public override void Draw(SpriteBatch spriteBatch)

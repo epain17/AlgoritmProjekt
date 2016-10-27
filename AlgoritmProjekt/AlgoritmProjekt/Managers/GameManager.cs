@@ -24,6 +24,7 @@ namespace AlgoritmProjekt.Managers
         Texture2D square, smallSquare;
 
         int size = 32;
+        int spawnHP = 50;
         List<JsonObject> jsonTiles = new List<JsonObject>();
         List<Enemy> enemies = new List<Enemy>();
         List<Wall> walls = new List<Wall>();
@@ -36,7 +37,7 @@ namespace AlgoritmProjekt.Managers
             smallSquare = createRectangle(5, 5, graphicsDevice);
             grid = new TileGrid(square, size, 100, 50);
 
-            LoadLevel.LoadingLevel("SaveTest.json", ref jsonTiles, ref walls, ref enemies, ref player, ref square, ref smallSquare, size);
+            LoadLevel.LoadingLevel("SaveTest.json", ref jsonTiles, ref walls, ref enemies, ref player, ref square, ref smallSquare, size, spawnHP);
             camera = new Camera(new Rectangle(0, 0, Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), new Rectangle(0, 0, Window.ClientBounds.Width * 4, Window.ClientBounds.Height * 4));
             xhair = new CrossHair(square, new Vector2(200, 200), size);
         }
@@ -56,6 +57,11 @@ namespace AlgoritmProjekt.Managers
             {
                 enemy.Update(player.myPoint, grid);
                 player.CheckHit(enemy);
+            }
+            for (int i = enemies.Count - 1; i >= 0; --i)
+            {
+                if (!enemies[i].Alive)
+                    enemies.RemoveAt(i);
             }
             HandleCamera();
             xhair.Update(camera.CameraPos);
