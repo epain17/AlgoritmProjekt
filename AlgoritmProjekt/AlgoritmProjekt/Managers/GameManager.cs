@@ -1,6 +1,7 @@
 ﻿using AlgoritmProjekt.Characters;
 using AlgoritmProjekt.Grid;
 using AlgoritmProjekt.Input;
+using AlgoritmProjekt.Objects;
 using AlgoritmProjekt.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -26,6 +27,7 @@ namespace AlgoritmProjekt.Managers
         int size = 32;
         int spawnHP = 50;
         List<JsonObject> jsonTiles = new List<JsonObject>();
+        List<EnemySpawner> spawners = new List<EnemySpawner>();
         List<Enemy> enemies = new List<Enemy>();
         List<Wall> walls = new List<Wall>();
         Player player;
@@ -40,10 +42,13 @@ namespace AlgoritmProjekt.Managers
             player = new Player(square, new Vector2(64, 64), smallSquare, size);
             enemy = new Enemy(square, new Vector2(126, 128), size, 10);
 
+
             enemies.Add(enemy);
 
 
-            //LoadLevel.LoadingLevel("SaveTest.json", ref jsonTiles, ref walls, ref enemies, ref player, ref square, ref smallSquare, size, spawnHP);
+
+           // LoadLevel.LoadingLevel("SaveTest.json", ref jsonTiles, ref walls, ref spawners, ref player, ref square, ref smallSquare, size, spawnHP);
+
             camera = new Camera(new Rectangle(0, 0, Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), new Rectangle(0, 0, Window.ClientBounds.Width * 4, Window.ClientBounds.Height * 4));
             xhair = new CrossHair(square, new Vector2(200, 200), size);
         }
@@ -69,6 +74,10 @@ namespace AlgoritmProjekt.Managers
                 if (!enemies[i].Alive)
                     enemies.RemoveAt(i);
             }
+            foreach (EnemySpawner spawner in spawners)
+            {
+                spawner.Update(ref enemies);
+            }
             HandleCamera();
             xhair.Update(camera.CameraPos);
         }
@@ -91,6 +100,7 @@ namespace AlgoritmProjekt.Managers
                 wall.Draw(spriteBatch);
             }
 
+
             foreach (Enemy enemy in enemies)
             {
                 foreach (Vector2 v in enemy.Way)
@@ -98,6 +108,20 @@ namespace AlgoritmProjekt.Managers
                     spriteBatch.Draw(createRectangle(3, 3, graphicsDevice), new Vector2(v.X, v.Y), Color.Yellow);
                 }
             }
+
+            foreach (EnemySpawner spawner in spawners)
+            {
+                spawner.Draw(spriteBatch);
+            }
+
+            //foreach (Enemy enemy in enemies)
+            //{
+            //    foreach (Vector2 v in enemy.Way)
+            //    {
+            //        spriteBatch.Draw(createRectangle(3, 3, graphicsDevice), new Vector2(v.X, v.Y), Color.Yellow);
+            //    }
+            //}
+
             xhair.Draw(spriteBatch);
             spriteBatch.Draw(smallSquare, new Vector2(xhair.myPosition.X - 2.5f, xhair.myPosition.Y - 2.5f), Color.Red);
             spriteBatch.End();

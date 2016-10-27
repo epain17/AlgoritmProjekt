@@ -1,4 +1,5 @@
 ﻿using AlgoritmProjekt.Characters;
+using AlgoritmProjekt.Objects;
 using AlgoritmProjekt.Utility.json;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -28,7 +29,7 @@ namespace AlgoritmProjekt.Utility
             }
         }
 
-        static void JsonEnemySpawner(ref List<Enemy> enemies, ref List<JsonObject> jsonTiles, ref Texture2D texture, string filePath, int size, int hp)
+        static void JsonEnemySpawner(ref List<EnemySpawner> enemies, ref List<JsonObject> jsonTiles, ref Texture2D texture, string filePath, int size, int hp)
         {
             jsonTiles = JsonSerialization.ReadFromJsonFile<List<JsonObject>>(filePath);
 
@@ -39,7 +40,7 @@ namespace AlgoritmProjekt.Utility
                     int x, y;
                     x = jsonTiles[i].PositionX;
                     y = jsonTiles[i].PositionY;
-                    enemies.Add(new Enemy(texture, new Vector2(x, y), size, hp));
+                    enemies.Add(new EnemySpawner(texture, new Vector2(x, y), size, hp));
                 }
             }
         }
@@ -61,14 +62,14 @@ namespace AlgoritmProjekt.Utility
         }
 
         public static void LoadingLevel(string filePath, ref List<JsonObject> jsonTiles, ref List<Wall> walls, 
-            ref List<Enemy> enemies, ref Player player, ref Texture2D texture, ref Texture2D projectileTex, int size, int enemySpawnerHP)
+            ref List<EnemySpawner> spawners, ref Player player, ref Texture2D texture, ref Texture2D projectileTex, int size, int enemySpawnerHP)
         {
             if(Game1.LoadJsonLevel && filePath != null)
             {
                 Game1.LoadJsonLevel = false;
                 jsonTiles = null;
                 JsonPlayer(ref player, ref jsonTiles, ref texture, ref projectileTex, filePath, size);
-                JsonEnemySpawner(ref enemies, ref jsonTiles, ref texture, filePath, size, enemySpawnerHP);
+                JsonEnemySpawner(ref spawners, ref jsonTiles, ref texture, filePath, size, enemySpawnerHP);
                 JsonWalls(ref walls, ref jsonTiles, ref texture, filePath, size);
             }
         }
