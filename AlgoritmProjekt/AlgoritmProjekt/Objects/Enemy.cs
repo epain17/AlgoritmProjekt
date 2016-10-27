@@ -61,6 +61,7 @@ namespace AlgoritmProjekt.Characters
         {
             // if closest node reached
             FindPath(targetPoint, grid);
+            UpdatePos();
             position += velocity;
             if (HP <= 0)
                 alive = false;
@@ -68,32 +69,43 @@ namespace AlgoritmProjekt.Characters
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(enemyTexture, position, null, Color.Red, 0, origin, 1, SpriteEffects.None, 1);           
+            spriteBatch.Draw(enemyTexture, position, null, Color.Red, 0, origin, 1, SpriteEffects.None, 1);
         }
 
         public void FindPath(Point targetPoint, TileGrid grid)
         {
-            waypoints.Clear();
-            pathfinder = new Pathfinder(grid);
-            startPoint = myPoint;
-            endPoint = targetPoint;
-
-            newPath.Clear();
-            path = pathfinder.FindPath(startPoint, endPoint);
-            if (path != null)
+            if (Range(targetPoint) < 200)
             {
-                foreach (Vector2 point in path)
+
+                waypoints.Clear();
+                pathfinder = new Pathfinder(grid);
+                startPoint = myPoint;
+                endPoint = targetPoint;
+
+                newPath.Clear();
+                path = pathfinder.FindPath(startPoint, endPoint);
+                if (path != null)
                 {
-                    foreach (Vector2 pathpos in path)
+                    foreach (Vector2 point in path)
                     {
-                        pathPos = new Vector2(pathpos.X, pathpos.Y);
-                        newPath.Add(pathPos);
-                        waypoints.Enqueue(pathPos);
+                        foreach (Vector2 pathpos in path)
+                        {
+                            pathPos = new Vector2(pathpos.X, pathpos.Y);
+                            newPath.Add(pathPos);
+                            waypoints.Enqueue(pathPos);
+                        }
+                        break;
                     }
-                    break;
                 }
+
             }
 
+
+
+        }
+
+        private void UpdatePos()
+        {
             if (waypoints.Count > 0)
             {
                 if (DistanceToWaypoint < 1f)
@@ -108,6 +120,17 @@ namespace AlgoritmProjekt.Characters
                     velocity = Vector2.Multiply(direction, speed);
                 }
             }
+        }
+
+        protected void AddPlayerWaypointToQueue(Point targetPoint)
+        {
+            
+        }
+
+        protected float Range(Point point)
+        {
+            Vector2 range = new Vector2(point.X * 32, point.Y*32);
+            return Vector2.Distance(this.position, range);
         }
     }
 }

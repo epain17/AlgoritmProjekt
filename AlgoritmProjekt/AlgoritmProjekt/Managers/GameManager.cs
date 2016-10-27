@@ -29,6 +29,7 @@ namespace AlgoritmProjekt.Managers
         List<Enemy> enemies = new List<Enemy>();
         List<Wall> walls = new List<Wall>();
         Player player;
+        Enemy enemy;
 
         public GameManager(GameWindow Window, GraphicsDevice graphicsDevice)
         {
@@ -36,8 +37,13 @@ namespace AlgoritmProjekt.Managers
             square = createRectangle(size, size, graphicsDevice);
             smallSquare = createRectangle(5, 5, graphicsDevice);
             grid = new TileGrid(square, size, 100, 50);
+            player = new Player(square, new Vector2(64, 64), smallSquare, size);
+            enemy = new Enemy(square, new Vector2(126, 128), size, 10);
 
-            LoadLevel.LoadingLevel("SaveTest.json", ref jsonTiles, ref walls, ref enemies, ref player, ref square, ref smallSquare, size, spawnHP);
+            enemies.Add(enemy);
+
+
+            //LoadLevel.LoadingLevel("SaveTest.json", ref jsonTiles, ref walls, ref enemies, ref player, ref square, ref smallSquare, size, spawnHP);
             camera = new Camera(new Rectangle(0, 0, Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), new Rectangle(0, 0, Window.ClientBounds.Width * 4, Window.ClientBounds.Height * 4));
             xhair = new CrossHair(square, new Vector2(200, 200), size);
         }
@@ -85,13 +91,13 @@ namespace AlgoritmProjekt.Managers
                 wall.Draw(spriteBatch);
             }
 
-            //foreach (Enemy enemy in enemies)
-            //{
-            //    foreach (Vector2 v in enemy.Way)
-            //    {
-            //        spriteBatch.Draw(createRectangle(3, 3, graphicsDevice), new Vector2(v.X, v.Y), Color.Yellow);
-            //    }
-            //}
+            foreach (Enemy enemy in enemies)
+            {
+                foreach (Vector2 v in enemy.Way)
+                {
+                    spriteBatch.Draw(createRectangle(3, 3, graphicsDevice), new Vector2(v.X, v.Y), Color.Yellow);
+                }
+            }
             xhair.Draw(spriteBatch);
             spriteBatch.Draw(smallSquare, new Vector2(xhair.myPosition.X - 2.5f, xhair.myPosition.Y - 2.5f), Color.Red);
             spriteBatch.End();
