@@ -1,6 +1,7 @@
 ﻿using AlgoritmProjekt.Characters;
 using AlgoritmProjekt.Grid;
 using AlgoritmProjekt.Input;
+using AlgoritmProjekt.Objects;
 using AlgoritmProjekt.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -26,6 +27,7 @@ namespace AlgoritmProjekt.Managers
         int size = 32;
         int spawnHP = 50;
         List<JsonObject> jsonTiles = new List<JsonObject>();
+        List<EnemySpawner> spawners = new List<EnemySpawner>();
         List<Enemy> enemies = new List<Enemy>();
         List<Wall> walls = new List<Wall>();
         Player player;
@@ -37,7 +39,7 @@ namespace AlgoritmProjekt.Managers
             smallSquare = createRectangle(5, 5, graphicsDevice);
             grid = new TileGrid(square, size, 100, 50);
 
-            LoadLevel.LoadingLevel("SaveTest.json", ref jsonTiles, ref walls, ref enemies, ref player, ref square, ref smallSquare, size, spawnHP);
+            LoadLevel.LoadingLevel("SaveTest.json", ref jsonTiles, ref walls, ref spawners, ref player, ref square, ref smallSquare, size, spawnHP);
             camera = new Camera(new Rectangle(0, 0, Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), new Rectangle(0, 0, Window.ClientBounds.Width * 4, Window.ClientBounds.Height * 4));
             xhair = new CrossHair(square, new Vector2(200, 200), size);
         }
@@ -63,6 +65,10 @@ namespace AlgoritmProjekt.Managers
                 if (!enemies[i].Alive)
                     enemies.RemoveAt(i);
             }
+            foreach (EnemySpawner spawner in spawners)
+            {
+                spawner.Update(ref enemies);
+            }
             HandleCamera();
             xhair.Update(camera.CameraPos);
         }
@@ -83,6 +89,11 @@ namespace AlgoritmProjekt.Managers
             foreach (Wall wall in walls)
             {
                 wall.Draw(spriteBatch);
+            }
+
+            foreach (EnemySpawner spawner in spawners)
+            {
+                spawner.Draw(spriteBatch);
             }
 
             //foreach (Enemy enemy in enemies)
