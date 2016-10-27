@@ -31,12 +31,12 @@ namespace AlgoritmProjekt
             set { position = value; }
         }
 
-        public Rectangle HitBox
+        public Rectangle myHitBox
         {
             get { return hitBox = new Rectangle((int)position.X, (int)position.Y, size, size); }
         }
 
-        public virtual bool Occupied
+        public virtual bool iamOccupied
         {
             get { return occupied; }
             set { occupied = value; }
@@ -47,15 +47,24 @@ namespace AlgoritmProjekt
             get { return new Point((int)position.X / size, (int)position.Y / size); }
         }
 
-        public int HP
+        public int myHP
         {
             get { return hp; }
             set { hp = value; }
         }
 
-        public bool Alive
+        public bool iamAlive
         {
             get { return alive; }
+        }
+
+        public virtual bool CheckMyCollision(Tile target)
+        {
+            if (Vector2.Distance(myPosition, target.myPosition) < size)
+            {
+                return true;
+            }
+            return false;
         }
 
         public Tile(Texture2D texture, Vector2 position, int size)
@@ -101,41 +110,41 @@ namespace AlgoritmProjekt
 
         public virtual int Collision(Wall w)
         {
-            Rectangle top = w.HitBox;
+            Rectangle top = w.myHitBox;
             top.Height = 10;
 
-            Rectangle bottom = w.HitBox;
+            Rectangle bottom = w.myHitBox;
             bottom.Height = 5;
-            bottom.Y = bottom.Y + w.HitBox.Height - 5;
+            bottom.Y = bottom.Y + w.myHitBox.Height - 5;
 
-            Rectangle left = w.HitBox;
+            Rectangle left = w.myHitBox;
             left.Width = 2;
-            left.Y = w.HitBox.Y + 10;
-            left.Height = w.HitBox.Height - 20;
+            left.Y = w.myHitBox.Y + 10;
+            left.Height = w.myHitBox.Height - 20;
 
-            Rectangle right = w.HitBox;
+            Rectangle right = w.myHitBox;
             right.X = right.X + right.Width - 2;
             right.Width = 2;
-            right.Y = w.HitBox.Y + 10;
-            right.Height = w.HitBox.Height - 20;
+            right.Y = w.myHitBox.Y + 10;
+            right.Height = w.myHitBox.Height - 20;
 
 
 
-            if (HitBox.Intersects(left))
+            if (myHitBox.Intersects(left))
             {
                 return 3;
             }
 
-            else if (HitBox.Intersects(right))
+            else if (myHitBox.Intersects(right))
             {
                 return 4;
             }
-            if (HitBox.Intersects(top))
+            if (myHitBox.Intersects(top))
             {
                 return 1;
             }
 
-            if (HitBox.Intersects(bottom))
+            if (myHitBox.Intersects(bottom))
             {
                 return 2;
             }

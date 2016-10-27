@@ -63,7 +63,7 @@ namespace AlgoritmProjekt.Grid
                 {
                     if(w.myPoint == t.myPoint)
                     {
-                        t.Occupied = true;
+                        t.iamOccupied = true;
                     }
                 }
             }
@@ -75,7 +75,7 @@ namespace AlgoritmProjekt.Grid
             {
                 for (int j = cellY; j < height;)
                 {
-                    if (tileGrid[i, j].Occupied == false && tileGrid[i, j] != null)
+                    if (tileGrid[i, j].iamOccupied == false && tileGrid[i, j] != null)
                     {
                         return 0;
                     }

@@ -19,6 +19,7 @@ namespace AlgoritmProjekt.Objects
 
         float spawnTimer = 0;
         float timeLimit = 500;
+        int enemyHP = 6;
 
         public EnemySpawner(Texture2D texture, Vector2 position, int size, int hp) 
             : base(texture, position, size)
@@ -31,7 +32,7 @@ namespace AlgoritmProjekt.Objects
 
         public void Update(ref List<Enemy> enemies)
         {
-            if (HP <= 0)
+            if (myHP <= 0)
                 alive = false;
             Random rand = new Random();
             if(spawnTimer >= timeLimit + rand.Next(- 100, 200))
@@ -49,7 +50,7 @@ namespace AlgoritmProjekt.Objects
 
         void SpawnEnemies(ref List<Enemy> enemies)
         {
-            enemies.Add(new Enemy(texture, position, size, 6));
+            enemies.Add(new Enemy(texture, position, size, enemyHP));
         }
     }
 }

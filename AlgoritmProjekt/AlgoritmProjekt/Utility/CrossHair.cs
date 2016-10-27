@@ -12,9 +12,10 @@ namespace AlgoritmProjekt.Utility
     class CrossHair
     {
         Texture2D texture;
-        Vector2 position;
+        Vector2 position, directionToMouse;
         int size;
         float rotate;
+        float distance;
     
         public Vector2 myPosition
         {
@@ -27,11 +28,15 @@ namespace AlgoritmProjekt.Utility
             this.position = position;
             this.size = size;
             rotate = (float)Math.PI / 4;
+            distance = size * 3;
         }
 
-        public void Update(Vector2 camera)
+        public void Update(Vector2 camera, Vector2 playerPos)
         {
-            position = new Vector2(KeyMouseReader.mouseState.X - camera.X, KeyMouseReader.mouseState.Y - camera.Y);
+            directionToMouse = new Vector2(KeyMouseReader.mouseState.X - camera.X - playerPos.X, KeyMouseReader.mouseState.Y - camera.Y - playerPos.Y);
+            directionToMouse.Normalize();            
+
+            position = new Vector2(playerPos.X + (directionToMouse.X * distance), playerPos.Y + (directionToMouse.Y * distance));
         }
 
         public void Draw(SpriteBatch spriteBatch)

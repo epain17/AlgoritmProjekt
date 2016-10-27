@@ -52,7 +52,7 @@ namespace AlgoritmProjekt.Characters
             FindPath(targetPoint, grid);
             UpdatePos();
             position += velocity;
-            if (HP <= 0)
+            if (myHP <= 0)
                 alive = false;
         }
 

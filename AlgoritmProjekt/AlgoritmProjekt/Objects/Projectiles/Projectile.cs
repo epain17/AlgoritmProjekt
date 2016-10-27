@@ -9,10 +9,8 @@ using System.Threading.Tasks;
 
 namespace AlgoritmProjekt.Objects.Projectiles
 {
-    class Projectile
+    class Projectile : Tile
     {
-        Texture2D texture;
-        Vector2 position;
         Vector2 velocity;
         float speed;
         float lifeSpan, lifeTime;
@@ -30,10 +28,12 @@ namespace AlgoritmProjekt.Objects.Projectiles
             get { return position; }
         }
 
-        public Projectile(Texture2D texture, Vector2 position, Vector2 targetVect)
+        public Projectile(Texture2D texture, Vector2 position, int size, Vector2 targetVect)
+            :base(texture, position, size)
         {
             this.texture = texture;
             this.position = position;
+            this.size = size;
             lifeTime = 200;
             speed = 10f;
             Shoot(targetVect);
@@ -45,7 +45,7 @@ namespace AlgoritmProjekt.Objects.Projectiles
             LifeCycle();
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, position, Color.White);
         }
@@ -56,13 +56,12 @@ namespace AlgoritmProjekt.Objects.Projectiles
             velocity.Normalize();
         }
 
-        public bool Hit(Enemy enemy)
+        public override bool CheckMyCollision(Tile target)
         {
-            if(Vector2.Distance(enemy.myPosition, position) < 1f)
+            if(Vector2.Distance(target.myPosition, position) < 1f)
             {
                 InstaKillMe();
                 return true;
-
             }
             return false;
         }

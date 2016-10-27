@@ -19,23 +19,20 @@ namespace AlgoritmProjekt.Characters
             ShotGun,
             MachineGun,
         }
-        public WeaponType weaponState = WeaponType.Pistol;
+        public WeaponType weaponState = WeaponType.ShotGun;
 
         List<Projectile> projectiles = new List<Projectile>();
         public float RecoilPower;
         Texture2D projeTexture;
         float shotInterval = 0;
         bool shot = false;
-
-
         Vector2 velocity;
 
-
-        public bool CheckHit(Tile enemy)
+        public override bool CheckMyCollision(Tile enemy)
         {
             for (int i = 0; i < projectiles.Count; i++)
             {
-                if(Vector2.Distance(projectiles[i].Position, enemy.myPosition) < (size))
+                if (Vector2.Distance(projectiles[i].Position, enemy.myPosition) < (size))
                 {
                     projectiles[i].InstaKillMe();
                     return true;
@@ -71,9 +68,9 @@ namespace AlgoritmProjekt.Characters
 
         public void Update(Vector2 target)
         {
+            firingTimeFrame();
             HandlePlayerInteractions(Keys.S, Keys.A, Keys.D, Keys.W, Keys.Space, target);
             HandleWeaponStates();
-            firingTimeFrame();
             HandleProjectiles();
             position += velocity;
         }
@@ -90,11 +87,11 @@ namespace AlgoritmProjekt.Characters
         private void firingTimeFrame()
         {
             float timer = 0;
-            while (ShotsFired)
+            while (shot)
             {
                 timer += 0.1f;
                 if (timer > 100)
-                    ShotsFired = false;
+                    shot = false;
             }
         }
 
@@ -157,11 +154,11 @@ namespace AlgoritmProjekt.Characters
                     {
                         for (int i = 0; i < 5; i++)
                         {
-                            projectiles.Add(new Projectile(projeTexture, position, new Vector2(target.X + rand.Next(-25, 25), target.Y + rand.Next(-25, 25))));
+                            projectiles.Add(new Projectile(projeTexture, position, 3, new Vector2(target.X + rand.Next(-25, 25), target.Y + rand.Next(-25, 25))));
                         }
                     }
                     else
-                        projectiles.Add(new Projectile(projeTexture, position, new Vector2(target.X + rand.Next(-15, 15), target.Y + rand.Next(-15, 15))));
+                        projectiles.Add(new Projectile(projeTexture, position, 3, new Vector2(target.X + rand.Next(-15, 15), target.Y + rand.Next(-15, 15))));
                 }
             }
         }
@@ -172,15 +169,15 @@ namespace AlgoritmProjekt.Characters
             {
                 case WeaponType.Pistol:
                     shotInterval += 0.5f;
-                    RecoilPower = 2.5f;
+                    RecoilPower = 5f;
                     break;
                 case WeaponType.ShotGun:
                     shotInterval += 0.25f;
-                    RecoilPower = 10;
+                    RecoilPower = 20;
                     break;
                 case WeaponType.MachineGun:
                     shotInterval += 2;
-                    RecoilPower = 5;
+                    RecoilPower = 10;
                     break;
             }
         }
