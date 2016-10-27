@@ -25,6 +25,8 @@ namespace AlgoritmProjekt.Characters
         List<Vector2> newPath = new List<Vector2>();
         List<Vector2> path = new List<Vector2>();
 
+        protected int rangeLimit = 300;
+
         //kan raderas när pathfindingen fungerar bra 
         public Queue<Vector2> Way
         {
@@ -74,7 +76,7 @@ namespace AlgoritmProjekt.Characters
 
         public void FindPath(Point targetPoint, TileGrid grid)
         {
-            if (Range(targetPoint) < 200)
+            if (Range(targetPoint) < rangeLimit)
             {
 
                 waypoints.Clear();
@@ -129,7 +131,7 @@ namespace AlgoritmProjekt.Characters
 
         protected float Range(Point point)
         {
-            Vector2 range = new Vector2(point.X * 32, point.Y*32);
+            Vector2 range = new Vector2(point.X * size, point.Y * size);
             return Vector2.Distance(this.position, range);
         }
     }

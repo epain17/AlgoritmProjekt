@@ -25,29 +25,29 @@ namespace AlgoritmProjekt.Managers
         Texture2D square, smallSquare;
 
         int size = 32;
-        int spawnHP = 50;
+        int spawnHP = 150;
         List<JsonObject> jsonTiles = new List<JsonObject>();
         List<EnemySpawner> spawners = new List<EnemySpawner>();
         List<Enemy> enemies = new List<Enemy>();
         List<Wall> walls = new List<Wall>();
         Player player;
-        Enemy enemy;
+        //Enemy enemy;
 
         public GameManager(GameWindow Window, GraphicsDevice graphicsDevice)
         {
             this.graphicsDevice = graphicsDevice;
             square = createRectangle(size, size, graphicsDevice);
-            smallSquare = createRectangle(5, 5, graphicsDevice);
+            smallSquare = createRectangle(3, 3, graphicsDevice);
             grid = new TileGrid(square, size, 100, 50);
-            player = new Player(square, new Vector2(64, 64), smallSquare, size);
-            enemy = new Enemy(square, new Vector2(126, 128), size, 10);
+            //player = new Player(square, new Vector2(64, 64), smallSquare, size);
+            //enemy = new Enemy(square, new Vector2(126, 128), size, 10);
 
 
-            enemies.Add(enemy);
+            //enemies.Add(enemy);
 
 
 
-           // LoadLevel.LoadingLevel("SaveTest.json", ref jsonTiles, ref walls, ref spawners, ref player, ref square, ref smallSquare, size, spawnHP);
+            LoadLevel.LoadingLevel("SaveTest.json", ref jsonTiles, ref walls, ref spawners, ref player, ref square, ref smallSquare, size, spawnHP);
 
             camera = new Camera(new Rectangle(0, 0, Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), new Rectangle(0, 0, Window.ClientBounds.Width * 4, Window.ClientBounds.Height * 4));
             xhair = new CrossHair(square, new Vector2(200, 200), size);
@@ -107,13 +107,13 @@ namespace AlgoritmProjekt.Managers
             }
 
 
-            foreach (Enemy enemy in enemies)
-            {
-                foreach (Vector2 v in enemy.Way)
-                {
-                    spriteBatch.Draw(createRectangle(3, 3, graphicsDevice), new Vector2(v.X, v.Y), Color.Yellow);
-                }
-            }
+            //foreach (Enemy enemy in enemies)
+            //{
+            //    foreach (Vector2 v in enemy.Way)
+            //    {
+            //        spriteBatch.Draw(createRectangle(3, 3, graphicsDevice), new Vector2(v.X, v.Y), Color.Yellow);
+            //    }
+            //}
 
             foreach (EnemySpawner spawner in spawners)
             {
@@ -129,7 +129,7 @@ namespace AlgoritmProjekt.Managers
             //}
 
             xhair.Draw(spriteBatch);
-            spriteBatch.Draw(smallSquare, new Vector2(xhair.myPosition.X - 2.5f, xhair.myPosition.Y - 2.5f), Color.Red);
+            spriteBatch.Draw(smallSquare, new Vector2(xhair.myPosition.X - 1.5f, xhair.myPosition.Y - 1.5f), Color.Red);
             spriteBatch.End();
         }
 
@@ -141,7 +141,7 @@ namespace AlgoritmProjekt.Managers
                 recoil = player.myPosition - new Vector2(xhair.myPosition.X, xhair.myPosition.Y);
                 recoil.Normalize();
 
-                player.myPosition += recoil * player.RecoilPower;
+                //player.myPosition += recoil * player.RecoilPower;
 
                 cameraRecoil += recoil * (player.RecoilPower * 3);
                 camera.Update(cameraRecoil);

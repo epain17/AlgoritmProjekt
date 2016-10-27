@@ -33,7 +33,7 @@ namespace AlgoritmProjekt.Objects
             if(spawnTimer >= timeLimit + rand.Next(- 100, 200))
             {
                 spawnTimer = 0;
-                //SpawnEnemies(ref enemies);
+                SpawnEnemies(ref enemies);
             }
             spawnTimer++;
         }

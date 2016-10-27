@@ -14,6 +14,7 @@ namespace AlgoritmProjekt.Utility
         Texture2D texture;
         Vector2 position;
         int size;
+        float rotate;
     
         public Vector2 myPosition
         {
@@ -25,6 +26,7 @@ namespace AlgoritmProjekt.Utility
             this.texture = texture;
             this.position = position;
             this.size = size;
+            rotate = (float)Math.PI / 4;
         }
 
         public void Update(Vector2 camera)
@@ -34,7 +36,7 @@ namespace AlgoritmProjekt.Utility
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, position, null, new Color(0.5f, 0.5f, 0.5f), 0, new Vector2(size / 2, size / 2), 1, SpriteEffects.None, 0);
+            spriteBatch.Draw(texture, position, null, new Color(0.5f, 0.5f, 0.5f), rotate, new Vector2(size / 2, size / 2), 0.75f, SpriteEffects.None, 0);
         }
 
     }
