@@ -77,10 +77,10 @@ namespace AlgoritmProjekt
                         new Point(x, y + 1),
                         new Point(x -1, y),
                         new Point(x +1, y),
-                        //new Point(x +1, y -1),
-                        //new Point(x +1, y +1),
-                        //new Point(x -1, y -1),
-                        //new Point(x -1, y +1),
+                        new Point(x +1, y -1),
+                        new Point(x +1, y +1),
+                        new Point(x -1, y -1),
+                        new Point(x -1, y +1),
                     };
 
                     for (int i = 0; i < neighbors.Length; i++)
