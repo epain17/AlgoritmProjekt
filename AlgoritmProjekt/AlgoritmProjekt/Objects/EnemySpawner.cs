@@ -9,21 +9,15 @@ using System.Threading.Tasks;
 
 namespace AlgoritmProjekt.Objects
 {
-    class EnemySpawner : Tile
+    class EnemySpawner : Enemy
     {
         int hp;
-        bool alive = true;
 
-        float spawnTimer = 500;
-
-        public int HP
-        {
-            get { return hp; }
-            set { hp = value; }
-        }
+        float spawnTimer = 0;
+        float timeLimit = 500;
 
         public EnemySpawner(Texture2D texture, Vector2 position, int size, int hp) 
-            : base(texture, position, size)
+            : base(texture, position, size, hp)
         {
             this.texture = texture;
             this.position = position;
@@ -35,10 +29,11 @@ namespace AlgoritmProjekt.Objects
         {
             if (HP <= 0)
                 alive = false;
-            if(spawnTimer >= 500)
+            Random rand = new Random();
+            if(spawnTimer >= timeLimit + rand.Next(- 100, 200))
             {
                 spawnTimer = 0;
-                SpawnEnemies(ref enemies);
+                //SpawnEnemies(ref enemies);
             }
             spawnTimer++;
         }

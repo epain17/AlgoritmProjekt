@@ -15,7 +15,7 @@ namespace AlgoritmProjekt.Characters
         Texture2D enemyTexture;
         float speed;
         int hp;
-        bool alive = true;
+        protected bool alive = true;
 
         Pathfinder pathfinder;
         public Vector2 pathPos;

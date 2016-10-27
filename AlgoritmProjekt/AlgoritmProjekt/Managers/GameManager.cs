@@ -56,14 +56,14 @@ namespace AlgoritmProjekt.Managers
         public void Update(GameTime gameTime)
         {
             player.Update(xhair.myPosition);
-            foreach (Wall w in grid.GetWalls)
-            {
-                int n = player.Collision(w);
-                if (n > 0)
-                {
-                    player.HandelCollision(w, n);
-                }
-            }
+            //foreach (Wall w in grid.GetWalls)
+            //{
+            //    int n = player.Collision(w);
+            //    if (n > 0)
+            //    {
+            //        player.HandelCollision(w, n);
+            //    }
+            //}
             foreach (Enemy enemy in enemies)
             {
                 enemy.Update(player.myPoint, grid);
@@ -74,9 +74,15 @@ namespace AlgoritmProjekt.Managers
                 if (!enemies[i].Alive)
                     enemies.RemoveAt(i);
             }
+            for (int i = spawners.Count - 1; i >= 0; --i)
+            {
+                if (!spawners[i].Alive)
+                    spawners.RemoveAt(i);
+            }
             foreach (EnemySpawner spawner in spawners)
             {
                 spawner.Update(ref enemies);
+                player.CheckHit(spawner);
             }
             HandleCamera();
             xhair.Update(camera.CameraPos);
