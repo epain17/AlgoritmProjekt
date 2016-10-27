@@ -74,7 +74,7 @@ namespace AlgoritmProjekt.Characters
 
         public void FindPath(Point targetPoint, TileGrid grid)
         {
-            if (Range(targetPoint) < 200)
+            if (Range(targetPoint) < 200 && waypoints.Count() == 0)
             {
 
                 waypoints.Clear();
@@ -108,7 +108,7 @@ namespace AlgoritmProjekt.Characters
         {
             if (waypoints.Count > 0)
             {
-                if (DistanceToWaypoint < 1f)
+                if (DistanceToWaypoint < 1.5f)
                 {
                     position = waypoints.Peek();
                     waypoints.Dequeue();
