@@ -92,9 +92,9 @@ namespace AlgoritmProjekt.Managers
                 wall.Draw(spriteBatch);
             }
 
-            foreach (Projectile projectile in projectiles)
+            foreach (Projectile p in projectiles)
             {
-                projectile.Draw(spriteBatch);
+                p.Draw(spriteBatch);
             }
 
             foreach (EnemySpawner spawner in spawners)
@@ -122,9 +122,9 @@ namespace AlgoritmProjekt.Managers
                 spawner.Update(ref enemies);
             }
 
-            foreach (Projectile projectile in projectiles)
+            for (int i = 0; i < projectiles.Count; i++)
             {
-                projectile.Update();
+                projectiles[i].Update();
             }
         }
 
@@ -162,7 +162,7 @@ namespace AlgoritmProjekt.Managers
             }
             for (int i = projectiles.Count - 1; i >= 0; --i)
             {
-                if (projectiles[i].DeadShot)
+                if (!projectiles[i].iamAlive)
                     projectiles.RemoveAt(i);
             }
 
@@ -189,26 +189,31 @@ namespace AlgoritmProjekt.Managers
         {
             foreach (Enemy enemy in enemies)
             {
-                if (enemy != null)
+                foreach (Projectile shot in projectiles)
                 {
-                    foreach (Projectile shot in projectiles)
+                    if (shot.CheckMyCollision(enemy))
                     {
-                        if (shot.CheckMyCollision(enemy))
-                        {
-                            enemy.myHP--;
-                        }
+                        enemy.myHP--;
                     }
                 }
             }
+
             foreach (Wall wall in walls)
             {
                 foreach (Projectile p in projectiles)
                 {
-                    if (wall.CheckMyCollision(p))
-                        p.DeadShot = true;
+                    p.CheckMyCollision(wall);
                 }
             }
 
+            foreach (EnemySpawner spawner in spawners)
+            {
+                foreach (Projectile p in projectiles)
+                {
+                    if (p.CheckMyCollision(spawner))
+                        spawner.myHP--;
+                }
+            }
         }
 
         Texture2D createRectangle(int width, int height, GraphicsDevice graphicsDevice)

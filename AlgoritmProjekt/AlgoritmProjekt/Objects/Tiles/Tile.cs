@@ -38,7 +38,7 @@ namespace AlgoritmProjekt
 
         public Rectangle myHitBox
         {
-            get { return hitBox = new Rectangle((int)position.X, (int)position.Y, size, size); }
+            get { return hitBox = new Rectangle((int)position.X - (size / 2), (int)position.Y - (size / 2), size, size); }
         }
 
         public virtual bool iamOccupied
@@ -65,7 +65,7 @@ namespace AlgoritmProjekt
 
         public virtual bool CheckMyCollision(Tile target)
         {
-            if (Vector2.Distance(myPosition, target.myPosition) < size)
+            if (Vector2.Distance(myPosition, target.myPosition) < size + target.mySize)
             {
                 return true;
             }

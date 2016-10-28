@@ -56,7 +56,7 @@ namespace AlgoritmProjekt.Utility
                     int x, y;
                     x = jsonTiles[i].PositionX;
                     y = jsonTiles[i].PositionY;
-                    player = (new Player(texture, new Vector2(x, y), projectileTex, size));
+                    player = (new Player(texture, new Vector2(x, y), size));
                 }
             }
         }

@@ -15,27 +15,30 @@ namespace AlgoritmProjekt.Objects.Projectiles
         float speed;
         float lifeSpan, lifeTime;
 
-        bool killMe = false;
-
-        public bool DeadShot
-        {
-            get { return killMe; }
-            set { killMe = value; }
-        }
-
         public Vector2 Position
         {
             get { return position; }
         }
 
+        public override bool CheckMyCollision(Tile target)
+        {
+            if (target.myHitBox.Contains(myPosition))
+            {
+                InstaKillMe();
+                return true;
+            }
+            return false;
+        }
+
         public Projectile(Texture2D texture, Vector2 position, int size, Vector2 targetVect)
-            :base(texture, position, size)
+            : base(texture, position, size)
         {
             this.texture = texture;
             this.position = position;
+            this.alive = true;
             this.size = size;
             lifeTime = 200;
-            speed = 10f;
+            speed = 6;
             Shoot(targetVect);
         }
 
@@ -56,28 +59,18 @@ namespace AlgoritmProjekt.Objects.Projectiles
             velocity.Normalize();
         }
 
-        public override bool CheckMyCollision(Tile target)
-        {
-            if(Vector2.Distance(target.myPosition, position) < mySize + target.mySize)
-            {
-                InstaKillMe();
-                return true;
-            }
-            return false;
-        }
-
         void LifeCycle()
         {
             ++lifeSpan;
             if (lifeSpan > lifeTime)
             {
-                killMe = true;
+                alive = false;
             }
         }
 
         public void InstaKillMe()
         {
-            killMe = true;
+            lifeSpan = 1000;
         }
     }
 }
