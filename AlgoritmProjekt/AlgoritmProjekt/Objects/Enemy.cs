@@ -13,7 +13,7 @@ namespace AlgoritmProjekt.Characters
     {
         Texture2D enemyTexture;
         float speed;
-        
+        float startHp;
         Pathfinder pathfinder;
         public Vector2 pathPos;
         Point startPoint, endPoint;
@@ -42,6 +42,7 @@ namespace AlgoritmProjekt.Characters
             this.position = position;
             this.size = size;
             this.hp = 4;
+            startHp = hp;
             speed = 3.2f;
         }
 
@@ -57,7 +58,9 @@ namespace AlgoritmProjekt.Characters
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(enemyTexture, position, null, Color.Red, 0, origin, 1, SpriteEffects.None, 1);
+            float healthPercent = hp / startHp;
+            Color color = new Color(0.25f / healthPercent, 1 * healthPercent, 1f * healthPercent);
+            spriteBatch.Draw(enemyTexture, position, null, color, 0, origin, 1, SpriteEffects.None, 1);
         }
 
         protected void FindPath(Point targetPoint, TileGrid grid)

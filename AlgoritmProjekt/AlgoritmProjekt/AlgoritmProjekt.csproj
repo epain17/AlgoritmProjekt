@@ -40,6 +40,8 @@
   <ItemGroup>
     <Compile Include="Managers\GameManager.cs" />
     <Compile Include="Managers\Menu.cs" />
+    <Compile Include="Managers\ParticleEngine\Emitter.cs" />
+    <Compile Include="Managers\ParticleEngine\Particle.cs" />
     <Compile Include="Objects\EnemySpawner.cs" />
     <Compile Include="Utility\Camera.cs" />
     <Compile Include="Objects\Enemy.cs" />

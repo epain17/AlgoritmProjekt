@@ -1,6 +1,7 @@
 ﻿using AlgoritmProjekt.Characters;
 using AlgoritmProjekt.Grid;
 using AlgoritmProjekt.Input;
+using AlgoritmProjekt.Managers.ParticleEngine;
 using AlgoritmProjekt.Objects;
 using AlgoritmProjekt.Objects.Projectiles;
 using AlgoritmProjekt.Utility;
@@ -35,6 +36,8 @@ namespace AlgoritmProjekt.Managers
         SpriteFont font;
         int score = 0;
 
+        List<Emitter> emitters = new List<Emitter>();
+
         public GameManager(GameWindow Window, GraphicsDevice graphicsDevice, SpriteFont font)
         {
             camera = new Camera(new Rectangle(0, 0, Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), new Rectangle(0, 0, Window.ClientBounds.Width * 4, Window.ClientBounds.Height * 4));
@@ -55,10 +58,10 @@ namespace AlgoritmProjekt.Managers
                 score -= 1;
             xhair.Update(camera.CameraPos, player.myPosition);
             WhenPlayerShoots();
-            RemoveDeadObjects();
             UpdateObjects((float)gameTime.ElapsedGameTime.TotalSeconds);
+            RemoveDeadObjects();
             player.Update(xhair.myPosition);
-            if (score > 2000)
+            if (score > 500)
                 player.weaponState = Player.WeaponType.ShotGun;
             HandleCamera();
             Collisions();
@@ -97,6 +100,11 @@ namespace AlgoritmProjekt.Managers
                 wall.Draw(spriteBatch);
             }
 
+            foreach (Emitter emitter in emitters)
+            {
+                emitter.Draw(spriteBatch);
+            }
+
             foreach (Projectile p in projectiles)
             {
                 p.Draw(spriteBatch);
@@ -121,6 +129,11 @@ namespace AlgoritmProjekt.Managers
             foreach (Enemy enemy in enemies)
             {
                 enemy.Update(player.myPoint, grid);
+            }
+
+            foreach (Emitter emitter in emitters)
+            {
+                emitter.Update(time);
             }
 
             for (int i = 0; i < spawners.Count; i++)
@@ -162,10 +175,12 @@ namespace AlgoritmProjekt.Managers
             {
                 if (!enemies[i].iamAlive)
                 {
+                    emitters.Add(new Emitter(square, enemies[i].myPosition));
                     enemies.RemoveAt(i);
-                    score += 150;
+                    score += 25;
                 }
             }
+
             for (int i = spawners.Count - 1; i >= 0; --i)
             {
                 if (!spawners[i].iamAlive)
@@ -174,12 +189,18 @@ namespace AlgoritmProjekt.Managers
                     score += 275;
                 }
             }
+
             for (int i = projectiles.Count - 1; i >= 0; --i)
             {
                 if (!projectiles[i].iamAlive)
                     projectiles.RemoveAt(i);
             }
 
+            for (int i = emitters.Count - 1; i >= 0; i--)
+            {
+                if (!emitters[i].IsAlive)
+                    emitters.RemoveAt(i);
+            }
         }
 
         private void HandleCamera()
