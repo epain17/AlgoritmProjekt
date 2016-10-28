@@ -11,17 +11,11 @@ namespace AlgoritmProjekt.Objects
 {
     class EnemySpawner : Enemy
     {
-        //public int CountEnemies
-        //{
-        //    get { return count; }
-        //    set { count = value; }
-        //}
-
         float spawnTimer = 0;
-        float timeLimit = 200;
+        float timeLimit = 5;
         int enemyHP = 4;
 
-        public EnemySpawner(Texture2D texture, Vector2 position, int size, int hp) 
+        public EnemySpawner(Texture2D texture, Vector2 position, int size, int hp)
             : base(texture, position, size, hp)
         {
             this.texture = texture;
@@ -30,18 +24,20 @@ namespace AlgoritmProjekt.Objects
             this.hp = hp;
         }
 
-        public void Update(ref List<Enemy> enemies, Vector2 player)
+        public void Update(ref List<Enemy> enemies, Vector2 player, float time)
         {
             if (myHP <= 0)
                 alive = false;
-            Random rand = new Random();
-            if(Vector2.Distance(player, myPosition) < 300)
-            if(spawnTimer >= timeLimit + rand.Next(-100, 200))
+            if (Vector2.Distance(player, myPosition) < 300)
             {
-                spawnTimer = 0;
-                SpawnEnemies(ref enemies);
+                Random rand = new Random();
+                spawnTimer += time;
+                if (spawnTimer >= timeLimit + rand.Next(-2, 5))
+                {
+                    spawnTimer = 0;
+                    SpawnEnemies(ref enemies);
+                }
             }
-            spawnTimer++;
         }
 
         public override void Draw(SpriteBatch spriteBatch)

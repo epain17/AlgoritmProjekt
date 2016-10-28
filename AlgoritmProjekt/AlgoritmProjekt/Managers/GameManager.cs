@@ -33,21 +33,18 @@ namespace AlgoritmProjekt.Managers
         List<Enemy> enemies = new List<Enemy>();
         List<Wall> walls = new List<Wall>();
         Player player;
-        //Enemy enemy;
         SpriteFont font;
-        int scoreInt = 0;
-        string score;
+        int score = 0;
 
         public GameManager(GameWindow Window, GraphicsDevice graphicsDevice, SpriteFont font)
         {
             camera = new Camera(new Rectangle(0, 0, Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), new Rectangle(0, 0, Window.ClientBounds.Width * 4, Window.ClientBounds.Height * 4));
             this.graphicsDevice = graphicsDevice;
             this.font = font;
-            score = "Score: " + scoreInt;
             square = createRectangle(size, size, graphicsDevice);
             smallSquare = createRectangle(3, 3, graphicsDevice);
             grid = new TileGrid(square, size, 100, 50);
-            xhair = new CrossHair(square, new Vector2(200, 200), size);
+            xhair = new CrossHair(square, smallSquare, new Vector2(200, 200), size);
 
             LoadLevel.LoadingLevel("SaveTest.json", ref jsonTiles, ref walls, ref spawners, ref player, ref square, ref smallSquare, size, spawnerHP);
         }
@@ -57,7 +54,7 @@ namespace AlgoritmProjekt.Managers
             xhair.Update(camera.CameraPos, player.myPosition);
             WhenPlayerShoots();
             RemoveDeadObjects();
-            UpdateObjects();
+            UpdateObjects((float)gameTime.ElapsedGameTime.TotalSeconds);
             player.Update(xhair.myPosition);
             HandleCamera();
             Collisions();
@@ -69,7 +66,7 @@ namespace AlgoritmProjekt.Managers
             grid.Draw(spriteBatch);
             DrawAllObjects(spriteBatch);
             xhair.Draw(spriteBatch);
-            spriteBatch.Draw(smallSquare, new Vector2(xhair.myPosition.X - 1.5f, xhair.myPosition.Y - 1.5f), Color.Red);
+            //spriteBatch.Draw(smallSquare, new Vector2(xhair.myPosition.X - 1.5f, xhair.myPosition.Y - 1.5f), Color.Red);
             //foreach (Enemy enemy in enemies)
             //{
             //    foreach (Vector2 v in enemy.Way)
@@ -85,7 +82,7 @@ namespace AlgoritmProjekt.Managers
             //        spriteBatch.Draw(createRectangle(3, 3, graphicsDevice), new Vector2(v.X, v.Y), Color.Yellow);
             //    }
             //}
-            spriteBatch.DrawString(font, score, new Vector2(10 - camera.CameraPos.X, -camera.CameraPos.Y), Color.LimeGreen);
+            spriteBatch.DrawString(font, "Score: " + score, new Vector2(10 - camera.CameraPos.X, -camera.CameraPos.Y), Color.LimeGreen);
             spriteBatch.End();
         }
 
@@ -115,15 +112,16 @@ namespace AlgoritmProjekt.Managers
             //spriteBatch.Draw(createRectangle(3, 3, graphicsDevice), player.myPosition, Color.Red);
         }
 
-        private void UpdateObjects()
+        private void UpdateObjects(float time)
         {
             foreach (Enemy enemy in enemies)
             {
                 enemy.Update(player.myPoint, grid);
             }
-            foreach (EnemySpawner spawner in spawners)
+            
+            for (int i = 0; i < spawners.Count; i++)
             {
-                spawner.Update(ref enemies, player.myPosition);
+                spawners[i].Update(ref enemies, player.myPosition, time);
             }
 
             for (int i = 0; i < projectiles.Count; i++)
@@ -161,12 +159,16 @@ namespace AlgoritmProjekt.Managers
                 if (!enemies[i].iamAlive)
                 {
                     enemies.RemoveAt(i);
+                    score += 150;
                 }
             }
             for (int i = spawners.Count - 1; i >= 0; --i)
             {
                 if (!spawners[i].iamAlive)
+                {
                     spawners.RemoveAt(i);
+                    score += 275;
+                }
             }
             for (int i = projectiles.Count - 1; i >= 0; --i)
             {

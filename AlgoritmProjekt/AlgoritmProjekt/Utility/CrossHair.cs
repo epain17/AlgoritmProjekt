@@ -9,22 +9,20 @@ using System.Threading.Tasks;
 
 namespace AlgoritmProjekt.Utility
 {
-    class CrossHair
+    class CrossHair : Tile
     {
-        Texture2D texture;
-        Vector2 position, directionToMouse;
-        int size;
+        Texture2D smallTex;
+        Vector2 directionToMouse;
         float rotate;
         float distance;
     
-        public Vector2 myPosition
-        {
-            get { return position; }
-        }
+        
 
-        public CrossHair(Texture2D texture, Vector2 position, int size)
+        public CrossHair(Texture2D texture, Texture2D smallTex, Vector2 position, int size)
+            :base(texture, position, size)
         {
             this.texture = texture;
+            this.smallTex = smallTex;
             this.position = position;
             this.size = size;
             rotate = (float)Math.PI / 4;
@@ -39,9 +37,10 @@ namespace AlgoritmProjekt.Utility
             position = new Vector2(playerPos.X + (directionToMouse.X * distance), playerPos.Y + (directionToMouse.Y * distance));
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, position, null, new Color(0.5f, 0.5f, 0.5f), rotate, new Vector2(size / 2, size / 2), 0.75f, SpriteEffects.None, 0);
+            spriteBatch.Draw(smallTex, position, null, Color.Red, rotate, new Vector2(smallTex.Width / 2, smallTex.Height / 2), 1, SpriteEffects.None, 0);
         }
 
     }
