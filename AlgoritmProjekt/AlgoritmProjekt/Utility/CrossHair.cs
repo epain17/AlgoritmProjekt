@@ -28,7 +28,7 @@ namespace AlgoritmProjekt.Utility
             this.position = position;
             this.size = size;
             rotate = (float)Math.PI / 4;
-            distance = size * 3;
+            distance = size * 4;
         }
 
         public void Update(Vector2 camera, Vector2 playerPos)

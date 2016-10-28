@@ -51,12 +51,12 @@ namespace AlgoritmProjekt.Managers
 
         public void Update(GameTime gameTime)
         {
-            UpdateObjects();
             xhair.Update(camera.CameraPos, player.myPosition);
-            player.Update(xhair.myPosition);
-            HandleCamera();
             WhenPlayerShoots();
             RemoveDeadObjects();
+            UpdateObjects();
+            player.Update(xhair.myPosition);
+            HandleCamera();
             Collisions();
         }
 
@@ -119,7 +119,7 @@ namespace AlgoritmProjekt.Managers
             }
             foreach (EnemySpawner spawner in spawners)
             {
-                spawner.Update(ref enemies);
+                spawner.Update(ref enemies, player.myPosition);
             }
 
             for (int i = 0; i < projectiles.Count; i++)

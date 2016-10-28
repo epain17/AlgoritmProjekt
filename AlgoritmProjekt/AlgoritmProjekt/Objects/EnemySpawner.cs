@@ -18,7 +18,7 @@ namespace AlgoritmProjekt.Objects
         //}
 
         float spawnTimer = 0;
-        float timeLimit = 500;
+        float timeLimit = 200;
         int enemyHP = 4;
 
         public EnemySpawner(Texture2D texture, Vector2 position, int size, int hp) 
@@ -30,12 +30,13 @@ namespace AlgoritmProjekt.Objects
             this.hp = hp;
         }
 
-        public void Update(ref List<Enemy> enemies)
+        public void Update(ref List<Enemy> enemies, Vector2 player)
         {
             if (myHP <= 0)
                 alive = false;
             Random rand = new Random();
-            if(spawnTimer >= timeLimit + rand.Next(- 100, 200))
+            if(Vector2.Distance(player, myPosition) < 300)
+            if(spawnTimer >= timeLimit + rand.Next(-100, 200))
             {
                 spawnTimer = 0;
                 SpawnEnemies(ref enemies);

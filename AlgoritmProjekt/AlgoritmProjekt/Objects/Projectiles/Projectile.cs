@@ -11,6 +11,7 @@ namespace AlgoritmProjekt.Objects.Projectiles
 {
     class Projectile : Tile
     {
+        Vector2 direction;
         float speed;
         float lifeSpan, lifeTime;
 
@@ -43,7 +44,8 @@ namespace AlgoritmProjekt.Objects.Projectiles
 
         public override void Update()
         {
-            position += (velocity * speed);
+            velocity = direction * speed;
+            position += velocity;
             LifeCycle();
         }
 
@@ -54,8 +56,8 @@ namespace AlgoritmProjekt.Objects.Projectiles
 
         public void Shoot(Vector2 targetVect)
         {
-            velocity = targetVect - position;
-            velocity.Normalize();
+            direction = targetVect - position;
+            direction.Normalize();
         }
 
         void LifeCycle()

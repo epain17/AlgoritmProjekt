@@ -42,7 +42,7 @@ namespace AlgoritmProjekt.Characters
             this.position = position;
             this.size = size;
             this.hp = hp;
-            speed = 2.8f;
+            speed = 3.2f;
         }
 
         public void Update(Point targetPoint, TileGrid grid)
@@ -60,11 +60,10 @@ namespace AlgoritmProjekt.Characters
             spriteBatch.Draw(enemyTexture, position, null, Color.Red, 0, origin, 1, SpriteEffects.None, 1);
         }
 
-        public void FindPath(Point targetPoint, TileGrid grid)
+        protected void FindPath(Point targetPoint, TileGrid grid)
         {
             if (Range(targetPoint) < rangeLimit && waypoints.Count() == 0)
             {
-
                 waypoints.Clear();
                 pathfinder = new Pathfinder(grid);
                 startPoint = myPoint;
@@ -77,8 +76,8 @@ namespace AlgoritmProjekt.Characters
                     foreach (Vector2 point in path)
                     {
                         foreach (Vector2 pathpos in path)
-                        {
-                            pathPos = new Vector2(pathpos.X, pathpos.Y);
+                        { //inte säker på om detta med size i pathpos är rätt - gjorde det för offsets
+                            pathPos = new Vector2(pathpos.X - (size / 2), pathpos.Y - (size / 2));
                             newPath.Add(pathPos);
                             waypoints.Enqueue(pathPos);
                         }
@@ -90,7 +89,7 @@ namespace AlgoritmProjekt.Characters
 
         }
 
-        private void UpdatePos()
+        protected virtual void UpdatePos()
         {
             if (waypoints.Count > 0)
             {
