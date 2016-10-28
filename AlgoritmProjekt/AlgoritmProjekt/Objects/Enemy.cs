@@ -35,13 +35,13 @@ namespace AlgoritmProjekt.Characters
             get { return Vector2.Distance(position, waypoints.Peek()); }
         }
         
-        public Enemy(Texture2D texture, Vector2 position, int size, int hp)
+        public Enemy(Texture2D texture, Vector2 position, int size)
             : base(texture, position, size)
         {
             this.enemyTexture = texture;
             this.position = position;
             this.size = size;
-            this.hp = hp;
+            this.hp = 4;
             speed = 3.2f;
         }
 

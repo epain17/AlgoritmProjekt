@@ -19,7 +19,7 @@ namespace AlgoritmProjekt.Characters
             ShotGun,
             MachineGun,
         }
-        public WeaponType weaponState = WeaponType.MachineGun;
+        public WeaponType weaponState = WeaponType.Pistol;
 
         public float RecoilPower;
         float shotInterval = 0;

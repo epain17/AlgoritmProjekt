@@ -25,7 +25,6 @@ namespace AlgoritmProjekt.Managers
 
         Vector2 cameraRecoil;
         Vector2 recoil;
-        int spawnerHP = 30;
         int size = 32;
 
         List<EnemySpawner> spawners = new List<EnemySpawner>();
@@ -46,16 +45,21 @@ namespace AlgoritmProjekt.Managers
             grid = new TileGrid(square, size, 100, 50);
             xhair = new CrossHair(square, smallSquare, new Vector2(200, 200), size);
 
-            LoadLevel.LoadingLevel("SaveTest.json", ref jsonTiles, ref walls, ref spawners, ref player, ref square, ref smallSquare, size, spawnerHP);
+            LoadLevel.LoadingLevel("SaveTest.json", ref jsonTiles, ref walls,
+                ref spawners, ref player, ref square, ref smallSquare, size);
         }
 
         public void Update(GameTime gameTime)
         {
+            if (score > 0)
+                score -= 1;
             xhair.Update(camera.CameraPos, player.myPosition);
             WhenPlayerShoots();
             RemoveDeadObjects();
             UpdateObjects((float)gameTime.ElapsedGameTime.TotalSeconds);
             player.Update(xhair.myPosition);
+            if (score > 2000)
+                player.weaponState = Player.WeaponType.ShotGun;
             HandleCamera();
             Collisions();
         }
@@ -118,7 +122,7 @@ namespace AlgoritmProjekt.Managers
             {
                 enemy.Update(player.myPoint, grid);
             }
-            
+
             for (int i = 0; i < spawners.Count; i++)
             {
                 spawners[i].Update(ref enemies, player.myPosition, time);
@@ -143,9 +147,9 @@ namespace AlgoritmProjekt.Managers
                         projectiles.Add(new Projectile(smallSquare, player.myPosition, 3, new Vector2(xhair.myPosition.X + rand.Next(-20, 20), xhair.myPosition.Y + rand.Next(-20, 20))));
                     }
                 }
-                else if(player.weaponState == Player.WeaponType.MachineGun)
+                else if (player.weaponState == Player.WeaponType.MachineGun)
                     projectiles.Add(new Projectile(smallSquare, player.myPosition, 3, new Vector2(xhair.myPosition.X + rand.Next(-10, 10), xhair.myPosition.Y + rand.Next(-10, 10))));
-                else if(player.weaponState == Player.WeaponType.Pistol)
+                else if (player.weaponState == Player.WeaponType.Pistol)
                     projectiles.Add(new Projectile(smallSquare, player.myPosition, 3, new Vector2(xhair.myPosition.X + rand.Next(-3, 3), xhair.myPosition.Y + rand.Next(-3, 3))));
 
                 player.ShotsFired = false;
