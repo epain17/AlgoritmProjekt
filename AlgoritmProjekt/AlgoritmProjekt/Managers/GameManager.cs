@@ -34,13 +34,16 @@ namespace AlgoritmProjekt.Managers
         List<Wall> walls = new List<Wall>();
         Player player;
         //Enemy enemy;
+        SpriteFont font;
+        int scoreInt = 0;
+        string score;
 
-
-
-        public GameManager(GameWindow Window, GraphicsDevice graphicsDevice)
+        public GameManager(GameWindow Window, GraphicsDevice graphicsDevice, SpriteFont font)
         {
             camera = new Camera(new Rectangle(0, 0, Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), new Rectangle(0, 0, Window.ClientBounds.Width * 4, Window.ClientBounds.Height * 4));
             this.graphicsDevice = graphicsDevice;
+            this.font = font;
+            score = "Score: " + scoreInt;
             square = createRectangle(size, size, graphicsDevice);
             smallSquare = createRectangle(3, 3, graphicsDevice);
             grid = new TileGrid(square, size, 100, 50);
@@ -82,6 +85,7 @@ namespace AlgoritmProjekt.Managers
             //        spriteBatch.Draw(createRectangle(3, 3, graphicsDevice), new Vector2(v.X, v.Y), Color.Yellow);
             //    }
             //}
+            spriteBatch.DrawString(font, score, new Vector2(10 - camera.CameraPos.X, -camera.CameraPos.Y), Color.LimeGreen);
             spriteBatch.End();
         }
 

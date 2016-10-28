@@ -45,8 +45,8 @@ namespace AlgoritmProjekt
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            gameManager = new GameManager(Window, GraphicsDevice);
             font = Content.Load<SpriteFont>("font");
+            gameManager = new GameManager(Window, GraphicsDevice, font);
             menu = new Menu(font, new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2));
         }
 
@@ -65,7 +65,7 @@ namespace AlgoritmProjekt
                 Exit();
             if (RELOAD)
             {
-                gameManager = new GameManager(Window, GraphicsDevice);
+                gameManager = new GameManager(Window, GraphicsDevice, font);
                 RELOAD = false;
             }
             KeyMouseReader.Update();
