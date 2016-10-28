@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AlgoritmProjekt.Objects
 {
-    class EnemySpawner : Tile
+    class EnemySpawner : Enemy
     {
         //public int CountEnemies
         //{
@@ -19,10 +19,10 @@ namespace AlgoritmProjekt.Objects
 
         float spawnTimer = 0;
         float timeLimit = 500;
-        int enemyHP = 6;
+        int enemyHP = 4;
 
         public EnemySpawner(Texture2D texture, Vector2 position, int size, int hp) 
-            : base(texture, position, size)
+            : base(texture, position, size, hp)
         {
             this.texture = texture;
             this.position = position;

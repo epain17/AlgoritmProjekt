@@ -19,26 +19,11 @@ namespace AlgoritmProjekt.Characters
             ShotGun,
             MachineGun,
         }
-        public WeaponType weaponState = WeaponType.Pistol;
+        public WeaponType weaponState = WeaponType.MachineGun;
 
         public float RecoilPower;
         float shotInterval = 0;
         bool shot = false;
-        Vector2 velocity;
-
-        //public override bool CheckMyCollision(Tile enemy)
-        //{
-        //    for (int i = 0; i < projectiles.Count; i++)
-        //    {
-        //        if (Vector2.Distance(projectiles[i].Position, enemy.myPosition) < (size))
-        //        {
-        //            projectiles[i].InstaKillMe();
-        //            return true;
-        //        }
-        //    }
-
-        //    return false;
-        //}
 
         public bool ShotsFired
         {
@@ -65,7 +50,6 @@ namespace AlgoritmProjekt.Characters
 
         public void Update(Vector2 target)
         {
-            firingTimeFrame();
             HandlePlayerInteractions(Keys.S, Keys.A, Keys.D, Keys.W, Keys.Space, target);
             HandleWeaponStates();
             position += velocity;
@@ -74,17 +58,6 @@ namespace AlgoritmProjekt.Characters
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, position, null, Color.Blue, 0, origin, 1, SpriteEffects.None, 1);
-        }
-
-        private void firingTimeFrame()
-        {
-            float timer = 0;
-            while (shot)
-            {
-                timer += 0.1f;
-                if (timer > 100)
-                    shot = false;
-            }
         }
 
         private void HandlePlayerInteractions(Keys downKey, Keys leftKey, Keys rightKey, Keys upKey, Keys shotKey, Vector2 target)
@@ -102,17 +75,17 @@ namespace AlgoritmProjekt.Characters
                 velocity.X = -3;
             }
 
-            if (isKeyDown(rightKey))
+            else if (isKeyDown(rightKey))
             {
                 velocity.X = 3;
             }
 
-            if (isKeyDown(downKey))
+            else if (isKeyDown(downKey))
             {
                 velocity.Y = 3;
             }
 
-            if (isKeyDown(upKey))
+            else if (isKeyDown(upKey))
             {
                 velocity.Y = -3;
             }

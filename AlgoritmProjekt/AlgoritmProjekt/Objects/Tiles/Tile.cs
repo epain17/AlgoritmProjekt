@@ -17,7 +17,7 @@ namespace AlgoritmProjekt
     class Tile
     {
         protected Texture2D texture;
-        protected Vector2 position;
+        protected Vector2 position, velocity;
         protected Rectangle hitBox;
         protected int size;
         protected bool occupied = false;
@@ -65,7 +65,7 @@ namespace AlgoritmProjekt
 
         public virtual bool CheckMyCollision(Tile target)
         {
-            if (Vector2.Distance(myPosition, target.myPosition) < size + target.mySize)
+            if (myHitBox.Intersects(target.myHitBox))
             {
                 return true;
             }
@@ -78,6 +78,12 @@ namespace AlgoritmProjekt
             this.position = position;
             this.size = size;
             this.origin = new Vector2(size / 2, size / 2);
+            this.velocity = Vector2.Zero;
+        }
+
+        public virtual void Update()
+        {
+            position += velocity;
         }
 
         public virtual void Draw(SpriteBatch spritebatch)
@@ -85,75 +91,20 @@ namespace AlgoritmProjekt
             spritebatch.Draw(texture, position, null, new Color(0f, 0.1f, 0f), 0, origin, 1, SpriteEffects.None, 1);
         }
 
-        public void HandelCollision(Wall w, int n)
+        public virtual void SolveCollision(Tile target)
         {
-            //Top
-            if (n == 1)
-            {
-                position.Y = position.Y + 4;
-            }
+            if (velocity.X > 0)
+                position.X = target.myHitBox.Left - (size / 2);
+            else if (velocity.X < 0)
+                position.X = target.myHitBox.Right + (size / 2);
 
-            //Bottom             
-            if (n == 2)
-            {
-                position.Y = position.Y - 4;
-            }
+            else if (velocity.Y > 0)
+                position.Y = target.myHitBox.Top - (size / 2);
+            else if (velocity.Y < 0)
+                position.Y = target.myHitBox.Bottom + (size / 2);
 
-            // Left            
-            if (n == 3)
-            {
-                position.X = position.X - 4;
-            }
-
-            // Right            
-            if (n == 4)
-            {
-                position.X = position.X + 4;
-            }
-
+            velocity = Vector2.Zero;
         }
-
-        public virtual int Collision(Wall w)
-        {
-            Rectangle top = w.myHitBox;
-            top.Height = 10;
-
-            Rectangle bottom = w.myHitBox;
-            bottom.Height = 5;
-            bottom.Y = bottom.Y + w.myHitBox.Height - 5;
-
-            Rectangle left = w.myHitBox;
-            left.Width = 2;
-            left.Y = w.myHitBox.Y + 10;
-            left.Height = w.myHitBox.Height - 20;
-
-            Rectangle right = w.myHitBox;
-            right.X = right.X + right.Width - 2;
-            right.Width = 2;
-            right.Y = w.myHitBox.Y + 10;
-            right.Height = w.myHitBox.Height - 20;
-
-
-
-            if (myHitBox.Intersects(left))
-            {
-                return 3;
-            }
-
-            else if (myHitBox.Intersects(right))
-            {
-                return 4;
-            }
-            if (myHitBox.Intersects(top))
-            {
-                return 1;
-            }
-
-            if (myHitBox.Intersects(bottom))
-            {
-                return 2;
-            }
-            return 0;
-        }
+        
     }
 }

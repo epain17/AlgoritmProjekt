@@ -11,7 +11,6 @@ namespace AlgoritmProjekt.Characters
 {
     class Enemy : Tile
     {
-        Vector2 velocity;
         Texture2D enemyTexture;
         float speed;
         
@@ -43,7 +42,7 @@ namespace AlgoritmProjekt.Characters
             this.position = position;
             this.size = size;
             this.hp = hp;
-            speed = 2.5f;
+            speed = 2.8f;
         }
 
         public void Update(Point targetPoint, TileGrid grid)

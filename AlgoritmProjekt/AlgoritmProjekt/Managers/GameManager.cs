@@ -44,9 +44,9 @@ namespace AlgoritmProjekt.Managers
             square = createRectangle(size, size, graphicsDevice);
             smallSquare = createRectangle(3, 3, graphicsDevice);
             grid = new TileGrid(square, size, 100, 50);
+            xhair = new CrossHair(square, new Vector2(200, 200), size);
 
             LoadLevel.LoadingLevel("SaveTest.json", ref jsonTiles, ref walls, ref spawners, ref player, ref square, ref smallSquare, size, spawnerHP);
-            xhair = new CrossHair(square, new Vector2(200, 200), size);
         }
 
         public void Update(GameTime gameTime)
@@ -56,8 +56,8 @@ namespace AlgoritmProjekt.Managers
             player.Update(xhair.myPosition);
             HandleCamera();
             WhenPlayerShoots();
-            Collisions();
             RemoveDeadObjects();
+            Collisions();
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -65,6 +65,8 @@ namespace AlgoritmProjekt.Managers
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, camera.TranslationMatrix);
             grid.Draw(spriteBatch);
             DrawAllObjects(spriteBatch);
+            xhair.Draw(spriteBatch);
+            spriteBatch.Draw(smallSquare, new Vector2(xhair.myPosition.X - 1.5f, xhair.myPosition.Y - 1.5f), Color.Red);
             //foreach (Enemy enemy in enemies)
             //{
             //    foreach (Vector2 v in enemy.Way)
@@ -80,8 +82,6 @@ namespace AlgoritmProjekt.Managers
             //        spriteBatch.Draw(createRectangle(3, 3, graphicsDevice), new Vector2(v.X, v.Y), Color.Yellow);
             //    }
             //}
-            xhair.Draw(spriteBatch);
-            spriteBatch.Draw(smallSquare, new Vector2(xhair.myPosition.X - 1.5f, xhair.myPosition.Y - 1.5f), Color.Red);
             spriteBatch.End();
         }
 
@@ -138,11 +138,15 @@ namespace AlgoritmProjekt.Managers
                 {
                     for (int i = 0; i < 5; i++)
                     {
-                        projectiles.Add(new Projectile(smallSquare, player.myPosition, 3, new Vector2(xhair.myPosition.X + rand.Next(-25, 25), xhair.myPosition.Y + rand.Next(-25, 25))));
+                        projectiles.Add(new Projectile(smallSquare, player.myPosition, 3, new Vector2(xhair.myPosition.X + rand.Next(-20, 20), xhair.myPosition.Y + rand.Next(-20, 20))));
                     }
                 }
-                else
-                    projectiles.Add(new Projectile(smallSquare, player.myPosition, 3, new Vector2(xhair.myPosition.X + rand.Next(-15, 15), xhair.myPosition.Y + rand.Next(-15, 15))));
+                else if(player.weaponState == Player.WeaponType.MachineGun)
+                    projectiles.Add(new Projectile(smallSquare, player.myPosition, 3, new Vector2(xhair.myPosition.X + rand.Next(-10, 10), xhair.myPosition.Y + rand.Next(-10, 10))));
+                else if(player.weaponState == Player.WeaponType.Pistol)
+                    projectiles.Add(new Projectile(smallSquare, player.myPosition, 3, new Vector2(xhair.myPosition.X + rand.Next(-3, 3), xhair.myPosition.Y + rand.Next(-3, 3))));
+
+                player.ShotsFired = false;
             }
         }
 
@@ -168,7 +172,7 @@ namespace AlgoritmProjekt.Managers
 
         }
 
-        void HandleCamera()
+        private void HandleCamera()
         {
             if (player.ShotsFired)
             {
@@ -200,6 +204,9 @@ namespace AlgoritmProjekt.Managers
 
             foreach (Wall wall in walls)
             {
+                if (player.CheckMyCollision(wall))
+                    player.SolveCollision(wall);
+
                 foreach (Projectile p in projectiles)
                 {
                     p.CheckMyCollision(wall);
