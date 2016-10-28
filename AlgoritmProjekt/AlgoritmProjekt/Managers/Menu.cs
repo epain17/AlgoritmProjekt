@@ -18,16 +18,20 @@ namespace AlgoritmProjekt.Screens
         Vector2 position;
         Color color;
         int selected = 0;
-        Emitter emitter;
+        List<Emitter> emitters = new List<Emitter>();
         GameWindow window;
+        Texture2D texture;
         Random rand;
+
+        float timer;
+
         public Menu(GameWindow window, SpriteFont font, Vector2 position, Texture2D texture)
         {
             this.window = window;
+            this.texture = texture;
             this.font = font;
             this.position = position;
             this.color = Color.White;
-            emitter = new Emitter(texture, Vector2.Zero, 2);
             buttons.Add("Play");
             buttons.Add("High Score");
             buttons.Add("Quit");
@@ -37,10 +41,18 @@ namespace AlgoritmProjekt.Screens
 
         public void Update(float time)
         {
-            emitter.myPosition = new Vector2((float)rand.Next(0, window.ClientBounds.Width), 0);
-
-            emitter.Update(time);
-            
+            timer += time;
+            if (timer > 1)
+            {
+                timer = 0;
+                emitters.Add(new Emitter(texture, new Vector2((float)rand.Next(0, window.ClientBounds.Width), 0), 2));
+            }
+            for (int i = emitters.Count - 1; i >= 0; i--)
+            {
+                emitters[i].Update(time);
+                if (!emitters[i].IsAlive)
+                    emitters.RemoveAt(i);
+            }
             if (KeyMouseReader.KeyPressed(Keys.Up) && selected > 0)
                 selected--;
             else if (KeyMouseReader.KeyPressed(Keys.Down) && selected < buttons.Count - 1)
@@ -67,7 +79,11 @@ namespace AlgoritmProjekt.Screens
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            emitter.Draw(spriteBatch);
+            for (int i = 0; i < emitters.Count; i++)
+            {
+                emitters[i].Draw(spriteBatch);
+            }
+
             for (int i = 0; i < buttons.Count; i++)
             {
                 color = (i == selected) ? Color.LimeGreen : Color.Blue;
