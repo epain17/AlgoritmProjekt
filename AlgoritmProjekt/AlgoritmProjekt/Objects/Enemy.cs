@@ -22,7 +22,7 @@ namespace AlgoritmProjekt.Characters
         List<Vector2> newPath = new List<Vector2>();
         List<Vector2> path = new List<Vector2>();
 
-        protected int rangeLimit = 300;
+        protected int rangeLimit = 400;
 
         //kan raderas när pathfindingen fungerar bra 
         public Queue<Vector2> Way

@@ -56,13 +56,13 @@ namespace AlgoritmProjekt.Managers
         {
             if (score > 0)
                 score -= 1;
+            if (score > 500)
+                player.weaponState = Player.WeaponType.ShotGun;
             xhair.Update(camera.CameraPos, player.myPosition);
             WhenPlayerShoots();
             UpdateObjects((float)gameTime.ElapsedGameTime.TotalSeconds);
             RemoveDeadObjects();
             player.Update(xhair.myPosition);
-            if (score > 500)
-                player.weaponState = Player.WeaponType.ShotGun;
             HandleCamera();
             Collisions();
         }
@@ -175,7 +175,7 @@ namespace AlgoritmProjekt.Managers
             {
                 if (!enemies[i].iamAlive)
                 {
-                    emitters.Add(new Emitter(square, enemies[i].myPosition));
+                    emitters.Add(new Emitter(square, enemies[i].myPosition, 1));
                     enemies.RemoveAt(i);
                     score += 25;
                 }

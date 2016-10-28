@@ -27,7 +27,7 @@ namespace AlgoritmProjekt.Objects
         {
             if (myHP <= 0)
                 alive = false;
-            if (Vector2.Distance(player, myPosition) < 300)
+            if (Vector2.Distance(player, myPosition) < 400)
             {
                 Random rand = new Random();
                 spawnTimer += time;

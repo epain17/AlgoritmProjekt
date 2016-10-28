@@ -12,23 +12,31 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
     {
         private List<Particle> particles = new List<Particle>();
         protected Vector2 position;
+        public Vector2 velocity;
         private Random random;
         protected Texture2D texture;
         protected bool alive = true;
-        protected int nrParticles = 15;
+        protected int nrParticles = 10;
         protected float myLifeTime = 3f;
-        int count;
+        int count, switchCase;
 
         public bool IsAlive
         {
             get { return alive; }
         }
 
-        public Emitter(Texture2D texture, Vector2 position)
+        public Vector2 myPosition
+        {
+            get { return position; }
+            set { position = value; }
+        }
+
+        public Emitter(Texture2D texture, Vector2 position, int switchCase)
         {
             this.texture = texture;
             this.position = position;
-            
+            this.switchCase = switchCase;
+            velocity = Vector2.Zero;
         }
 
         public void Update(float time)
@@ -36,9 +44,18 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
             myLifeTime -= time;
             if (myLifeTime <= 0)
                 alive = false;
-
-            Emit();
+            random = new Random();
+            switch (switchCase)
+            {
+                case 1:
+                    EmitEnemies();
+                    break;
+                case 2:
+                    EmitRain();
+                    break;
+            }
             RemoveParticles(time);
+            position += velocity;
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -49,7 +66,7 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
             }
         }
 
-        private Particle GenerateNewParticle()
+        private Particle EnemyParticle()
         {
             Vector2 velocity = new Vector2(random.Next(-5, 5), random.Next(-5, 5));
             int lifeTime = 50 + random.Next(50);
@@ -57,16 +74,31 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
             return new Particle(texture, position, velocity, lifeTime, size);
         }
 
-        private void Emit()
+        private void EmitEnemies()
         {
             if (count < nrParticles)
             {
                 count++;
                 for (int i = 0; i < nrParticles; i++)
                 {
-                    random = new Random();
-                    particles.Add(GenerateNewParticle());
+                    particles.Add(EnemyParticle());
                 }
+            }
+        }
+
+        private Particle RainParticle()
+        {
+            Vector2 velocity = new Vector2(0, 5);
+            int lifeTime = 50 + random.Next(50);
+            float size = 16;
+            return new RainParticle(texture, position, velocity, lifeTime, size);
+        }
+
+        private void EmitRain()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                particles.Add(RainParticle());
             }
         }
 

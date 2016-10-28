@@ -30,6 +30,7 @@ namespace AlgoritmProjekt
         GameManager gameManager;
         Menu menu;
         SpriteFont font;
+        Texture2D smoothTex;
 
         public Game1()
         {
@@ -47,7 +48,8 @@ namespace AlgoritmProjekt
             spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("font");
             gameManager = new GameManager(Window, GraphicsDevice, font);
-            menu = new Menu(font, new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2));
+            smoothTex = Content.Load<Texture2D>("circle");
+            menu = new Menu(Window, font, new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), smoothTex);
         }
 
         protected override void UnloadContent()
@@ -72,7 +74,7 @@ namespace AlgoritmProjekt
             switch (gameState)
             {
                 case GameState.menu:
-                    menu.Update();
+                    menu.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
                     break;
                 case GameState.gamePlay:
                     gameManager.Update(gameTime);
