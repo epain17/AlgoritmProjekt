@@ -19,7 +19,7 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
             this.velocity = velocity;
             this.lifeTime = lifeTime;
             this.size = size;
-            this.color = new Color(0.3f, 0.9f, 0.3f);
+            this.color = Color.White;
         }
 
         public override void Update(float time)
@@ -30,7 +30,7 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
         public override void Draw(SpriteBatch spriteBatch)
         {
             color = new Color(0.007f * lifeTime, 0.9f, 0.007f * lifeTime, 0.05f * lifeTime);
-            spriteBatch.Draw(texture, position, null, color, 0, origin, 0.7f, SpriteEffects.None, 0);
+            spriteBatch.Draw(texture, position, null, color, 0, origin, 0.01f * lifeTime, SpriteEffects.None, 0);
         }
     }
 }

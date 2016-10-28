@@ -42,7 +42,7 @@ namespace AlgoritmProjekt.Screens
         public void Update(float time)
         {
             timer += time;
-            if (timer > 1)
+            if (timer > 0.5f)
             {
                 timer = 0;
                 emitters.Add(new Emitter(texture, new Vector2((float)rand.Next(0, window.ClientBounds.Width), 0), 2));
