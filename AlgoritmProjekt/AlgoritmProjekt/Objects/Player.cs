@@ -57,7 +57,7 @@ namespace AlgoritmProjekt.Characters
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, position, null, Color.Blue, 0, origin, 1, SpriteEffects.None, 1);
+            spriteBatch.Draw(texture, position, null, Color.LimeGreen, 0, origin, 1, SpriteEffects.None, 1);
         }
 
         private void HandlePlayerInteractions(Keys downKey, Keys leftKey, Keys rightKey, Keys upKey, Keys shotKey, Vector2 target)

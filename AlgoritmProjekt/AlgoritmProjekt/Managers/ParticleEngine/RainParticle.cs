@@ -10,16 +10,23 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
 {
     class RainParticle : Particle
     {
+        SpriteFont font;
+        float startLife;
+        Random rand = new Random();
+        int stringNR;
 
-        public RainParticle(Texture2D texture, Vector2 position, Vector2 velocity, float lifeTime, float size) 
+        public RainParticle(Texture2D texture, SpriteFont font, Vector2 position, Vector2 velocity, float lifeTime, float size) 
             :base(texture, position, velocity, lifeTime, size)
         {
             this.texture = texture;
+            this.font = font;
             this.position = position;
             this.velocity = velocity;
             this.lifeTime = lifeTime;
             this.size = size;
             this.color = Color.White;
+            this.startLife = lifeTime;
+            stringNR = rand.Next(0, 9);
         }
 
         public override void Update(float time)
@@ -29,8 +36,11 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            color = new Color(0.007f * lifeTime, 1, 0.007f * lifeTime, 0.005f * lifeTime);
-            spriteBatch.Draw(texture, position, null, color, 0, origin, 0.006f * lifeTime, SpriteEffects.None, 0);
+            if (lifeTime >= startLife * 0.95f)
+                color = Color.White;
+            else
+                color = new Color(0.0005f * lifeTime, 1, 0.0005f * lifeTime, 0.001f);
+            spriteBatch.DrawString(font, "" + stringNR, position, color, 0, origin, 1, SpriteEffects.None, 0);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace AlgoritmProjekt.Objects.Projectiles
             this.position = position;
             this.alive = true;
             this.size = size;
-            lifeTime = 200;
+            lifeTime = 70;
             speed = 6;
             Shoot(targetVect);
         }

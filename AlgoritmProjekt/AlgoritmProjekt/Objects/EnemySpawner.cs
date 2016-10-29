@@ -20,7 +20,7 @@ namespace AlgoritmProjekt.Objects
             this.texture = texture;
             this.position = position;
             this.size = size;
-            this.hp = 30;
+            this.hp = 10;
         }
 
         public void Update(ref List<Enemy> enemies, Vector2 player, float time)
@@ -43,7 +43,7 @@ namespace AlgoritmProjekt.Objects
         {
             spriteBatch.Draw(texture, position, null, Color.Purple, 0, origin, 1, SpriteEffects.None, 1);
             float healthPercent = hp / startHp;
-            Color color = new Color(0.25f / healthPercent, 0, 0.5f * healthPercent);
+            Color color = new Color(1, 0, 0.5f * healthPercent);
             spriteBatch.Draw(texture, position, null, color, 0, origin, 1, SpriteEffects.None, 1);
         }
 

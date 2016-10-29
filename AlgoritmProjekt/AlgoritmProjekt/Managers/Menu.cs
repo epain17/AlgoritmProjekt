@@ -24,6 +24,7 @@ namespace AlgoritmProjekt.Screens
         Random rand;
 
         float timer;
+        Rectangle frame;
 
         public Menu(GameWindow window, SpriteFont font, Vector2 position, Texture2D texture)
         {
@@ -36,7 +37,7 @@ namespace AlgoritmProjekt.Screens
             buttons.Add("High Score");
             buttons.Add("Quit");
             rand = new Random();
-
+            frame = new Rectangle((int)position.X - 75, (int)position.Y - 50, 150, 200);
         }
 
         public void Update(float time)
@@ -45,8 +46,8 @@ namespace AlgoritmProjekt.Screens
             if (timer > 0.3f)
             {
                 timer = 0;
-                emitters.Add(new Emitter(texture, new Vector2((float)rand.Next(0, window.ClientBounds.Width), 0), 2));
-                emitters.Add(new Emitter(texture, new Vector2((float)rand.Next(0, window.ClientBounds.Width), 0), 2));
+                emitters.Add(new Emitter(texture, font, new Vector2((float)rand.Next(0, window.ClientBounds.Width), 0), 2));
+                emitters.Add(new Emitter(texture, font, new Vector2((float)rand.Next(0, window.ClientBounds.Width), 0), 2));
 
             }
             for (int i = emitters.Count - 1; i >= 0; i--)
@@ -86,9 +87,11 @@ namespace AlgoritmProjekt.Screens
                 emitters[i].Draw(spriteBatch);
             }
 
+            spriteBatch.Draw(texture, frame, Color.Black);
+
             for (int i = 0; i < buttons.Count; i++)
             {
-                color = (i == selected) ? Color.LightGray : Color.DarkSlateGray;
+                color = (i == selected) ? Color.White : Color.SlateGray;
                 spriteBatch.DrawString(font, buttons[i], new Vector2(position.X - (font.MeasureString(buttons[i]).X / 2), position.Y + (i * 20)), color);
             }
         }

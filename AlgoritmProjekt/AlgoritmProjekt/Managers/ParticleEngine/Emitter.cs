@@ -19,6 +19,8 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
         protected int nrParticles = 10;
         protected float myLifeTime;
         int count, switchCase;
+        SpriteFont font;
+        float timer;
 
         public bool IsAlive
         {
@@ -37,9 +39,10 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
             set { velocity = value; }
         }
 
-        public Emitter(Texture2D texture, Vector2 position, int switchCase)
+        public Emitter(Texture2D texture, SpriteFont font, Vector2 position, int switchCase)
         {
             this.texture = texture;
+            this.font = font;
             this.position = position;
             this.switchCase = switchCase;
             switch (switchCase)
@@ -68,7 +71,12 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
                     EmitEnemies();
                     break;
                 case 2:
-                    EmitRain();
+                    timer++;
+                    if (timer > 6)
+                    {
+                        EmitRain();
+                        timer = 0;
+                    }
                     break;
             }
             RemoveParticles(time);
@@ -105,8 +113,8 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
 
         private Particle RainParticle()
         {
-            int lifeTime = 50 + random.Next(50);
-            return new RainParticle(texture, position, Vector2.Zero, lifeTime, 16);
+            int lifeTime = 180 + random.Next(50);
+            return new RainParticle(texture, font, position, Vector2.Zero, lifeTime, 16);
         }
 
         private void EmitRain()

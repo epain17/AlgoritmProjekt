@@ -58,9 +58,9 @@ namespace AlgoritmProjekt.Managers
 
         public void Update(GameTime gameTime)
         {
-            if (score > 0)
-                score -= 1;
-            if (score > 500)
+            if (score > 3500)
+                player.weaponState = Player.WeaponType.MachineGun;
+            else if (score > 1500)
                 player.weaponState = Player.WeaponType.ShotGun;
             xhair.Update(camera.CameraPos, player.myPosition);
             WhenPlayerShoots();
@@ -179,7 +179,7 @@ namespace AlgoritmProjekt.Managers
             {
                 if (!enemies[i].iamAlive)
                 {
-                    emitters.Add(new Emitter(square, enemies[i].myPosition, 1));
+                    emitters.Add(new Emitter(square, font, enemies[i].myPosition, 1));
                     enemies.RemoveAt(i);
                     score += 25;
                 }
