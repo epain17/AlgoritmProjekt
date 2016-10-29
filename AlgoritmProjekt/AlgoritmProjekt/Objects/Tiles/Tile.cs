@@ -47,6 +47,13 @@ namespace AlgoritmProjekt
             set { occupied = value; }
         }
 
+        public bool amIOccupied(Tile target)
+        {
+            if (myHitBox.Contains(target.myPosition))
+                return true;
+            return false;
+        }
+
         public Point myPoint
         {
             get { return new Point((int)position.X / size, (int)position.Y / size); }
@@ -105,6 +112,7 @@ namespace AlgoritmProjekt
 
             velocity = Vector2.Zero;
         }
-        
+
+
     }
 }

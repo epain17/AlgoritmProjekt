@@ -50,6 +50,10 @@ namespace AlgoritmProjekt.Managers
 
             LoadLevel.LoadingLevel("SaveTest.json", ref jsonTiles, ref walls,
                 ref spawners, ref player, ref square, ref smallSquare, size);
+            foreach (Wall wall in walls)
+            {
+                grid.SetOccupiedGrid(wall);
+            }
         }
 
         public void Update(GameTime gameTime)

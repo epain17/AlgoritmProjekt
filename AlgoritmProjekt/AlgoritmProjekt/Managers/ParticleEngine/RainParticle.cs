@@ -29,8 +29,8 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            color = new Color(0.007f * lifeTime, 0.9f, 0.007f * lifeTime, 0.05f * lifeTime);
-            spriteBatch.Draw(texture, position, null, color, 0, origin, 0.01f * lifeTime, SpriteEffects.None, 0);
+            color = new Color(0.007f * lifeTime, 1, 0.007f * lifeTime, 0.005f * lifeTime);
+            spriteBatch.Draw(texture, position, null, color, 0, origin, 0.006f * lifeTime, SpriteEffects.None, 0);
         }
     }
 }

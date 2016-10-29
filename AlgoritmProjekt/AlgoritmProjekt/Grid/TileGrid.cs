@@ -14,8 +14,7 @@ namespace AlgoritmProjekt.Grid
     {
         public int width, height;
         Tile[,] tileGrid;
-        Wall wall1, wall2, wall3, wall4;
-        List<Wall> wallList = new List<Wall>();
+        
         int size;
         Texture2D tileTex;
 
@@ -27,7 +26,6 @@ namespace AlgoritmProjekt.Grid
             height = rows;
             
             CreateTileGrid();
-            CreateWalls();
         }
 
         public void CreateTileGrid()
@@ -38,33 +36,6 @@ namespace AlgoritmProjekt.Grid
                 for (int j = 0; j < height; j++)
                 {
                     tileGrid[i, j] = new Tile(tileTex, new Vector2(0 + i * size, 0 + j * size), size);
-                }
-            }
-        }
-
-        public List<Wall> GetWalls
-        {
-            get { return wallList; }
-        }
-
-      public void CreateWalls()
-        {
-            wall1 = new Wall(tileTex, new Vector2(128, 160), 32);
-            wall2 = new Wall(tileTex, new Vector2(128, 192), 32);
-            wall3 = new Wall(tileTex, new Vector2(128, 224), 32);
-            wall4 = new Wall(tileTex, new Vector2(128, 256), 32);
-            wallList.Add(wall1);
-            wallList.Add(wall2);
-            wallList.Add(wall3);
-            wallList.Add(wall4);
-            foreach (Tile t in tileGrid)
-            {
-                foreach(Wall w in wallList)
-                {
-                    if(w.myPoint == t.myPoint)
-                    {
-                        t.iamOccupied = true;
-                    }
                 }
             }
         }
@@ -89,6 +60,18 @@ namespace AlgoritmProjekt.Grid
             return 0;
         }
 
+        public void SetOccupiedGrid(Tile target)
+        {
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    if (tileGrid[i, j].amIOccupied(target))
+                        tileGrid[i, j].iamOccupied = true;
+                }
+            }
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             if (tileGrid != null)
@@ -99,10 +82,6 @@ namespace AlgoritmProjekt.Grid
                         tileGrid[i, j].Draw(spriteBatch);
                     }
                 }
-            wall1.Draw(spriteBatch);
-            wall2.Draw(spriteBatch);
-            wall3.Draw(spriteBatch);
-            wall4.Draw(spriteBatch);
         }
     }
 }

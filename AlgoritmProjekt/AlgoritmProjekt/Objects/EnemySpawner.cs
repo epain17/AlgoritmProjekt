@@ -42,6 +42,9 @@ namespace AlgoritmProjekt.Objects
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, position, null, Color.Purple, 0, origin, 1, SpriteEffects.None, 1);
+            float healthPercent = hp / startHp;
+            Color color = new Color(0.25f / healthPercent, 0, 0.5f * healthPercent);
+            spriteBatch.Draw(texture, position, null, color, 0, origin, 1, SpriteEffects.None, 1);
         }
 
         void SpawnEnemies(ref List<Enemy> enemies)

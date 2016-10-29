@@ -42,10 +42,12 @@ namespace AlgoritmProjekt.Screens
         public void Update(float time)
         {
             timer += time;
-            if (timer > 0.5f)
+            if (timer > 0.3f)
             {
                 timer = 0;
                 emitters.Add(new Emitter(texture, new Vector2((float)rand.Next(0, window.ClientBounds.Width), 0), 2));
+                emitters.Add(new Emitter(texture, new Vector2((float)rand.Next(0, window.ClientBounds.Width), 0), 2));
+
             }
             for (int i = emitters.Count - 1; i >= 0; i--)
             {
@@ -86,7 +88,7 @@ namespace AlgoritmProjekt.Screens
 
             for (int i = 0; i < buttons.Count; i++)
             {
-                color = (i == selected) ? Color.LimeGreen : Color.Blue;
+                color = (i == selected) ? Color.LightGray : Color.DarkSlateGray;
                 spriteBatch.DrawString(font, buttons[i], new Vector2(position.X - (font.MeasureString(buttons[i]).X / 2), position.Y + (i * 20)), color);
             }
         }

@@ -105,7 +105,7 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
 
         private Particle RainParticle()
         {
-            int lifeTime = 5 + random.Next(50);
+            int lifeTime = 50 + random.Next(50);
             return new RainParticle(texture, position, Vector2.Zero, lifeTime, 16);
         }
 

@@ -11,9 +11,9 @@ namespace AlgoritmProjekt.Characters
 {
     class Enemy : Tile
     {
-        Texture2D enemyTexture;
-        float speed;
-        float startHp;
+        Texture2D texture;
+        protected float speed;
+        protected float startHp;
         Pathfinder pathfinder;
         public Vector2 pathPos;
         Point startPoint, endPoint;
@@ -38,7 +38,7 @@ namespace AlgoritmProjekt.Characters
         public Enemy(Texture2D texture, Vector2 position, int size)
             : base(texture, position, size)
         {
-            this.enemyTexture = texture;
+            this.texture = texture;
             this.position = position;
             this.size = size;
             this.hp = 4;
@@ -60,7 +60,7 @@ namespace AlgoritmProjekt.Characters
         {
             float healthPercent = hp / startHp;
             Color color = new Color(0.25f / healthPercent, 1 * healthPercent, 1f * healthPercent);
-            spriteBatch.Draw(enemyTexture, position, null, color, 0, origin, 1, SpriteEffects.None, 1);
+            spriteBatch.Draw(texture, position, null, color, 0, origin, 1, SpriteEffects.None, 1);
         }
 
         protected void FindPath(Point targetPoint, TileGrid grid)
