@@ -1,5 +1,6 @@
 ﻿using AlgoritmProjekt.Input;
 using AlgoritmProjekt.Managers.ParticleEngine;
+using AlgoritmProjekt.Managers.ParticleEngine.Emitters;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -37,25 +38,13 @@ namespace AlgoritmProjekt.Screens
             buttons.Add("High Score");
             buttons.Add("Quit");
             rand = new Random();
-            frame = new Rectangle((int)position.X - 75, (int)position.Y - 50, 150, 200);
+            frame = new Rectangle((int)position.X - 100, (int)position.Y - 50, 200, 200);
         }
 
         public void Update(float time)
         {
-            timer += time;
-            if (timer > 0.3f)
-            {
-                timer = 0;
-                emitters.Add(new Emitter(texture, font, new Vector2((float)rand.Next(0, window.ClientBounds.Width), 0), 2));
-                emitters.Add(new Emitter(texture, font, new Vector2((float)rand.Next(0, window.ClientBounds.Width), 0), 2));
+            HandleEmitters(time);
 
-            }
-            for (int i = emitters.Count - 1; i >= 0; i--)
-            {
-                emitters[i].Update(time);
-                if (!emitters[i].IsAlive)
-                    emitters.RemoveAt(i);
-            }
             if (KeyMouseReader.KeyPressed(Keys.Up) && selected > 0)
                 selected--;
             else if (KeyMouseReader.KeyPressed(Keys.Down) && selected < buttons.Count - 1)
@@ -82,17 +71,41 @@ namespace AlgoritmProjekt.Screens
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            for (int i = 0; i < emitters.Count; i++)
+            foreach (Emitter emitter in emitters)
             {
-                emitters[i].Draw(spriteBatch);
+                emitter.Draw(spriteBatch);
             }
 
             spriteBatch.Draw(texture, frame, Color.Black);
+            spriteBatch.Draw(texture, frame, Color.Black);
+
 
             for (int i = 0; i < buttons.Count; i++)
             {
-                color = (i == selected) ? Color.White : Color.SlateGray;
+                color = (i == selected) ? Color.White : Color.DarkSlateGray;
                 spriteBatch.DrawString(font, buttons[i], new Vector2(position.X - (font.MeasureString(buttons[i]).X / 2), position.Y + (i * 20)), color);
+            }
+        }
+
+        private void HandleEmitters(float time)
+        {
+            timer += time;
+            if (timer > 0.1f)
+            {
+                timer = 0;
+                //emitters.Add(new MatrixEmitter(font, new Vector2((float)rand.Next(0, window.ClientBounds.Width), 0)));
+                emitters.Add(new MatrixEmitter(font, new Vector2((float)rand.Next(0, window.ClientBounds.Width), 0)));
+            }
+
+            foreach (Emitter emitter in emitters)
+            {
+                emitter.Update(time);
+            }
+
+            for (int i = emitters.Count - 1; i >= 0; i--)
+            {
+                if (!emitters[i].IsAlive)
+                    emitters.RemoveAt(i);
             }
         }
     }

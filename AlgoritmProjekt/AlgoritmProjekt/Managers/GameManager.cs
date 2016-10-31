@@ -35,6 +35,7 @@ namespace AlgoritmProjekt.Managers
         Player player;
         SpriteFont font;
         int score = 0;
+        float inTime;
 
         List<Emitter> emitters = new List<Emitter>();
 
@@ -58,10 +59,14 @@ namespace AlgoritmProjekt.Managers
 
         public void Update(GameTime gameTime)
         {
+            inTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            //tillfällig funktion för att kolla olika vapen - fungerar som att lvlaupp
             if (score > 3500)
                 player.weaponState = Player.WeaponType.MachineGun;
             else if (score > 1500)
                 player.weaponState = Player.WeaponType.ShotGun;
+
+            //Ordningen är viktig - kan fucka upp saker om den ändras
             xhair.Update(camera.CameraPos, player.myPosition);
             WhenPlayerShoots();
             UpdateObjects((float)gameTime.ElapsedGameTime.TotalSeconds);
@@ -93,6 +98,7 @@ namespace AlgoritmProjekt.Managers
             //        spriteBatch.Draw(createRectangle(3, 3, graphicsDevice), new Vector2(v.X, v.Y), Color.Yellow);
             //    }
             //}
+            spriteBatch.DrawString(font, "Time: " + (int)inTime, new Vector2(350 - camera.CameraPos.X, -camera.CameraPos.Y), Color.LimeGreen);
             spriteBatch.DrawString(font, "Score: " + score, new Vector2(10 - camera.CameraPos.X, -camera.CameraPos.Y), Color.LimeGreen);
             spriteBatch.End();
         }
@@ -179,7 +185,7 @@ namespace AlgoritmProjekt.Managers
             {
                 if (!enemies[i].iamAlive)
                 {
-                    emitters.Add(new Emitter(square, font, enemies[i].myPosition, 1));
+                    emitters.Add(new EnemyEmitter(square,enemies[i].myPosition));
                     enemies.RemoveAt(i);
                     score += 25;
                 }

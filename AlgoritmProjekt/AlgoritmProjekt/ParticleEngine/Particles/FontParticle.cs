@@ -8,17 +8,16 @@ using System.Threading.Tasks;
 
 namespace AlgoritmProjekt.Managers.ParticleEngine
 {
-    class RainParticle : Particle
+    class FontParticle : Particle
     {
         SpriteFont font;
         float startLife;
         Random rand = new Random();
         int stringNR;
 
-        public RainParticle(Texture2D texture, SpriteFont font, Vector2 position, Vector2 velocity, float lifeTime, float size) 
-            :base(texture, position, velocity, lifeTime, size)
+        public FontParticle(SpriteFont font, Vector2 position, Vector2 velocity, float lifeTime, float size) 
+            :base(position, velocity, lifeTime, size)
         {
-            this.texture = texture;
             this.font = font;
             this.position = position;
             this.velocity = velocity;
@@ -26,21 +25,23 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
             this.size = size;
             this.color = Color.White;
             this.startLife = lifeTime;
-            stringNR = rand.Next(0, 9);
+            stringNR = rand.Next(0, 10);
+            origin = new Vector2(font.Texture.Width / 2, font.Texture.Height / 2);
         }
 
         public override void Update(float time)
         {
             base.Update(time);
+            if (lifeTime >= startLife * 0.98f)
+                color = Color.White;
+            else
+                color = new Color(0, 0.8f * (0.003f * lifeTime), 0);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (lifeTime >= startLife * 0.95f)
-                color = Color.White;
-            else
-                color = new Color(0.0005f * lifeTime, 1, 0.0005f * lifeTime, 0.001f);
-            spriteBatch.DrawString(font, "" + stringNR, position, color, 0, origin, 1, SpriteEffects.None, 0);
+            
+            spriteBatch.DrawString(font, "" + stringNR, position, color, 0, origin, 0.7f, SpriteEffects.None, 0);
         }
     }
 }

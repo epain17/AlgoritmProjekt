@@ -11,7 +11,6 @@ namespace AlgoritmProjekt.Characters
 {
     class Enemy : Tile
     {
-        Texture2D texture;
         protected float speed;
         protected float startHp;
         Pathfinder pathfinder;

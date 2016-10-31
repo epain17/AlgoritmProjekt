@@ -40,12 +40,15 @@
   <ItemGroup>
     <Compile Include="Managers\GameManager.cs" />
     <Compile Include="Managers\Menu.cs" />
-    <Compile Include="Managers\ParticleEngine\Emitter.cs" />
-    <Compile Include="Managers\ParticleEngine\Particle.cs" />
-    <Compile Include="Managers\ParticleEngine\RainParticle.cs" />
-    <Compile Include="Objects\EnemySpawner.cs" />
+    <Compile Include="ParticleEngine\Emitters\Emitter.cs" />
+    <Compile Include="ParticleEngine\Emitters\EnemyEmitter.cs" />
+    <Compile Include="ParticleEngine\Emitters\MatrixEmitter.cs" />
+    <Compile Include="ParticleEngine\Particles\TextureParticle.cs" />
+    <Compile Include="ParticleEngine\Particles\FontParticle.cs" />
+    <Compile Include="ParticleEngine\Particles\Particle.cs" />
+    <Compile Include="Objects\Enemies\EnemySpawner.cs" />
     <Compile Include="Utility\Camera.cs" />
-    <Compile Include="Objects\Enemy.cs" />
+    <Compile Include="Objects\Enemies\Enemy.cs" />
     <Compile Include="Objects\Player.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Grid\TileGrid.cs" />
@@ -53,12 +56,12 @@
     <Compile Include="Utility\json\JsonSerialization.cs" />
     <Compile Include="Utility\KeyMouseReader.cs" />
     <Compile Include="Objects\Projectiles\Projectile.cs" />
-    <Compile Include="Objects\Tiles\Wall.cs" />
+    <Compile Include="Objects\Wall.cs" />
     <Compile Include="Utility\json\LoadLevel.cs" />
     <Compile Include="Utility\Pathfinder.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Objects\Tiles\Tile.cs" />
+    <Compile Include="Objects\Tile.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
