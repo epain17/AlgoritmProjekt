@@ -21,9 +21,17 @@ namespace AlgoritmProjekt.Characters
         }
         public WeaponType weaponState = WeaponType.Pistol;
 
+        public enum PlayerState
+        {
+            normal,
+            invulnerable,
+            power,
+        }
+        public PlayerState playerState = PlayerState.normal;
+
         public float RecoilPower;
         float shotInterval = 0;
-        bool shot = false;
+        bool shot = false;        
 
         public bool ShotsFired
         {
@@ -46,6 +54,7 @@ namespace AlgoritmProjekt.Characters
             this.texture = texture;
             this.position = position;
             this.size = size;
+            this.myHP = 3;
         }
 
         public void Update(Vector2 target)
@@ -53,6 +62,22 @@ namespace AlgoritmProjekt.Characters
             HandlePlayerInteractions(Keys.S, Keys.A, Keys.D, Keys.W, Keys.Space, target);
             HandleWeaponStates();
             position += velocity;
+
+            switch (playerState)
+            {
+                case PlayerState.normal:
+                    break;
+                case PlayerState.invulnerable:
+                    InvulnerableState();
+                    break;
+                case PlayerState.power:
+                    break;
+            }
+        }
+
+        void InvulnerableState()
+        {
+            
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -60,7 +85,7 @@ namespace AlgoritmProjekt.Characters
             spriteBatch.Draw(texture, position, null, Color.LimeGreen, 0, origin, 1, SpriteEffects.None, 1);
         }
 
-        private void HandlePlayerInteractions(Keys downKey, Keys leftKey, Keys rightKey, Keys upKey, Keys shotKey, Vector2 target)
+        protected virtual void HandlePlayerInteractions(Keys downKey, Keys leftKey, Keys rightKey, Keys upKey, Keys shotKey, Vector2 target)
         {
             Moving(downKey, leftKey, rightKey, upKey);
             Shooting(shotKey, target);

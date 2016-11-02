@@ -56,7 +56,7 @@
     <Compile Include="Utility\json\JsonSerialization.cs" />
     <Compile Include="Utility\KeyMouseReader.cs" />
     <Compile Include="Objects\Projectiles\Projectile.cs" />
-    <Compile Include="Objects\Wall.cs" />
+    <Compile Include="Objects\Environment\Wall.cs" />
     <Compile Include="Utility\json\LoadLevel.cs" />
     <Compile Include="Utility\Pathfinder.cs" />
     <Compile Include="Program.cs" />

@@ -56,11 +56,6 @@ namespace AlgoritmProjekt
         {
         }
 
-        void ReloadGame()
-        {
-            
-        }
-
         protected override void Update(GameTime gameTime)
         {
             if (EXIT)

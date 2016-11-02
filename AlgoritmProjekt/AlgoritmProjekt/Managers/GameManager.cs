@@ -66,7 +66,7 @@ namespace AlgoritmProjekt.Managers
             else if (score > 1500)
                 player.weaponState = Player.WeaponType.ShotGun;
 
-            //Ordningen är viktig - kan fucka upp saker om den ändras
+            //Ordningen är viktig - vet inte var men kan fucka upp saker om den ändras
             xhair.Update(camera.CameraPos, player.myPosition);
             WhenPlayerShoots();
             UpdateObjects((float)gameTime.ElapsedGameTime.TotalSeconds);
@@ -82,6 +82,14 @@ namespace AlgoritmProjekt.Managers
             grid.Draw(spriteBatch);
             DrawAllObjects(spriteBatch);
             xhair.Draw(spriteBatch);
+
+            spriteBatch.DrawString(font, "Time: " + (int)inTime, new Vector2(350 - camera.CameraPos.X, -camera.CameraPos.Y), Color.LimeGreen);
+            spriteBatch.DrawString(font, "Score: " + score, new Vector2(10 - camera.CameraPos.X, -camera.CameraPos.Y), Color.LimeGreen);
+            spriteBatch.End();
+        }
+
+        private void DrawWaypoints(SpriteBatch spriteBatch)
+        {
             //spriteBatch.Draw(smallSquare, new Vector2(xhair.myPosition.X - 1.5f, xhair.myPosition.Y - 1.5f), Color.Red);
             //foreach (Enemy enemy in enemies)
             //{
@@ -98,9 +106,6 @@ namespace AlgoritmProjekt.Managers
             //        spriteBatch.Draw(createRectangle(3, 3, graphicsDevice), new Vector2(v.X, v.Y), Color.Yellow);
             //    }
             //}
-            spriteBatch.DrawString(font, "Time: " + (int)inTime, new Vector2(350 - camera.CameraPos.X, -camera.CameraPos.Y), Color.LimeGreen);
-            spriteBatch.DrawString(font, "Score: " + score, new Vector2(10 - camera.CameraPos.X, -camera.CameraPos.Y), Color.LimeGreen);
-            spriteBatch.End();
         }
 
         private void DrawAllObjects(SpriteBatch spriteBatch)
@@ -179,6 +184,7 @@ namespace AlgoritmProjekt.Managers
             }
         }
 
+        //score måste ses över
         private void RemoveDeadObjects()
         {
             for (int i = enemies.Count - 1; i >= 0; --i)
@@ -195,6 +201,7 @@ namespace AlgoritmProjekt.Managers
             {
                 if (!spawners[i].iamAlive)
                 {
+                    emitters.Add(new EnemyEmitter(square, spawners[i].myPosition));
                     spawners.RemoveAt(i);
                     score += 275;
                 }
@@ -234,6 +241,11 @@ namespace AlgoritmProjekt.Managers
         {
             foreach (Enemy enemy in enemies)
             {
+                if (enemy.CheckMyCollision(player) && player.playerState != Player.PlayerState.invulnerable)
+                {
+                    player.playerState = Player.PlayerState.invulnerable;
+                }
+
                 foreach (Projectile shot in projectiles)
                 {
                     if (shot.CheckMyCollision(enemy))

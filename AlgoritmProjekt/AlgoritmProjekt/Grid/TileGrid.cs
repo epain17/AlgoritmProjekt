@@ -13,10 +13,9 @@ namespace AlgoritmProjekt.Grid
     class TileGrid
     {
         public int width, height;
-        Tile[,] tileGrid;
-        
-        int size;
         Texture2D tileTex;
+        Tile[,] tileGrid;
+        int size;
 
         public TileGrid(Texture2D tileTex, int size, int columns, int rows)
         {
@@ -50,7 +49,6 @@ namespace AlgoritmProjekt.Grid
                     {
                         return 0;
                     }
-
                     else
                     {
                         return 1;
