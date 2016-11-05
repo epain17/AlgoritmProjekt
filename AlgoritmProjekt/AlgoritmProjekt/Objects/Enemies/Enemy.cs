@@ -67,7 +67,7 @@ namespace AlgoritmProjekt.Characters
             if (Range(targetPoint) < rangeLimit && waypoints.Count() == 0)
             {
                 waypoints.Clear();
-                pathfinder = new Pathfinder(grid);
+                pathfinder = new Pathfinder(grid); //kan man spara prestanda genom att inte skapa ny varje gång?
                 startPoint = myPoint;
                 endPoint = targetPoint;
 

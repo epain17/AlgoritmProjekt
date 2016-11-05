@@ -35,7 +35,7 @@ namespace AlgoritmProjekt.Managers
         Player player;
         SpriteFont font;
         int score = 0;
-        float inTime;
+        float TotalTime;
 
         List<Emitter> emitters = new List<Emitter>();
 
@@ -59,7 +59,7 @@ namespace AlgoritmProjekt.Managers
 
         public void Update(GameTime gameTime)
         {
-            inTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            TotalTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
             //tillfällig funktion för att kolla olika vapen - fungerar som att lvlaupp
             if (score > 3500)
                 player.weaponState = Player.WeaponType.MachineGun;
@@ -83,7 +83,7 @@ namespace AlgoritmProjekt.Managers
             DrawAllObjects(spriteBatch);
             xhair.Draw(spriteBatch);
 
-            spriteBatch.DrawString(font, "Time: " + (int)inTime, new Vector2(350 - camera.CameraPos.X, -camera.CameraPos.Y), Color.LimeGreen);
+            spriteBatch.DrawString(font, "Time: " + (int)TotalTime, new Vector2(350 - camera.CameraPos.X, -camera.CameraPos.Y), Color.LimeGreen);
             spriteBatch.DrawString(font, "Score: " + score, new Vector2(10 - camera.CameraPos.X, -camera.CameraPos.Y), Color.LimeGreen);
             spriteBatch.End();
         }
@@ -241,9 +241,9 @@ namespace AlgoritmProjekt.Managers
         {
             foreach (Enemy enemy in enemies)
             {
-                if (enemy.CheckMyCollision(player) && player.playerState != Player.PlayerState.invulnerable)
+                if (enemy.CheckMyCollision(player) && player.playerState != Player.PlayerState.Invulnerable)
                 {
-                    player.playerState = Player.PlayerState.invulnerable;
+                    player.playerState = Player.PlayerState.Invulnerable;
                 }
 
                 foreach (Projectile shot in projectiles)
@@ -284,7 +284,7 @@ namespace AlgoritmProjekt.Managers
             // Colour the entire texture transparent first.             
             for (int i = 0; i < data.Length; i++)
             {
-                data[i] = Color.Transparent;
+                data[i] = new Color(0.2f, 0.2f, 0.2f);
             }
             for (int i = 0; i < width; i++)
             {

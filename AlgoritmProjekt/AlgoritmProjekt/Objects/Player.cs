@@ -23,11 +23,11 @@ namespace AlgoritmProjekt.Characters
 
         public enum PlayerState
         {
-            normal,
-            invulnerable,
-            power,
+            Normal,
+            Invulnerable,
+            Power,
         }
-        public PlayerState playerState = PlayerState.normal;
+        public PlayerState playerState = PlayerState.Normal;
 
         public float RecoilPower;
         float shotInterval = 0;
@@ -59,18 +59,18 @@ namespace AlgoritmProjekt.Characters
 
         public void Update(Vector2 target)
         {
-            HandlePlayerInteractions(Keys.S, Keys.A, Keys.D, Keys.W, Keys.Space, target);
+            HandlePlayerInteractions(Keys.S, Keys.A, Keys.D, Keys.W, Keys.Space);
             HandleWeaponStates();
             position += velocity;
 
             switch (playerState)
             {
-                case PlayerState.normal:
+                case PlayerState.Normal:
                     break;
-                case PlayerState.invulnerable:
+                case PlayerState.Invulnerable:
                     InvulnerableState();
                     break;
-                case PlayerState.power:
+                case PlayerState.Power:
                     break;
             }
         }
@@ -85,10 +85,10 @@ namespace AlgoritmProjekt.Characters
             spriteBatch.Draw(texture, position, null, Color.LimeGreen, 0, origin, 1, SpriteEffects.None, 1);
         }
 
-        protected virtual void HandlePlayerInteractions(Keys downKey, Keys leftKey, Keys rightKey, Keys upKey, Keys shotKey, Vector2 target)
+        protected virtual void HandlePlayerInteractions(Keys downKey, Keys leftKey, Keys rightKey, Keys upKey, Keys shotKey)
         {
             Moving(downKey, leftKey, rightKey, upKey);
-            Shooting(shotKey, target);
+            Shooting(shotKey);
         }
 
         private void Moving(Keys downKey, Keys leftKey, Keys rightKey, Keys upKey)
@@ -116,7 +116,7 @@ namespace AlgoritmProjekt.Characters
             }
         }
 
-        private void Shooting(Keys shotKey, Vector2 target)
+        private void Shooting(Keys shotKey)
         {
             if (isKeyDown(shotKey))
             {
@@ -141,7 +141,7 @@ namespace AlgoritmProjekt.Characters
                     RecoilPower = 20;
                     break;
                 case WeaponType.MachineGun:
-                    shotInterval += 2;
+                    shotInterval += 1.5f;
                     RecoilPower = 10;
                     break;
             }
