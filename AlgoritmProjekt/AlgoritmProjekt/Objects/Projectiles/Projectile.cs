@@ -11,9 +11,9 @@ namespace AlgoritmProjekt.Objects.Projectiles
 {
     class Projectile : Tile
     {
-        Vector2 direction;
+        Vector2 direction, startPos;
         float speed;
-        float lifeSpan, lifeTime;
+
 
         public Vector2 Position
         {
@@ -37,16 +37,17 @@ namespace AlgoritmProjekt.Objects.Projectiles
             this.position = position;
             this.alive = true;
             this.size = size;
-            lifeTime = 70;
-            speed = 6;
+            this.startPos = position;
+            speed = 20000;
             Shoot(targetVect);
         }
 
-        public override void Update()
+        public override void Update(float time)
         {
-            velocity = direction * speed;
-            position += velocity;
-            LifeCycle();
+            velocity = direction * speed * time;
+            position += velocity * time;
+            LifeCycle(time);
+            //base.Update(time);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -60,10 +61,9 @@ namespace AlgoritmProjekt.Objects.Projectiles
             direction.Normalize();
         }
 
-        void LifeCycle()
+        void LifeCycle(float time)
         {
-            ++lifeSpan;
-            if (lifeSpan > lifeTime)
+            if (Vector2.Distance(position, startPos) > size * 12)
             {
                 alive = false;
             }
@@ -71,7 +71,7 @@ namespace AlgoritmProjekt.Objects.Projectiles
 
         public void InstaKillMe()
         {
-            lifeSpan = 1000;
+            alive = false;
         }
     }
 }

@@ -4,6 +4,7 @@ using AlgoritmProjekt.Input;
 using AlgoritmProjekt.Managers.ParticleEngine;
 using AlgoritmProjekt.Objects;
 using AlgoritmProjekt.Objects.Projectiles;
+using AlgoritmProjekt.ParticleEngine.Emitters;
 using AlgoritmProjekt.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -18,8 +19,7 @@ namespace AlgoritmProjekt.Managers
     class GameManager
     {
         List<JsonObject> jsonTiles = new List<JsonObject>();
-        GraphicsDevice graphicsDevice;
-        Texture2D square, smallSquare;
+        Texture2D hollowSquare, smallHollowSquare, solidSquare;
         CrossHair xhair;
         TileGrid grid;
         Camera camera;
@@ -27,9 +27,11 @@ namespace AlgoritmProjekt.Managers
         Vector2 cameraRecoil;
         Vector2 recoil;
         int size = 32;
+        string timeFont = "Time: ", scoreFont = "Score: ", lifeFont = "Life: ", energyFont = "Energy: ", gameOverFont = "Game Over", winFont = "Level Completed";
 
         List<EnemySpawner> spawners = new List<EnemySpawner>();
         List<Projectile> projectiles = new List<Projectile>();
+        List<Emitter> emitters = new List<Emitter>();
         List<Enemy> enemies = new List<Enemy>();
         List<Wall> walls = new List<Wall>();
         Player player;
@@ -37,20 +39,25 @@ namespace AlgoritmProjekt.Managers
         int score = 0;
         float TotalTime;
 
-        List<Emitter> emitters = new List<Emitter>();
+        bool playerEmit = true;
+        int screenWidth, screenHeight;
+        float powerMeter = 100;
 
-        public GameManager(GameWindow Window, GraphicsDevice graphicsDevice, SpriteFont font)
+        public GameManager(int screenWidth, int screenHeight, SpriteFont font, string filePath,
+            Texture2D solidSquare, Texture2D hollowSquare, Texture2D smallHollowSquare)
         {
-            camera = new Camera(new Rectangle(0, 0, Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2), new Rectangle(0, 0, Window.ClientBounds.Width * 4, Window.ClientBounds.Height * 4));
-            this.graphicsDevice = graphicsDevice;
+            camera = new Camera(new Rectangle(0, 0, screenWidth / 2, screenHeight / 2), new Rectangle(0, 0, screenWidth * 4, screenHeight * 4));
+            this.screenWidth = screenWidth;
+            this.screenHeight = screenHeight;
             this.font = font;
-            square = createRectangle(size, size, graphicsDevice);
-            smallSquare = createRectangle(3, 3, graphicsDevice);
-            grid = new TileGrid(square, size, 100, 50);
-            xhair = new CrossHair(square, smallSquare, new Vector2(200, 200), size);
+            this.solidSquare = solidSquare;
+            this.hollowSquare = hollowSquare;
+            this.smallHollowSquare = smallHollowSquare;
+            grid = new TileGrid(hollowSquare, size, 100, 50);
+            xhair = new CrossHair(hollowSquare, smallHollowSquare, new Vector2(200, 200), size);
 
-            LoadLevel.LoadingLevel("SaveTest.json", ref jsonTiles, ref walls,
-                ref spawners, ref player, ref square, ref smallSquare, size);
+            LoadLevel.LoadingLevel(filePath, ref jsonTiles, ref walls,
+                ref spawners, ref player, ref solidSquare, ref hollowSquare, ref smallHollowSquare, size);
             foreach (Wall wall in walls)
             {
                 grid.SetOccupiedGrid(wall);
@@ -59,20 +66,21 @@ namespace AlgoritmProjekt.Managers
 
         public void Update(GameTime gameTime)
         {
-            TotalTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (!Winner())
+                TotalTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            PlayerShoots();
             //tillfällig funktion för att kolla olika vapen - fungerar som att lvlaupp
-            if (score > 3500)
+            if (score >= 3500)
                 player.weaponState = Player.WeaponType.MachineGun;
-            else if (score > 1500)
+            else if (score >= 1500)
                 player.weaponState = Player.WeaponType.ShotGun;
 
-            //Ordningen är viktig - vet inte var men kan fucka upp saker om den ändras
-            xhair.Update(camera.CameraPos, player.myPosition);
-            WhenPlayerShoots();
+            //Ordningen är viktig - kameran tar emot på ett elastiskt sätt mot väggarna
             UpdateObjects((float)gameTime.ElapsedGameTime.TotalSeconds);
-            RemoveDeadObjects();
-            player.Update(xhair.myPosition);
+            xhair.Update(camera.CameraPos, player.myPosition);
             HandleCamera();
+            //om de nedan kastas om tar fiender skada 2 ggr / skott
+            RemoveDeadObjects();
             Collisions();
         }
 
@@ -82,12 +90,44 @@ namespace AlgoritmProjekt.Managers
             grid.Draw(spriteBatch);
             DrawAllObjects(spriteBatch);
             xhair.Draw(spriteBatch);
-
-            spriteBatch.DrawString(font, "Time: " + (int)TotalTime, new Vector2(350 - camera.CameraPos.X, -camera.CameraPos.Y), Color.LimeGreen);
-            spriteBatch.DrawString(font, "Score: " + score, new Vector2(10 - camera.CameraPos.X, -camera.CameraPos.Y), Color.LimeGreen);
+            DrawFonts(spriteBatch);
             spriteBatch.End();
         }
 
+        public bool Winner()
+        {
+            if (spawners.Count() == 0)
+                return true;
+            return false;
+        }
+
+        public bool GameOver()
+        {
+            if (player.myHP == 0)
+            {
+                if (playerEmit)
+                {
+                    emitters.Add(new PlayerEmitter(solidSquare, player.myPosition));
+                    playerEmit = false;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        private void DrawFonts(SpriteBatch spriteBatch)
+        {
+            spriteBatch.DrawString(font, scoreFont + score, new Vector2(-camera.CameraPos.X, -camera.CameraPos.Y), Color.LimeGreen);
+            spriteBatch.DrawString(font, timeFont + (int)TotalTime, new Vector2((screenWidth / 2) - (font.MeasureString(timeFont).X / 2) - camera.CameraPos.X, -camera.CameraPos.Y), Color.LimeGreen);
+            spriteBatch.DrawString(font, lifeFont + player.myHP, new Vector2(-camera.CameraPos.X, screenHeight - font.MeasureString(lifeFont).Y - camera.CameraPos.Y), Color.LimeGreen);
+            spriteBatch.DrawString(font, energyFont + (int)powerMeter, new Vector2(screenWidth - (font.MeasureString(energyFont).X + (size * 3)) - camera.CameraPos.X, screenHeight - font.MeasureString(energyFont).Y - camera.CameraPos.Y), Color.LimeGreen);
+            if (GameOver())
+                spriteBatch.DrawString(font, gameOverFont, new Vector2(350 - camera.CameraPos.X, 200 - camera.CameraPos.Y), Color.Red, 0, Vector2.Zero, 1.5f, SpriteEffects.None, 0);
+            if (Winner())
+                spriteBatch.DrawString(font, winFont, new Vector2(350 - camera.CameraPos.X, 200 - camera.CameraPos.Y), Color.Red, 0, new Vector2(40, 0), 1.5f, SpriteEffects.None, 0);
+
+        }
+        //not in use
         private void DrawWaypoints(SpriteBatch spriteBatch)
         {
             //spriteBatch.Draw(smallSquare, new Vector2(xhair.myPosition.X - 1.5f, xhair.myPosition.Y - 1.5f), Color.Red);
@@ -135,15 +175,19 @@ namespace AlgoritmProjekt.Managers
                 enemy.Draw(spriteBatch);
                 //spriteBatch.Draw(createRectangle(3, 3, graphicsDevice), enemy.myPosition, Color.Red);
             }
-            player.Draw(spriteBatch);
+
+            if (!GameOver())
+                player.Draw(spriteBatch);
             //spriteBatch.Draw(createRectangle(3, 3, graphicsDevice), player.myPosition, Color.Red);
         }
 
         private void UpdateObjects(float time)
         {
+            PlayerPowerUp(ref time);
+
             foreach (Enemy enemy in enemies)
             {
-                enemy.Update(player.myPoint, grid);
+                enemy.Update(time, player.myPoint, grid);
             }
 
             foreach (Emitter emitter in emitters)
@@ -151,18 +195,23 @@ namespace AlgoritmProjekt.Managers
                 emitter.Update(time);
             }
 
-            for (int i = 0; i < spawners.Count; i++)
-            {
-                spawners[i].Update(ref enemies, player.myPosition, time);
-            }
-
             for (int i = 0; i < projectiles.Count; i++)
             {
-                projectiles[i].Update();
+                projectiles[i].Update(time);
+            }
+
+            if (!GameOver())
+            {
+                player.Update(time);
+
+                for (int i = 0; i < spawners.Count; i++)
+                {
+                    spawners[i].Update(ref enemies, player.myPosition, time);
+                }
             }
         }
 
-        private void WhenPlayerShoots()
+        private void PlayerShoots()
         {
             if (player.ShotsFired)
             {
@@ -172,16 +221,27 @@ namespace AlgoritmProjekt.Managers
                 {
                     for (int i = 0; i < 5; i++)
                     {
-                        projectiles.Add(new Projectile(smallSquare, player.myPosition, 3, new Vector2(xhair.myPosition.X + rand.Next(-20, 20), xhair.myPosition.Y + rand.Next(-20, 20))));
+                        projectiles.Add(new Projectile(smallHollowSquare, player.myPosition, size, new Vector2(xhair.myPosition.X + rand.Next(-20, 20), xhair.myPosition.Y + rand.Next(-20, 20))));
                     }
                 }
                 else if (player.weaponState == Player.WeaponType.MachineGun)
-                    projectiles.Add(new Projectile(smallSquare, player.myPosition, 3, new Vector2(xhair.myPosition.X + rand.Next(-10, 10), xhair.myPosition.Y + rand.Next(-10, 10))));
+                    projectiles.Add(new Projectile(smallHollowSquare, player.myPosition, size, new Vector2(xhair.myPosition.X + rand.Next(-10, 10), xhair.myPosition.Y + rand.Next(-10, 10))));
                 else if (player.weaponState == Player.WeaponType.Pistol)
-                    projectiles.Add(new Projectile(smallSquare, player.myPosition, 3, new Vector2(xhair.myPosition.X + rand.Next(-3, 3), xhair.myPosition.Y + rand.Next(-3, 3))));
+                    projectiles.Add(new Projectile(smallHollowSquare, player.myPosition, size, new Vector2(xhair.myPosition.X + rand.Next(-3, 3), xhair.myPosition.Y + rand.Next(-3, 3))));
 
                 player.ShotsFired = false;
             }
+        }
+
+        private void PlayerPowerUp(ref float time)
+        {
+            if (player.playerState == Player.PlayerState.Power && powerMeter > 0)
+            {
+                powerMeter -= 0.15f;
+                time *= 0.35f;
+            }
+            else if (powerMeter < 30)
+                powerMeter += 0.15f;
         }
 
         //score måste ses över
@@ -191,7 +251,7 @@ namespace AlgoritmProjekt.Managers
             {
                 if (!enemies[i].iamAlive)
                 {
-                    emitters.Add(new EnemyEmitter(square,enemies[i].myPosition));
+                    emitters.Add(new EnemyEmitter(hollowSquare, enemies[i].myPosition));
                     enemies.RemoveAt(i);
                     score += 25;
                 }
@@ -201,7 +261,7 @@ namespace AlgoritmProjekt.Managers
             {
                 if (!spawners[i].iamAlive)
                 {
-                    emitters.Add(new EnemyEmitter(square, spawners[i].myPosition));
+                    emitters.Add(new EnemyEmitter(hollowSquare, spawners[i].myPosition));
                     spawners.RemoveAt(i);
                     score += 275;
                 }
@@ -244,6 +304,7 @@ namespace AlgoritmProjekt.Managers
                 if (enemy.CheckMyCollision(player) && player.playerState != Player.PlayerState.Invulnerable)
                 {
                     player.playerState = Player.PlayerState.Invulnerable;
+                    player.myHP--;
                 }
 
                 foreach (Projectile shot in projectiles)
@@ -276,35 +337,5 @@ namespace AlgoritmProjekt.Managers
             }
         }
 
-        Texture2D createRectangle(int width, int height, GraphicsDevice graphicsDevice)
-        {
-            Texture2D texture = new Texture2D(graphicsDevice, width, height);
-            Color[] data = new Color[width * height];
-
-            // Colour the entire texture transparent first.             
-            for (int i = 0; i < data.Length; i++)
-            {
-                data[i] = new Color(0.2f, 0.2f, 0.2f);
-            }
-            for (int i = 0; i < width; i++)
-            {
-                data[i] = Color.White;
-            }
-            for (int i = 0; i < width * height - width; i += width)
-            {
-                data[i] = Color.White;
-            }
-            for (int i = width - 1; i < width * height; i += width)
-            {
-                data[i] = Color.White;
-            }
-            for (int i = width * height - width; i < width * height; i++)
-            {
-                data[i] = Color.White;
-            }
-
-            texture.SetData(data);
-            return texture;
-        }
     }
 }

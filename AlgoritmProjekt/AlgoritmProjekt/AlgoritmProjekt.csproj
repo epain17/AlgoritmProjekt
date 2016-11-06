@@ -40,9 +40,15 @@
   <ItemGroup>
     <Compile Include="Managers\GameManager.cs" />
     <Compile Include="Managers\Menu.cs" />
+    <Compile Include="Objects\Weapons\LaserGun.cs" />
+    <Compile Include="Objects\Weapons\MachineGun.cs" />
+    <Compile Include="Objects\Weapons\Pistol.cs" />
+    <Compile Include="Objects\Weapons\ShotGun.cs" />
     <Compile Include="ParticleEngine\Emitters\Emitter.cs" />
     <Compile Include="ParticleEngine\Emitters\EnemyEmitter.cs" />
     <Compile Include="ParticleEngine\Emitters\MatrixEmitter.cs" />
+    <Compile Include="ParticleEngine\Emitters\PlayerEmitter.cs" />
+    <Compile Include="ParticleEngine\Particles\PlayerParticle.cs" />
     <Compile Include="ParticleEngine\Particles\TextureParticle.cs" />
     <Compile Include="ParticleEngine\Particles\FontParticle.cs" />
     <Compile Include="ParticleEngine\Particles\Particle.cs" />
@@ -81,7 +87,6 @@
     <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

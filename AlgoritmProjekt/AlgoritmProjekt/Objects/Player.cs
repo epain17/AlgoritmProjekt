@@ -29,6 +29,10 @@ namespace AlgoritmProjekt.Characters
         }
         public PlayerState playerState = PlayerState.Normal;
 
+        float invuleranbleTimer = 0;
+        float colorAlpha = 1;
+        bool fade = true;
+
         public float RecoilPower;
         float shotInterval = 0;
         bool shot = false;        
@@ -39,56 +43,72 @@ namespace AlgoritmProjekt.Characters
             set { shot = value; }
         }
 
-        bool isKeyDown(Keys key)
-        {
-            if (KeyMouseReader.keyState.IsKeyDown(key))
-            {
-                return true;
-            }
-            return false;
-        }
-
         public Player(Texture2D texture, Vector2 position, int size)
             : base(texture, position, size)
         {
             this.texture = texture;
             this.position = position;
             this.size = size;
-            this.myHP = 3;
+            this.myHP = 2;
         }
 
-        public void Update(Vector2 target)
+        public override void Update(float time)
         {
-            HandlePlayerInteractions(Keys.S, Keys.A, Keys.D, Keys.W, Keys.Space);
-            HandleWeaponStates();
-            position += velocity;
+            HandlePlayerInteractions(Keys.S, Keys.A, Keys.D, Keys.W, Keys.Space, Keys.E);
+            HandleWeaponStates(time);
+            HandlePlayerStates(time);
+            base.Update(time);
+        }
 
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(texture, position, null, Color.LimeGreen * colorAlpha, 0, origin, 1, SpriteEffects.None, 1);
+        }
+
+        protected virtual void HandlePlayerInteractions(Keys downKey, Keys leftKey, Keys rightKey, Keys upKey, Keys shotKey, Keys powerKey)
+        {
+            Moving(downKey, leftKey, rightKey, upKey);
+            Shooting(shotKey);
+            Powering(powerKey);
+        }
+
+        private void HandlePlayerStates(float time)
+        {
             switch (playerState)
             {
                 case PlayerState.Normal:
                     break;
                 case PlayerState.Invulnerable:
-                    InvulnerableState();
+                    InvulnerableState(time);
                     break;
                 case PlayerState.Power:
                     break;
             }
         }
 
-        void InvulnerableState()
+        private void InvulnerableState(float time)
         {
-            
-        }
+            invuleranbleTimer += time;
+            if(fade)
+            {
+                colorAlpha -= 0.1f;
+                if (colorAlpha < 0.1f)
+                    fade = false;
+            }
+            else
+            {
+                colorAlpha += 0.1f;
+                if (colorAlpha > 0.9f)
+                    fade = true;
+            }
 
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(texture, position, null, Color.LimeGreen, 0, origin, 1, SpriteEffects.None, 1);
-        }
-
-        protected virtual void HandlePlayerInteractions(Keys downKey, Keys leftKey, Keys rightKey, Keys upKey, Keys shotKey)
-        {
-            Moving(downKey, leftKey, rightKey, upKey);
-            Shooting(shotKey);
+            if(invuleranbleTimer > 200)
+            {
+                playerState = PlayerState.Normal;
+                invuleranbleTimer = 0;
+                colorAlpha = 1;
+                fade = true;
+            }
         }
 
         private void Moving(Keys downKey, Keys leftKey, Keys rightKey, Keys upKey)
@@ -97,22 +117,22 @@ namespace AlgoritmProjekt.Characters
 
             if (isKeyDown(leftKey))
             {
-                velocity.X = -3;
+                velocity.X = -160;
             }
 
             else if (isKeyDown(rightKey))
             {
-                velocity.X = 3;
+                velocity.X = 160;
             }
 
             else if (isKeyDown(downKey))
             {
-                velocity.Y = 3;
+                velocity.Y = 160;
             }
 
             else if (isKeyDown(upKey))
             {
-                velocity.Y = -3;
+                velocity.Y = -160;
             }
         }
 
@@ -120,7 +140,7 @@ namespace AlgoritmProjekt.Characters
         {
             if (isKeyDown(shotKey))
             {
-                if (shotInterval > 10)
+                if (shotInterval > 0.5f)
                 {
                     shot = true;
                     shotInterval = 0;
@@ -128,21 +148,38 @@ namespace AlgoritmProjekt.Characters
             }
         }
 
-        private void HandleWeaponStates()
+        private void Powering(Keys powerKey)
+        {
+            if (isKeyDown(powerKey))
+                playerState = PlayerState.Power;
+            else if(playerState != PlayerState.Invulnerable)
+                playerState = PlayerState.Normal;
+        }
+
+        private bool isKeyDown(Keys key)
+        {
+            if (KeyMouseReader.keyState.IsKeyDown(key))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private void HandleWeaponStates(float time)
         {
             switch (weaponState)
             {
                 case WeaponType.Pistol:
-                    shotInterval += 0.5f;
+                    shotInterval += time;
                     RecoilPower = 5f;
                     break;
                 case WeaponType.ShotGun:
-                    shotInterval += 0.25f;
-                    RecoilPower = 20;
+                    shotInterval += time * 0.5f;
+                    RecoilPower = 12;
                     break;
                 case WeaponType.MachineGun:
-                    shotInterval += 1.5f;
-                    RecoilPower = 10;
+                    shotInterval += time * 2.5f;
+                    RecoilPower = 8;
                     break;
             }
         }

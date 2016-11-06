@@ -55,16 +55,24 @@ namespace AlgoritmProjekt.Screens
             switch (run)
             {
                 case RunTime.FirstLoad:
-                    if (KeyMouseReader.KeyPressed(Keys.Up) && selected > 1)
+                    if (KeyMouseReader.KeyPressed(Keys.W) && selected > 1)
                         selected--;
-                    else if (KeyMouseReader.KeyPressed(Keys.Down) && selected < buttons.Count - 1)
+                    else if (KeyMouseReader.KeyPressed(Keys.W) && selected == 1)
+                        selected = buttons.Count - 1;
+                    if (KeyMouseReader.KeyPressed(Keys.S) && selected < buttons.Count - 1)
                         selected++;
+                    else if (KeyMouseReader.KeyPressed(Keys.S) && selected == buttons.Count - 1)
+                        selected = 1;
                     break;
                 case RunTime.Continued:
-                    if (KeyMouseReader.KeyPressed(Keys.Up) && selected > 0)
+                    if (KeyMouseReader.KeyPressed(Keys.W) && selected > 0)
                         selected--;
-                    else if (KeyMouseReader.KeyPressed(Keys.Down) && selected < buttons.Count - 1)
+                    else if (KeyMouseReader.KeyPressed(Keys.W) && selected == 0)
+                        selected = buttons.Count - 1;
+                    if (KeyMouseReader.KeyPressed(Keys.S) && selected < buttons.Count - 1)
                         selected++;
+                    else if (KeyMouseReader.KeyPressed(Keys.S) && selected == buttons.Count - 1)
+                        selected = 0;
                     break;
             }
             if (KeyMouseReader.KeyPressed(Keys.Enter) || KeyMouseReader.KeyPressed(Keys.Space))
@@ -72,15 +80,14 @@ namespace AlgoritmProjekt.Screens
                 switch (selected)
                 {
                     case 0:
-                        //continue
-                        //run = RunTime.Continued;
+                        //continue - no changes
                         Game1.gameState = Game1.GameState.gamePlay;
                         break;
                     case 1:
                         //new game
-                        Game1.RELOAD = true;
+                        Game1.RELOADGAMEPLAY = true;
                         Game1.LoadJsonLevel = true;
-                        Game1.gameState = Game1.GameState.gamePlay;
+                        //Game1.gameState = Game1.GameState.gamePlay;
                         run = RunTime.Continued;
                         selected = 0;
                         break;
@@ -129,7 +136,8 @@ namespace AlgoritmProjekt.Screens
             if (timer > 0.1f)
             {
                 timer = 0;
-                emitters.Add(new MatrixEmitter(font, new Vector2((float)rand.Next(0, window.ClientBounds.Width), 0)));
+                if (Game1.gameState == Game1.GameState.menu)
+                    emitters.Add(new MatrixEmitter(font, new Vector2((float)rand.Next(0, window.ClientBounds.Width), 0)));
             }
 
             foreach (Emitter emitter in emitters)

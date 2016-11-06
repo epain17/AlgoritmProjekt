@@ -62,15 +62,15 @@ namespace AlgoritmProjekt.Utility
         }
 
         public static void LoadingLevel(string filePath, ref List<JsonObject> jsonTiles, ref List<Wall> walls, 
-            ref List<EnemySpawner> spawners, ref Player player, ref Texture2D texture, ref Texture2D projectileTex, int size)
+            ref List<EnemySpawner> spawners, ref Player player, ref Texture2D solidSquare, ref Texture2D hollowSquare, ref Texture2D smallHollowSquare, int size)
         {
             if(Game1.LoadJsonLevel && filePath != null)
             {
                 Game1.LoadJsonLevel = false;
                 jsonTiles = null;
-                JsonPlayer(ref player, ref jsonTiles, ref texture, ref projectileTex, filePath, size);
-                JsonEnemySpawner(ref spawners, ref jsonTiles, ref texture, filePath, size);
-                JsonWalls(ref walls, ref jsonTiles, ref texture, filePath, size);
+                JsonPlayer(ref player, ref jsonTiles, ref solidSquare, ref smallHollowSquare, filePath, size);
+                JsonEnemySpawner(ref spawners, ref jsonTiles, ref hollowSquare, filePath, size);
+                JsonWalls(ref walls, ref jsonTiles, ref solidSquare, filePath, size);
             }
         }
     }

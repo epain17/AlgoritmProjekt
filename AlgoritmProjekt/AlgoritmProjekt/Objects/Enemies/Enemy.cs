@@ -42,16 +42,16 @@ namespace AlgoritmProjekt.Characters
             this.size = size;
             this.hp = 4;
             startHp = hp;
-            speed = 3.2f;
+            speed = 50f;
         }
 
-        public void Update(Point targetPoint, TileGrid grid)
+        public void Update(float time, Point targetPoint, TileGrid grid)
         {
             // if closest node reached
             FindPath(targetPoint, grid);
             UpdatePos();
-            position += velocity;
-            if (myHP <= 0)
+            position += time * (velocity + acceleration * time / 2);
+            velocity += acceleration * time; if (myHP <= 0)
                 alive = false;
         }
 

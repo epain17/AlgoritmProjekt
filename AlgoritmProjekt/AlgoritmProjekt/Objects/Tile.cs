@@ -17,7 +17,7 @@ namespace AlgoritmProjekt
     class Tile
     {
         protected Texture2D texture;
-        protected Vector2 position, velocity;
+        protected Vector2 position, velocity, acceleration;
         protected Rectangle hitBox;
         protected int size;
         protected bool occupied = false;
@@ -86,11 +86,13 @@ namespace AlgoritmProjekt
             this.size = size;
             this.origin = new Vector2(size / 2, size / 2);
             this.velocity = Vector2.Zero;
+            this.acceleration = Vector2.Zero;
         }
 
-        public virtual void Update()
+        public virtual void Update(float time)
         {
-            position += velocity;
+            position += time * (velocity + acceleration * time / 2);
+            velocity += acceleration * time;
         }
 
         public virtual void Draw(SpriteBatch spritebatch)

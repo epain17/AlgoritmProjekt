@@ -12,7 +12,8 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
     {
         Texture2D texture;
 
-        public EnemyEmitter(Texture2D texture, Vector2 position) : base(position)
+        public EnemyEmitter(Texture2D texture, Vector2 position) 
+            : base(position)
         {
             this.texture = texture;
             this.position = position;
