@@ -4,6 +4,7 @@ using AlgoritmProjekt.Input;
 using AlgoritmProjekt.Managers.ParticleEngine;
 using AlgoritmProjekt.Objects;
 using AlgoritmProjekt.Objects.Projectiles;
+using AlgoritmProjekt.Objects.Weapons;
 using AlgoritmProjekt.ParticleEngine.Emitters;
 using AlgoritmProjekt.Utility;
 using Microsoft.Xna.Framework;
@@ -27,7 +28,7 @@ namespace AlgoritmProjekt.Managers
         Vector2 cameraRecoil;
         Vector2 recoil;
         int tileSize = 32;
-        string timeFont = "Time: ", scoreFont = "Score: ", lifeFont = "Life: ", 
+        string timeFont = "Time: ", scoreFont = "Score: ", lifeFont = "Life: ",
             energyFont = "Energy: ", gameOverFont = "Game Over", winFont = "Level Completed";
 
         List<EnemySpawner> spawners = new List<EnemySpawner>();
@@ -43,6 +44,8 @@ namespace AlgoritmProjekt.Managers
         bool playerEmit = true;
         int screenWidth, screenHeight;
 
+        List<Weapon> weapons = new List<Weapon>();
+
         public GameManager(int screenWidth, int screenHeight, int tileSize, SpriteFont font, string filePath,
             Texture2D solidSquare, Texture2D hollowSquare, Texture2D smallHollowSquare)
         {
@@ -57,12 +60,14 @@ namespace AlgoritmProjekt.Managers
             grid = new TileGrid(hollowSquare, tileSize, 100, 50);
             xhair = new CrossHair(hollowSquare, smallHollowSquare, new Vector2(200, 200), tileSize);
 
+
             LoadLevel.LoadingLevel(filePath, ref jsonTiles, ref walls,
                 ref spawners, ref player, ref solidSquare, ref hollowSquare, ref smallHollowSquare, tileSize);
             foreach (Wall wall in walls)
             {
                 grid.SetOccupiedGrid(wall);
             }
+            weapons.Add(new Pistol(solidSquare, font, new Vector2(player.myPosition.X, player.myPosition.Y + (tileSize * 3)), tileSize));
         }
 
         public void Update(GameTime gameTime)
@@ -70,16 +75,16 @@ namespace AlgoritmProjekt.Managers
             if (!Winner())
                 TotalTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
             PlayerShoots();
-            //tillfällig funktion för att kolla olika vapen - fungerar som att lvlaupp
-            if (score >= 3500)
-                player.weaponState = Player.WeaponType.MachineGun;
-            else if (score >= 1500)
-                player.weaponState = Player.WeaponType.ShotGun;
 
             //Ordningen är viktig - kameran tar emot på ett elastiskt sätt mot väggarna
             UpdateObjects((float)gameTime.ElapsedGameTime.TotalSeconds);
             xhair.Update(camera.CameraPos, player.myPosition);
             HandleCamera();
+            foreach (Weapon weapon in weapons)//ligger efter kameran så att objektet inte släpar efter
+            {
+                weapon.Update(camera.CameraPos, screenWidth, screenHeight);
+            }
+
             //om de nedan kastas om tar fiender skada 2 ggr / skott
             RemoveDeadObjects();
             Collisions();
@@ -90,6 +95,7 @@ namespace AlgoritmProjekt.Managers
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, camera.TranslationMatrix);
             grid.Draw(spriteBatch);
             DrawObjects(spriteBatch);
+
             xhair.Draw(spriteBatch);
             DrawFonts(spriteBatch);
             spriteBatch.End();
@@ -128,6 +134,7 @@ namespace AlgoritmProjekt.Managers
                 spriteBatch.DrawString(font, winFont, new Vector2(350 - camera.CameraPos.X, 200 - camera.CameraPos.Y), Color.Red, 0, new Vector2(40, 0), 1.5f, SpriteEffects.None, 0);
 
         }
+
         //not in use
         private void DrawWaypoints(SpriteBatch spriteBatch)
         {
@@ -180,6 +187,10 @@ namespace AlgoritmProjekt.Managers
             if (!GameOver())
                 player.Draw(spriteBatch);
             //spriteBatch.Draw(createRectangle(3, 3, graphicsDevice), player.myPosition, Color.Red);
+            foreach (Weapon weapon in weapons)
+            {
+                weapon.Draw(spriteBatch);
+            }
         }
 
         private void UpdateObjects(float time)
@@ -208,7 +219,6 @@ namespace AlgoritmProjekt.Managers
             {
                 projectiles[i].Update(ref time);
             }
-
         }
 
         private void PlayerShoots()
@@ -318,6 +328,22 @@ namespace AlgoritmProjekt.Managers
                 foreach (Wall wall in walls)
                 {
                     projectile.CheckMyCollision(wall);
+                }
+            }
+
+            foreach (Weapon weapon in weapons)
+            {
+                if (weapon.CheckMyCollision(player))
+                {
+                    if (weapon is Pistol)
+                        player.weaponState = Player.WeaponType.Pistol;
+                    else if (weapon is ShotGun)
+                        player.weaponState = Player.WeaponType.ShotGun;
+                    else if (weapon is MachineGun)
+                        player.weaponState = Player.WeaponType.MachineGun;
+                    else if (weapon is LaserGun)
+                        player.weaponState = Player.WeaponType.Lazer;
+                    weapon.moveMe = true;
                 }
             }
 

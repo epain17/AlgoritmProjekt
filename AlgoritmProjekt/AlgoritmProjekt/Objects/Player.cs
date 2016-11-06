@@ -1,4 +1,5 @@
 ﻿using AlgoritmProjekt.Input;
+using AlgoritmProjekt.Objects;
 using AlgoritmProjekt.Objects.Projectiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,15 +12,17 @@ using System.Threading.Tasks;
 
 namespace AlgoritmProjekt.Characters
 {
-    class Player : Tile
+    class Player : LivingTile
     {
         public enum WeaponType
         {
+            None,
             Pistol,
             ShotGun,
             MachineGun,
+            Lazer,
         }
-        public WeaponType weaponState = WeaponType.Pistol;
+        public WeaponType weaponState = WeaponType.None;
 
         public enum PlayerState
         {

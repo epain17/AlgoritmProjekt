@@ -1,4 +1,5 @@
 using AlgoritmProjekt.Grid;
+using AlgoritmProjekt.Objects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -9,7 +10,7 @@ using System.Text;
 
 namespace AlgoritmProjekt.Characters
 {
-    class Enemy : Tile
+    class Enemy : LivingTile
     {
         protected float speed;
         protected float startHp;
@@ -21,7 +22,7 @@ namespace AlgoritmProjekt.Characters
         List<Vector2> newPath = new List<Vector2>();
         List<Vector2> path = new List<Vector2>();
 
-        protected int rangeLimit = 400;
+        protected int AggroRange = 400;
 
         //kan raderas när pathfindingen fungerar bra 
         public Queue<Vector2> Way
@@ -40,9 +41,9 @@ namespace AlgoritmProjekt.Characters
             this.texture = texture;
             this.position = position;
             this.size = size;
-            this.hp = 4;
+            this.hp = 3;
             startHp = hp;
-            speed = 200f;
+            speed = 180f;
         }
 
         public void Update(float time, Point targetPoint, TileGrid grid)
@@ -65,7 +66,7 @@ namespace AlgoritmProjekt.Characters
 
         protected void FindPath(Point targetPoint, TileGrid grid)
         {
-            if (Range(targetPoint) < rangeLimit && waypoints.Count() == 0)
+            if (Range(targetPoint) < AggroRange && waypoints.Count() == 0)
             {
                 waypoints.Clear();
                 pathfinder = new Pathfinder(grid); //kan man spara prestanda genom att inte skapa ny varje gång?

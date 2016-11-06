@@ -22,8 +22,6 @@ namespace AlgoritmProjekt
         protected int size;
         protected bool occupied = false;
         protected Vector2 origin;
-        protected int hp;
-        protected bool alive = true;
 
         public int mySize
         {
@@ -59,17 +57,6 @@ namespace AlgoritmProjekt
             get { return new Point((int)position.X / size, (int)position.Y / size); }
         }
 
-        public int myHP
-        {
-            get { return hp; }
-            set { hp = value; }
-        }
-
-        public bool iamAlive
-        {
-            get { return alive; }
-        }
-
         public virtual bool CheckMyCollision(Tile target)
         {
             if (myHitBox.Intersects(target.myHitBox))
@@ -91,8 +78,7 @@ namespace AlgoritmProjekt
 
         public virtual void Update(ref float time)
         {
-            position += time * (velocity + acceleration * time / 2);
-            velocity += acceleration * time;
+            
         }
 
         public virtual void Draw(SpriteBatch spritebatch)
@@ -114,7 +100,6 @@ namespace AlgoritmProjekt
 
             velocity = Vector2.Zero;
         }
-
 
     }
 }

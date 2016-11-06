@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AlgoritmProjekt.Objects.Projectiles
 {
-    class Projectile : Tile
+    class Projectile : LivingTile
     {
         Vector2 direction, startPos;
         float speed;
