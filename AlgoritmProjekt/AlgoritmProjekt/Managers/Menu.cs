@@ -24,18 +24,18 @@ namespace AlgoritmProjekt.Screens
         SpriteFont font;
         Vector2 position;
         Color color;
-        int selected = 1;
+        int selected = 1, screenWidth, screenHeight;
         List<Emitter> emitters = new List<Emitter>();
-        GameWindow window;
         Texture2D texture;
         Random rand;
 
         float timer;
         Rectangle frame;
 
-        public Menu(GameWindow window, SpriteFont font, Vector2 position, Texture2D texture)
+        public Menu(int screenWidth, int screenHeight, SpriteFont font, Vector2 position, Texture2D texture)
         {
-            this.window = window;
+            this.screenWidth = screenWidth;
+            this.screenHeight = screenHeight;
             this.texture = texture;
             this.font = font;
             this.position = position;
@@ -52,53 +52,8 @@ namespace AlgoritmProjekt.Screens
         {
             HandleEmitters(time);
 
-            switch (run)
-            {
-                case RunTime.FirstLoad:
-                    if (KeyMouseReader.KeyPressed(Keys.W) && selected > 1)
-                        selected--;
-                    else if (KeyMouseReader.KeyPressed(Keys.W) && selected == 1)
-                        selected = buttons.Count - 1;
-                    if (KeyMouseReader.KeyPressed(Keys.S) && selected < buttons.Count - 1)
-                        selected++;
-                    else if (KeyMouseReader.KeyPressed(Keys.S) && selected == buttons.Count - 1)
-                        selected = 1;
-                    break;
-                case RunTime.Continued:
-                    if (KeyMouseReader.KeyPressed(Keys.W) && selected > 0)
-                        selected--;
-                    else if (KeyMouseReader.KeyPressed(Keys.W) && selected == 0)
-                        selected = buttons.Count - 1;
-                    if (KeyMouseReader.KeyPressed(Keys.S) && selected < buttons.Count - 1)
-                        selected++;
-                    else if (KeyMouseReader.KeyPressed(Keys.S) && selected == buttons.Count - 1)
-                        selected = 0;
-                    break;
-            }
-            if (KeyMouseReader.KeyPressed(Keys.Enter) || KeyMouseReader.KeyPressed(Keys.Space))
-            {
-                switch (selected)
-                {
-                    case 0:
-                        //continue - no changes
-                        Game1.gameState = Game1.GameState.gamePlay;
-                        break;
-                    case 1:
-                        //new game
-                        Game1.RELOADGAMEPLAY = true;
-                        Game1.LoadJsonLevel = true;
-                        //Game1.gameState = Game1.GameState.gamePlay;
-                        run = RunTime.Continued;
-                        selected = 0;
-                        break;
-                    case 2:
-                        //highscore
-                        break;
-                    case 3:
-                        Game1.EXIT = true;
-                        break;
-                }
-            }
+            HandleSelect();
+            ExecuteSelectedButton();
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -130,6 +85,61 @@ namespace AlgoritmProjekt.Screens
             }
         }
 
+        private void HandleSelect()
+        {
+            switch (run)
+            {
+                case RunTime.FirstLoad:
+                    if (KeyMouseReader.KeyPressed(Keys.W) && selected > 1)
+                        selected--;
+                    else if (KeyMouseReader.KeyPressed(Keys.W) && selected == 1)
+                        selected = buttons.Count - 1;
+                    if (KeyMouseReader.KeyPressed(Keys.S) && selected < buttons.Count - 1)
+                        selected++;
+                    else if (KeyMouseReader.KeyPressed(Keys.S) && selected == buttons.Count - 1)
+                        selected = 1;
+                    break;
+                case RunTime.Continued:
+                    if (KeyMouseReader.KeyPressed(Keys.W) && selected > 0)
+                        selected--;
+                    else if (KeyMouseReader.KeyPressed(Keys.W) && selected == 0)
+                        selected = buttons.Count - 1;
+                    if (KeyMouseReader.KeyPressed(Keys.S) && selected < buttons.Count - 1)
+                        selected++;
+                    else if (KeyMouseReader.KeyPressed(Keys.S) && selected == buttons.Count - 1)
+                        selected = 0;
+                    break;
+            }
+        }
+
+        private void ExecuteSelectedButton()
+        {
+            if (KeyMouseReader.KeyPressed(Keys.Enter) || KeyMouseReader.KeyPressed(Keys.Space))
+            {
+                switch (selected)
+                {
+                    case 0:
+                        //continue - no changes
+                        Game1.gameState = Game1.GameState.gamePlay;
+                        break;
+                    case 1:
+                        //new game
+                        Game1.RELOADGAMEPLAY = true;
+                        Game1.LoadJsonLevel = true;
+                        //Game1.gameState = Game1.GameState.gamePlay;
+                        run = RunTime.Continued;
+                        selected = 0;
+                        break;
+                    case 2:
+                        //highscore
+                        break;
+                    case 3:
+                        Game1.EXIT = true;
+                        break;
+                }
+            }
+        }
+
         private void HandleEmitters(float time)
         {
             timer += time;
@@ -137,7 +147,7 @@ namespace AlgoritmProjekt.Screens
             {
                 timer = 0;
                 if (Game1.gameState == Game1.GameState.menu)
-                    emitters.Add(new MatrixEmitter(font, new Vector2((float)rand.Next(0, window.ClientBounds.Width), 0)));
+                    emitters.Add(new MatrixEmitter(font, new Vector2((float)rand.Next(0, screenWidth), 0)));
             }
 
             foreach (Emitter emitter in emitters)

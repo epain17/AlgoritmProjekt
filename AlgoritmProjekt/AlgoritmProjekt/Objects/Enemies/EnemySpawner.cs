@@ -20,7 +20,7 @@ namespace AlgoritmProjekt.Objects
             this.texture = texture;
             this.position = position;
             this.size = size;
-            this.hp = 10;
+            this.hp = 3;
         }
 
         public void Update(ref List<Enemy> enemies, Vector2 player, float time)

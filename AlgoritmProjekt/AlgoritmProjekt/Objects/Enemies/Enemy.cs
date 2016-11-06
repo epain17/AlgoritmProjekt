@@ -42,7 +42,7 @@ namespace AlgoritmProjekt.Characters
             this.size = size;
             this.hp = 4;
             startHp = hp;
-            speed = 50f;
+            speed = 200f;
         }
 
         public void Update(float time, Point targetPoint, TileGrid grid)
@@ -50,9 +50,10 @@ namespace AlgoritmProjekt.Characters
             // if closest node reached
             FindPath(targetPoint, grid);
             UpdatePos();
-            position += time * (velocity + acceleration * time / 2);
-            velocity += acceleration * time; if (myHP <= 0)
+            
+            if (myHP <= 0)
                 alive = false;
+            base.Update(ref time);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

@@ -34,6 +34,7 @@ namespace AlgoritmProjekt
 
         string LevelName = "SaveTest.json";
         int screenWidth = 800, screenHeight = 600;
+        int tileSize = 32;
 
         public Game1()
         {
@@ -54,10 +55,10 @@ namespace AlgoritmProjekt
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("font");
-            gameManager = new GameManager(screenWidth, screenHeight, font, LevelName, createSolidRectangle(32, 32, GraphicsDevice),
-                createHollowRectangle(32, 32, GraphicsDevice), createHollowRectangle(3, 3, GraphicsDevice));
+            gameManager = new GameManager(screenWidth, screenHeight, tileSize, font, LevelName, createSolidRectangle(tileSize, tileSize, GraphicsDevice),
+                createHollowRectangle(tileSize, tileSize, GraphicsDevice), createHollowRectangle(3, 3, GraphicsDevice));
             smoothTex = Content.Load<Texture2D>("circle");
-            menu = new Menu(Window, font, new Vector2(screenWidth / 2, screenHeight / 2), smoothTex);
+            menu = new Menu(screenWidth, screenHeight, font, new Vector2(screenWidth / 2, screenHeight / 2), smoothTex);
         }
 
         protected override void UnloadContent()
@@ -71,8 +72,8 @@ namespace AlgoritmProjekt
                 Exit();
             if (RELOADGAMEPLAY)
             {
-                gameManager = new GameManager(screenWidth, screenHeight, font, LevelName, createSolidRectangle(32, 32, GraphicsDevice),
-                                createHollowRectangle(32, 32, GraphicsDevice), createHollowRectangle(3, 3, GraphicsDevice));
+                gameManager = new GameManager(screenWidth, screenHeight, tileSize, font, LevelName, createSolidRectangle(tileSize, tileSize, GraphicsDevice),
+                                createHollowRectangle(tileSize, tileSize, GraphicsDevice), createHollowRectangle(3, 3, GraphicsDevice));
                 RELOADGAMEPLAY = false;
                 gameState = GameState.gamePlay;
             }
@@ -115,7 +116,7 @@ namespace AlgoritmProjekt
                             KeyMouseReader.KeyPressed(Keys.Enter) ||
                             KeyMouseReader.KeyPressed(Keys.Escape))
                         {
-                            menu = new Menu(Window, font, new Vector2(screenWidth / 2, screenHeight / 2), smoothTex);
+                            menu = new Menu(screenWidth, screenHeight, font, new Vector2(screenWidth / 2, screenHeight / 2), smoothTex);
                             gameState = GameState.menu;
                         }
                     if (KeyMouseReader.KeyPressed(Keys.Escape))

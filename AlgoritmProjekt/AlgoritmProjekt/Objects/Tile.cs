@@ -89,7 +89,7 @@ namespace AlgoritmProjekt
             this.acceleration = Vector2.Zero;
         }
 
-        public virtual void Update(float time)
+        public virtual void Update(ref float time)
         {
             position += time * (velocity + acceleration * time / 2);
             velocity += acceleration * time;

@@ -42,7 +42,7 @@ namespace AlgoritmProjekt.Objects.Projectiles
             Shoot(targetVect);
         }
 
-        public override void Update(float time)
+        public override void Update(ref float time)
         {
             velocity = direction * speed * time;
             position += velocity * time;

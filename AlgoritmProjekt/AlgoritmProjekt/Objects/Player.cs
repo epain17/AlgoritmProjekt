@@ -35,12 +35,19 @@ namespace AlgoritmProjekt.Characters
 
         public float RecoilPower;
         float shotInterval = 0;
-        bool shot = false;        
+        bool shot = false;
+
+        float energyMeter = 50, maxEnergy = 50;
 
         public bool ShotsFired
         {
             get { return shot; }
             set { shot = value; }
+        }
+
+        public float EnergyMeter
+        {
+            get { return energyMeter; }
         }
 
         public Player(Texture2D texture, Vector2 position, int size)
@@ -49,15 +56,15 @@ namespace AlgoritmProjekt.Characters
             this.texture = texture;
             this.position = position;
             this.size = size;
-            this.myHP = 2;
+            this.myHP = 3;
         }
 
-        public override void Update(float time)
+        public override void Update(ref float time)
         {
-            HandlePlayerInteractions(Keys.S, Keys.A, Keys.D, Keys.W, Keys.Space, Keys.E);
+            HandlePlayerInteractions(Keys.S, Keys.A, Keys.D, Keys.W, Keys.Space, Keys.LeftControl);
             HandleWeaponStates(time);
-            HandlePlayerStates(time);
-            base.Update(time);
+            HandlePlayerStates(ref time);
+            base.Update(ref time);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -65,25 +72,28 @@ namespace AlgoritmProjekt.Characters
             spriteBatch.Draw(texture, position, null, Color.LimeGreen * colorAlpha, 0, origin, 1, SpriteEffects.None, 1);
         }
 
-        protected virtual void HandlePlayerInteractions(Keys downKey, Keys leftKey, Keys rightKey, Keys upKey, Keys shotKey, Keys powerKey)
-        {
-            Moving(downKey, leftKey, rightKey, upKey);
-            Shooting(shotKey);
-            Powering(powerKey);
-        }
-
-        private void HandlePlayerStates(float time)
+        private void HandlePlayerStates(ref float time)
         {
             switch (playerState)
             {
                 case PlayerState.Normal:
+                    if (energyMeter < maxEnergy)
+                        energyMeter += 0.15f;
                     break;
                 case PlayerState.Invulnerable:
                     InvulnerableState(time);
                     break;
                 case PlayerState.Power:
+                    PowerState(ref time);
                     break;
             }
+        }
+
+        protected virtual void HandlePlayerInteractions(Keys downKey, Keys leftKey, Keys rightKey, Keys upKey, Keys shotKey, Keys powerKey)
+        {
+            Moving(downKey, leftKey, rightKey, upKey);
+            Shooting(shotKey);
+            Powering(powerKey);
         }
 
         private void InvulnerableState(float time)
@@ -102,12 +112,21 @@ namespace AlgoritmProjekt.Characters
                     fade = true;
             }
 
-            if(invuleranbleTimer > 200)
+            if(invuleranbleTimer > 3)
             {
                 playerState = PlayerState.Normal;
                 invuleranbleTimer = 0;
                 colorAlpha = 1;
                 fade = true;
+            }
+        }
+
+        private void PowerState(ref float time)
+        {
+            if (playerState == PlayerState.Power && energyMeter > 0)
+            {
+                energyMeter -= 0.15f;
+                time *= 0.35f;
             }
         }
 
