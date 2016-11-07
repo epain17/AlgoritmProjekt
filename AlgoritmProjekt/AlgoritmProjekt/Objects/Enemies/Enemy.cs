@@ -14,8 +14,9 @@ namespace AlgoritmProjekt.Characters
     {
         protected float speed;
         protected float startHp;
+
+        protected bool FoundPlayer;
         Pathfinder pathfinder;
-        public Vector2 pathPos;
         Point startPoint, endPoint;
 
         Queue<Vector2> waypoints = new Queue<Vector2>();
@@ -62,6 +63,8 @@ namespace AlgoritmProjekt.Characters
             float healthPercent = hp / startHp;
             Color color = new Color(0.25f / healthPercent, 1 * healthPercent, 1f * healthPercent);
             spriteBatch.Draw(texture, position, null, color, 0, origin, 1, SpriteEffects.None, 1);
+            if(waypoints.Count() != 0)
+            spriteBatch.Draw(texture, waypoints.Peek(), null, color, 0, origin, 1, SpriteEffects.None, 1);
         }
 
         protected void FindPath(Point targetPoint, TileGrid grid)
@@ -74,20 +77,23 @@ namespace AlgoritmProjekt.Characters
                 endPoint = targetPoint;
 
                 newPath.Clear();
-                path = pathfinder.FindPath(startPoint, endPoint);
-                if (path != null)
-                {
-                    foreach (Vector2 point in path)
-                    {
-                        foreach (Vector2 pathpos in path)
-                        { //inte säker på om detta med size i pathpos är rätt - gjorde det för offsets
-                            pathPos = new Vector2(pathpos.X - (size / 2), pathpos.Y - (size / 2));
-                            newPath.Add(pathPos);
-                            waypoints.Enqueue(pathPos);
-                        }
-                        break;
-                    }
-                }
+                waypoints = pathfinder.FindPath(startPoint, endPoint);
+              
+                
+                //if (path != null && path.Count < 5)
+                //{
+                //    FoundPlayer = true;
+                //    foreach (Vector2 point in path)
+                //    {
+                //        foreach (Vector2 pathpos in path)
+                //        { //inte säker på om detta med size i pathpos är rätt - gjorde det för offsets
+                //            pathPos = new Vector2(pathpos.X - (size / 2), pathpos.Y - (size / 2));
+                //            newPath.Add(pathPos);
+                //            waypoints.Enqueue(pathPos);
+                //        }
+                //        break;
+                //    }
+                //}
 
             }
 

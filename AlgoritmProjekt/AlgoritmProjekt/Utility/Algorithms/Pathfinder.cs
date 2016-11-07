@@ -102,11 +102,11 @@ namespace AlgoritmProjekt
 
         }
 
-        public List<Vector2> FindPath(Point startPoint, Point endPoint)
+        public Queue<Vector2> FindPath(Point startPoint, Point endPoint)
         {
             if (startPoint == endPoint)
             {
-                return new List<Vector2>();
+                return new Queue<Vector2>();
             }
 
             ResetSearchNode();
@@ -176,7 +176,7 @@ namespace AlgoritmProjekt
                         currentNode.InClosedList = true;
                     }
                 }
-                return new List<Vector2>();
+                return new Queue<Vector2>();
             }
             return null;
         }
@@ -219,7 +219,7 @@ namespace AlgoritmProjekt
             return currentTile;
         }
 
-        private List<Vector2> FindFinalPath(SearchNode startNode, SearchNode endNode)
+        private Queue<Vector2> FindFinalPath(SearchNode startNode, SearchNode endNode)
         {
             closedList.Add(endNode);
             SearchNode parentTile = endNode.Parent;
@@ -230,10 +230,10 @@ namespace AlgoritmProjekt
                 parentTile = parentTile.Parent;
             }
 
-            List<Vector2> finalPath = new List<Vector2>();
+            Queue<Vector2> finalPath = new Queue<Vector2>();
             for (int i = closedList.Count - 1; i >= 0; i--)
             {
-                finalPath.Add(new Vector2((closedList[i].Position.X * 32)+ 16, (closedList[i].Position.Y * 32)+16));
+                finalPath.Enqueue(new Vector2((closedList[i].Position.X * 32), (closedList[i].Position.Y * 32)));
             }
             return finalPath;
         }
