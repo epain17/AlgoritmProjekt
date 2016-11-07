@@ -172,7 +172,7 @@ namespace AlgoritmProjekt.Characters
 
         private void Powering(Keys powerKey)
         {
-            if (isKeyDown(powerKey))
+            if (isKeyDown(powerKey) && playerState != PlayerState.Invulnerable)
                 playerState = PlayerState.Power;
             else if(playerState != PlayerState.Invulnerable)
                 playerState = PlayerState.Normal;

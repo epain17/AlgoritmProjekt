@@ -1,0 +1,256 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="AlgoritmProjekt.Game1" Collapsed="true">
+    <Position X="25.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEYAEEAIAQJAAwAAAAAACQgAQAAAAAgACEAgQAAABAQ=</HashCode>
+      <FileName>Game1.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Wall" Collapsed="true">
+    <Position X="1.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Objects\Environment\Wall.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.JsonObject" Collapsed="true">
+    <Position X="23.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Objects\Tile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Tile" Collapsed="true">
+    <Position X="10.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>DARQgBAAAAAAAgAAAIAAICAgAIAAAgQABAQEAAAAAAA=</HashCode>
+      <FileName>Objects\Tile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Program" Collapsed="true">
+    <Position X="27" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.SearchNode" Collapsed="true">
+    <Position X="21.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAggAAAQAAAAAAACAACIAgAAAAAAAA=</HashCode>
+      <FileName>Utility\Algorithms\Pathfinder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Pathfinder" Collapsed="true">
+    <Position X="25.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIIAACAAABQAAAAAAAAAAAAIAAAAQAAAgFAgA=</HashCode>
+      <FileName>Utility\Algorithms\Pathfinder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Camera" Collapsed="true">
+    <Position X="21.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAQAAAAAAACAAAgAAAAAAAAgAAAAAAIAAAAA=</HashCode>
+      <FileName>Utility\Camera.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Grid.TileGrid" Collapsed="true">
+    <Position X="23.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACEAAAAAAAAgQAQIEAAQAAAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>Grid\TileGrid.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Managers.GameManager" Collapsed="true">
+    <Position X="27" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAcAwBEAAwJAwiAAIESYCACAAgABAAMBAZFBUQAAAQA=</HashCode>
+      <FileName>Managers\GameManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Screens.Menu" Collapsed="true">
+    <Position X="23.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAYAAoAAAABAAhAAIAAAIACAAAAAAgiAAAAAQwAAAAA=</HashCode>
+      <FileName>Managers\Menu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Characters.Enemy" Collapsed="true">
+    <Position X="8" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQACAAAAABASgAAAkACABAgAAKAAYAAAAEEAAAAAAA=</HashCode>
+      <FileName>Objects\Enemies\Enemy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Characters.Player" Collapsed="true">
+    <Position X="3.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAgaEAAAAIAggAAAAaAAEIAAQAAABAHgAAAAIAIAA=</HashCode>
+      <FileName>Objects\Player.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Objects.EnemySpawner" Collapsed="true">
+    <Position X="8" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQABAAAAAAAAgAAAAAAAAAAAAAAAAAAACEAAAAAAAA=</HashCode>
+      <FileName>Objects\Enemies\EnemySpawner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Objects.LivingTile" Collapsed="true">
+    <Position X="5.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAABBAAAAAAEABAAAAAAAA=</HashCode>
+      <FileName>Objects\LivingTile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Objects.Weapons.ObjectTile" Collapsed="true">
+    <Position X="16" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAYAAAAAAAAAAgAAAAAAAAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>Objects\ObjectTile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Objects.Weapons.LaserGun" Collapsed="true">
+    <Position X="17" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Objects\Weapons\LaserGun.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Objects.Weapons.MachineGun" Collapsed="true">
+    <Position X="19.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Objects\Weapons\MachineGun.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Objects.Weapons.Pistol" Collapsed="true">
+    <Position X="12.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAgAAAAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Objects\Weapons\Pistol.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Objects.Weapons.ShotGun" Collapsed="true">
+    <Position X="14.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Objects\Weapons\ShotGun.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Objects.Weapons.Weapon" Collapsed="true">
+    <Position X="16" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAACAAgEAAEIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Objects\Weapons\Weapon.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Objects.Projectiles.Projectile" Collapsed="true">
+    <Position X="5.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAEAAJgAgAAAAAAAgAAAAAQAAAAgAAAAAAAI=</HashCode>
+      <FileName>Objects\Projectiles\Projectile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Managers.ParticleEngine.Emitter" Collapsed="true">
+    <Position X="3" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQQABBAAAgAAAgAABAgAICCARAAAAJAAAAQAAAAAAAA=</HashCode>
+      <FileName>ParticleEngine\Emitters\Emitter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Managers.ParticleEngine.EnemyEmitter" Collapsed="true">
+    <Position X="5.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAABAAAAAAAgAAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>ParticleEngine\Emitters\EnemyEmitter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Managers.ParticleEngine.FontParticle" Collapsed="true">
+    <Position X="0.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAYAAIAAAAAAAgAAAAAAABAAAAAAQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ParticleEngine\Particles\FontParticle.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Managers.ParticleEngine.Particle" Collapsed="true">
+    <Position X="1.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAQAAAAAAAAAQgQAAIAAIAAAAIAAAACAAAQAAAAAAAA=</HashCode>
+      <FileName>ParticleEngine\Particles\Particle.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Managers.ParticleEngine.TextureParticle" Collapsed="true">
+    <Position X="2.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAgAAAAAQAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>ParticleEngine\Particles\TextureParticle.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Managers.ParticleEngine.Emitters.MatrixEmitter" Collapsed="true">
+    <Position X="0.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAYAABAAAAAAAgAAAAAAAAAAQAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ParticleEngine\Emitters\MatrixEmitter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.ParticleEngine.Emitters.PlayerEmitter" Collapsed="true">
+    <Position X="3" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAABAAAAAAAgAAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>ParticleEngine\Emitters\PlayerEmitter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.ParticleEngine.Particles.PlayerParticle" Collapsed="true">
+    <Position X="2.75" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ParticleEngine\Particles\PlayerParticle.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Utility.Algorithms.Entry" Collapsed="true">
+    <Position X="23.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAgAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Utility\Algorithms\HashTable.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Utility.Algorithms.HashTable" Collapsed="true">
+    <Position X="21.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAIAAAAABAAAAABAQAAAAAgAAAAAIAAAAACAA=</HashCode>
+      <FileName>Utility\Algorithms\HashTable.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Utility.CrossHair" Collapsed="true">
+    <Position X="10.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAiAAAAAwAAAAAEAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utility\CrossHair.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Utility.LoadLevel" Collapsed="true">
+    <Position X="21.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAEAAAAAACAAAAAAAAEAAAAAAAAA=</HashCode>
+      <FileName>Utility\json\LoadLevel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Utility.json.JsonSerialization" Collapsed="true">
+    <Position X="25.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Utility\json\JsonSerialization.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AlgoritmProjekt.Input.KeyMouseReader" Collapsed="true">
+    <Position X="27" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BBQCAAAAAAAAAAEAAAAAAAACAAAAAAAAAAAIAABAAAQ=</HashCode>
+      <FileName>Utility\KeyMouseReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

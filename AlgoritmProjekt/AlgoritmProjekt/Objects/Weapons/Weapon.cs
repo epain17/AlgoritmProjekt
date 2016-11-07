@@ -12,7 +12,6 @@ namespace AlgoritmProjekt.Objects.Weapons
     {
         public bool moveMe = false;
         bool changeColor = true;
-        Color fontColor = Color.DarkSlateGray, texColor = Color.DarkViolet;
 
         public Weapon(Texture2D texture, SpriteFont font, Vector2 position, int size) 
             :base(texture, font, position, size)
@@ -32,8 +31,8 @@ namespace AlgoritmProjekt.Objects.Weapons
                 if (changeColor)
                 {
                     changeColor = false;
-                    texColor = Color.Violet;
-                    fontColor = Color.Gray;
+                    texColor = Color.SteelBlue;
+                    fontColor = Color.LightGray;
                 }
             }
         }

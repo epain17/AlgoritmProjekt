@@ -12,6 +12,8 @@ namespace AlgoritmProjekt.Objects.Weapons
     {
         protected string text;
         protected SpriteFont font;
+        protected Color fontColor = Color.DarkSlateGray, texColor = Color.Blue;
+
 
         public ObjectTile(Texture2D texture, SpriteFont font, Vector2 position, int size)
             : base(texture, position, size)
@@ -28,8 +30,8 @@ namespace AlgoritmProjekt.Objects.Weapons
         
         public override void Draw(SpriteBatch spritebatch)
         {
-            spritebatch.Draw(texture, position, null, new Color(0f, 0.1f, 0f), 0, origin, 1, SpriteEffects.None, 1);
-            spritebatch.DrawString(font, text, position, Color.Black, 0, new Vector2(font.MeasureString(text).X / 2, font.MeasureString(text).Y / 2), 1, SpriteEffects.None, 0);
+            spritebatch.Draw(texture, position, null, texColor, 0, origin, 1, SpriteEffects.None, 1);
+            spritebatch.DrawString(font, text, position, fontColor, 0, new Vector2(font.MeasureString(text).X / 2, font.MeasureString(text).Y / 2), 1, SpriteEffects.None, 0);
         }
     }
 }

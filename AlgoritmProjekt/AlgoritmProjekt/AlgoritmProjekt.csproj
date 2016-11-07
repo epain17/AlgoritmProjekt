@@ -41,6 +41,7 @@
     <Compile Include="Managers\GameManager.cs" />
     <Compile Include="Managers\Menu.cs" />
     <Compile Include="Objects\LivingTile.cs" />
+    <Compile Include="Objects\Weapons\Empty.cs" />
     <Compile Include="Objects\Weapons\LaserGun.cs" />
     <Compile Include="Objects\Weapons\MachineGun.cs" />
     <Compile Include="Objects\Weapons\Pistol.cs" />
@@ -91,6 +92,7 @@
     <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

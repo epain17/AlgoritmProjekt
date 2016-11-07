@@ -10,10 +10,6 @@ namespace AlgoritmProjekt.Objects.Weapons
 {
     class Pistol : Weapon
     {
-        public override bool CheckMyCollision(Tile target)
-        {
-            return base.CheckMyCollision(target);
-        }
 
         public Pistol(Texture2D texture, SpriteFont font, Vector2 position, int size)
             : base(texture, font, position, size)

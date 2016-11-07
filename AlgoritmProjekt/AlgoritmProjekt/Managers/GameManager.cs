@@ -67,7 +67,9 @@ namespace AlgoritmProjekt.Managers
             {
                 grid.SetOccupiedGrid(wall);
             }
+            weapons.Add(new Empty(solidSquare, font, Vector2.Zero, tileSize));
             weapons.Add(new Pistol(solidSquare, font, new Vector2(player.myPosition.X, player.myPosition.Y + (tileSize * 3)), tileSize));
+            weapons.Add(new ShotGun(solidSquare, font, new Vector2(player.myPosition.X + (tileSize * 6), player.myPosition.Y + (tileSize * 10)), tileSize));
         }
 
         public void Update(GameTime gameTime)
@@ -189,7 +191,34 @@ namespace AlgoritmProjekt.Managers
             //spriteBatch.Draw(createRectangle(3, 3, graphicsDevice), player.myPosition, Color.Red);
             foreach (Weapon weapon in weapons)
             {
-                weapon.Draw(spriteBatch);
+                if (weapon.moveMe)
+                {
+                    switch (player.weaponState)
+                    {
+                        case Player.WeaponType.None:
+                            if (weapon is Empty)
+                                weapon.Draw(spriteBatch);
+                            break;
+                        case Player.WeaponType.Pistol:
+                            if (weapon is Pistol)
+                                weapon.Draw(spriteBatch);
+                            break;
+                        case Player.WeaponType.ShotGun:
+                            if (weapon is ShotGun)
+                                weapon.Draw(spriteBatch);
+                            break;
+                        case Player.WeaponType.MachineGun:
+                            if (weapon is MachineGun)
+                                weapon.Draw(spriteBatch);
+                            break;
+                        case Player.WeaponType.Lazer:
+                            if (weapon is LazerGun)
+                                weapon.Draw(spriteBatch);
+                            break;
+                    }
+                }
+                else
+                    weapon.Draw(spriteBatch);
             }
         }
 
@@ -341,7 +370,7 @@ namespace AlgoritmProjekt.Managers
                         player.weaponState = Player.WeaponType.ShotGun;
                     else if (weapon is MachineGun)
                         player.weaponState = Player.WeaponType.MachineGun;
-                    else if (weapon is LaserGun)
+                    else if (weapon is LazerGun)
                         player.weaponState = Player.WeaponType.Lazer;
                     weapon.moveMe = true;
                 }

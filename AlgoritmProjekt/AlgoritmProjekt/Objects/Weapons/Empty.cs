@@ -8,16 +8,18 @@ using System.Threading.Tasks;
 
 namespace AlgoritmProjekt.Objects.Weapons
 {
-    class LazerGun : Weapon
+    class Empty : Weapon
     {
-        public LazerGun(Texture2D texture, SpriteFont font, Vector2 position, int size)
+
+        public Empty(Texture2D texture, SpriteFont font, Vector2 position, int size)
             : base(texture, font, position, size)
         {
             this.texture = texture;
             this.font = font;
             this.position = position;
             this.size = size;
-            this.text = "Lazor";
+            this.text = "Empty";
+            this.moveMe = true;
         }
 
         public override void Update(Vector2 camera, int screenWidth, int screenHeight)
