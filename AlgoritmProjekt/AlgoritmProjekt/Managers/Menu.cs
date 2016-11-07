@@ -51,9 +51,11 @@ namespace AlgoritmProjekt.Screens
         public void Update(float time)
         {
             HandleEmitters(time);
-
-            HandleSelect();
-            ExecuteSelectedButton();
+            if (Game1.gameState == Game1.GameState.menu)
+            {
+                HandleSelect();
+                ExecuteSelectedButton();
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -63,25 +65,28 @@ namespace AlgoritmProjekt.Screens
                 emitter.Draw(spriteBatch);
             }
 
-            spriteBatch.Draw(texture, frame, Color.Black);
-            spriteBatch.Draw(texture, frame, Color.Black);
-
-            switch (run)
+            if (Game1.gameState == Game1.GameState.menu)
             {
-                case RunTime.FirstLoad:
-                    for (int i = 1; i < buttons.Count; i++)
-                    {
-                        color = (i == selected) ? Color.White : Color.DarkSlateGray;
-                        spriteBatch.DrawString(font, buttons[i], new Vector2(position.X - (font.MeasureString(buttons[i]).X / 2), position.Y + (i * 20)), color);
-                    }
-                    break;
-                case RunTime.Continued:
-                    for (int i = 0; i < buttons.Count; i++)
-                    {
-                        color = (i == selected) ? Color.White : Color.DarkSlateGray;
-                        spriteBatch.DrawString(font, buttons[i], new Vector2(position.X - (font.MeasureString(buttons[i]).X / 2), position.Y + (i * 20)), color);
-                    }
-                    break;
+                spriteBatch.Draw(texture, frame, Color.Black);
+                spriteBatch.Draw(texture, frame, Color.Black);
+
+                switch (run)
+                {
+                    case RunTime.FirstLoad:
+                        for (int i = 1; i < buttons.Count; i++)
+                        {
+                            color = (i == selected) ? Color.White : Color.DarkSlateGray;
+                            spriteBatch.DrawString(font, buttons[i], new Vector2(position.X - (font.MeasureString(buttons[i]).X / 2), position.Y + (i * 20)), color);
+                        }
+                        break;
+                    case RunTime.Continued:
+                        for (int i = 0; i < buttons.Count; i++)
+                        {
+                            color = (i == selected) ? Color.White : Color.DarkSlateGray;
+                            spriteBatch.DrawString(font, buttons[i], new Vector2(position.X - (font.MeasureString(buttons[i]).X / 2), position.Y + (i * 20)), color);
+                        }
+                        break;
+                }
             }
         }
 
@@ -131,6 +136,11 @@ namespace AlgoritmProjekt.Screens
                     case 2:
                         //highscore
                         Game1.gameState = Game1.GameState.highscore;
+                        if (run == RunTime.FirstLoad)
+                            selected = 1;
+                        else
+                            selected = 0;
+
                         break;
                     case 3:
                         Game1.EXIT = true;
@@ -145,8 +155,7 @@ namespace AlgoritmProjekt.Screens
             if (timer > 0.1f)
             {
                 timer = 0;
-                if (Game1.gameState == Game1.GameState.menu)
-                    emitters.Add(new MatrixEmitter(font, new Vector2((float)rand.Next(0, screenWidth), 0)));
+                emitters.Add(new MatrixEmitter(font, new Vector2((float)rand.Next(0, screenWidth), 0)));
             }
 
             foreach (Emitter emitter in emitters)

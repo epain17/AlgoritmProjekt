@@ -123,11 +123,16 @@ namespace AlgoritmProjekt.Utility.Algorithms
         /// Returns the sorted order of current table
         /// </summary>
         /// <returns></returns>
-        public LinkedList<object> GetInserionOrder()
+        public LinkedList<object> GetValueList()
         {
             if (insertionOrder != null)
                 return insertionOrder;
             return null;
         }
+
+        //public LinkedList<object> GetOrderedValueList()
+        //{
+
+        //}
     }
 }

@@ -9,6 +9,8 @@ using System;
 using AlgoritmProjekt.Utility;
 using AlgoritmProjekt.Managers;
 using AlgoritmProjekt.Screens;
+using AlgoritmProjekt.Utility.Algorithms;
+using System.IO;
 
 namespace AlgoritmProjekt
 {
@@ -39,6 +41,9 @@ namespace AlgoritmProjekt
 
         List<int> scores = new List<int>();
         List<string> names = new List<string>();
+        List<string> scoreStrings = new List<string>();
+        HashTable hashTable;
+        int hashSize;
 
         public Game1()
         {
@@ -68,6 +73,22 @@ namespace AlgoritmProjekt
             scores.Add(15);
             names.Add("Hampus");
             names.Add("Emil");
+            hashTable = new HashTable(hashSize);
+        }
+
+        void ReadScores(string filePath)
+        {
+            StreamReader sr = new StreamReader(filePath);
+            string readLine = sr.ReadLine();
+            string[] strings = readLine.Split(',');
+
+            while (!sr.EndOfStream)
+            {
+                readLine = sr.ReadLine();
+                strings = readLine.Split(',');
+            }
+            hashSize = strings.Length;
+            sr.Close();
         }
 
         protected override void UnloadContent()
@@ -109,6 +130,7 @@ namespace AlgoritmProjekt
                     break;
                 case GameState.highscore:
                     spriteBatch.Begin();
+                    menu.Draw(spriteBatch);
                     scoreScreen.Draw(spriteBatch, names, scores);
                     spriteBatch.End();
                     break;
@@ -138,7 +160,10 @@ namespace AlgoritmProjekt
                         gameState = GameState.menu;
                     break;
                 case GameState.highscore: //HIGHSCORES
+                    menu.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
                     scoreScreen.Update();
+                    if (KeyMouseReader.KeyPressed(Keys.Escape))
+                        gameState = GameState.menu;
                     break;
             }
         }
