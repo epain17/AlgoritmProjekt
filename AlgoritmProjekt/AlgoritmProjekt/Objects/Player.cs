@@ -45,6 +45,10 @@ namespace AlgoritmProjekt.Characters
 
         float energyMeter = 50, maxEnergy = 50;
 
+        //För follow player
+        private Queue<Vector2> followed = new Queue<Vector2>();
+        private LinkedList<Vector2> finalQue = new LinkedList<Vector2>();
+
         public bool ShotsFired
         {
             get { return shot; }
@@ -70,6 +74,7 @@ namespace AlgoritmProjekt.Characters
         {
             HandlePlayerInteractions(Keys.S, Keys.A, Keys.D, Keys.W, Keys.Space, Keys.LeftControl);
             HandleWeaponStates(time);
+
             HandlePlayerStates(ref time);
             base.Update(ref time);
         }
@@ -77,6 +82,15 @@ namespace AlgoritmProjekt.Characters
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, position, null, Color.LimeGreen * colorAlpha, 0, origin, 1, SpriteEffects.None, 1);
+            if (followed.Count() != 0)
+            {
+                foreach (Vector2 v in followed)
+                {
+                    spriteBatch.Draw(texture, v, null, Color.LimeGreen * colorAlpha, 0, origin, 1, SpriteEffects.None, 1);
+
+                }
+
+            }
         }
 
         #region Player input
@@ -213,5 +227,35 @@ namespace AlgoritmProjekt.Characters
             }
         }
         #endregion
+
+        public Queue<Vector2> PlayerTrail()
+        {
+            //followed.Clear();
+
+            //if (finalQue.Count == 0)
+            //{
+            //    finalQue.AddFirst(new Vector2((myPoint.X * mySize), (myPoint.Y * mySize)));
+            //}
+
+            //else if (!finalQue.Contains(new Vector2((myPoint.X * mySize), (myPoint.Y * mySize))))
+            //{
+            //    finalQue.AddFirst(new Vector2((myPoint.X * mySize), (myPoint.Y * mySize)));
+            //}
+
+            //else if (finalQue.First() == (new Vector2((myPoint.X * mySize), (myPoint.Y * mySize))))
+            //{
+            //    finalQue.RemoveFirst();
+            //}
+            //foreach(Vector2 v in finalQue)
+            //{
+            //    followed.Enqueue(v);
+            //}
+
+
+            return followed;
+
+        }
+
+
     }
 }
