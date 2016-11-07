@@ -230,7 +230,7 @@ namespace AlgoritmProjekt.Managers
 
                 for (int i = 0; i < spawners.Count; i++)
                 {
-                    spawners[i].Update(ref enemies, player.myPosition, time);
+                    spawners[i].Update(ref enemies, player.myPosition, time, player.myPoint, grid);
                 }
             }
 

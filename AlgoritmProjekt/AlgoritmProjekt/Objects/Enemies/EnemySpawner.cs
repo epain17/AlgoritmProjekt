@@ -1,4 +1,5 @@
 ﻿using AlgoritmProjekt.Characters;
+using AlgoritmProjekt.Grid;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -23,12 +24,14 @@ namespace AlgoritmProjekt.Objects
             this.hp = 3;
         }
 
-        public void Update(ref List<Enemy> enemies, Vector2 player, float time)
+        public void Update(ref List<Enemy> enemies, Vector2 player, float time, Point targetPoint, TileGrid grid)
         {
             if (myHP <= 0)
                 alive = false;
             if (Vector2.Distance(player, myPosition) < 400)
             {
+                //FindPath(targetPoint, grid);
+
                 Random rand = new Random();
                 spawnTimer += time;
                 if (spawnTimer >= timeLimit + rand.Next(-2, 5))

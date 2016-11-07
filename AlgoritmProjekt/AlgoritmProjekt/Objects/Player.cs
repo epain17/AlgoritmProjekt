@@ -14,6 +14,7 @@ namespace AlgoritmProjekt.Characters
 {
     class Player : LivingTile
     {
+        #region Enums - weapon & player status
         public enum WeaponType
         {
             None,
@@ -31,7 +32,9 @@ namespace AlgoritmProjekt.Characters
             Power,
         }
         public PlayerState playerState = PlayerState.Normal;
+        #endregion
 
+        #region Fields
         float invuleranbleTimer = 0;
         float colorAlpha = 1;
         bool fade = true;
@@ -52,6 +55,7 @@ namespace AlgoritmProjekt.Characters
         {
             get { return energyMeter; }
         }
+        #endregion
 
         public Player(Texture2D texture, Vector2 position, int size)
             : base(texture, position, size)
@@ -75,62 +79,12 @@ namespace AlgoritmProjekt.Characters
             spriteBatch.Draw(texture, position, null, Color.LimeGreen * colorAlpha, 0, origin, 1, SpriteEffects.None, 1);
         }
 
-        private void HandlePlayerStates(ref float time)
-        {
-            switch (playerState)
-            {
-                case PlayerState.Normal:
-                    if (energyMeter < maxEnergy)
-                        energyMeter += 0.15f;
-                    break;
-                case PlayerState.Invulnerable:
-                    InvulnerableState(time);
-                    break;
-                case PlayerState.Power:
-                    PowerState(ref time);
-                    break;
-            }
-        }
-
+        #region Player input
         protected virtual void HandlePlayerInteractions(Keys downKey, Keys leftKey, Keys rightKey, Keys upKey, Keys shotKey, Keys powerKey)
         {
             Moving(downKey, leftKey, rightKey, upKey);
             Shooting(shotKey);
             Powering(powerKey);
-        }
-
-        private void InvulnerableState(float time)
-        {
-            invuleranbleTimer += time;
-            if(fade)
-            {
-                colorAlpha -= 0.1f;
-                if (colorAlpha < 0.1f)
-                    fade = false;
-            }
-            else
-            {
-                colorAlpha += 0.1f;
-                if (colorAlpha > 0.9f)
-                    fade = true;
-            }
-
-            if(invuleranbleTimer > 3)
-            {
-                playerState = PlayerState.Normal;
-                invuleranbleTimer = 0;
-                colorAlpha = 1;
-                fade = true;
-            }
-        }
-
-        private void PowerState(ref float time)
-        {
-            if (playerState == PlayerState.Power && energyMeter > 0)
-            {
-                energyMeter -= 0.15f;
-                time *= 0.35f;
-            }
         }
 
         private void Moving(Keys downKey, Keys leftKey, Keys rightKey, Keys upKey)
@@ -174,7 +128,7 @@ namespace AlgoritmProjekt.Characters
         {
             if (isKeyDown(powerKey) && playerState != PlayerState.Invulnerable)
                 playerState = PlayerState.Power;
-            else if(playerState != PlayerState.Invulnerable)
+            else if (playerState != PlayerState.Invulnerable)
                 playerState = PlayerState.Normal;
         }
 
@@ -185,6 +139,25 @@ namespace AlgoritmProjekt.Characters
                 return true;
             }
             return false;
+        }
+        #endregion
+
+        #region States
+        private void HandlePlayerStates(ref float time)
+        {
+            switch (playerState)
+            {
+                case PlayerState.Normal:
+                    if (energyMeter < maxEnergy)
+                        energyMeter += 0.15f;
+                    break;
+                case PlayerState.Invulnerable:
+                    InvulnerableState(time);
+                    break;
+                case PlayerState.Power:
+                    PowerState(ref time);
+                    break;
+            }
         }
 
         private void HandleWeaponStates(float time)
@@ -205,5 +178,40 @@ namespace AlgoritmProjekt.Characters
                     break;
             }
         }
+
+        private void InvulnerableState(float time)
+        {
+            invuleranbleTimer += time;
+            if (fade)
+            {
+                colorAlpha -= 0.1f;
+                if (colorAlpha < 0.1f)
+                    fade = false;
+            }
+            else
+            {
+                colorAlpha += 0.1f;
+                if (colorAlpha > 0.9f)
+                    fade = true;
+            }
+
+            if (invuleranbleTimer > 3)
+            {
+                playerState = PlayerState.Normal;
+                invuleranbleTimer = 0;
+                colorAlpha = 1;
+                fade = true;
+            }
+        }
+
+        private void PowerState(ref float time)
+        {
+            if (playerState == PlayerState.Power && energyMeter > 0)
+            {
+                energyMeter -= 0.15f;
+                time *= 0.35f;
+            }
+        }
+        #endregion
     }
 }
