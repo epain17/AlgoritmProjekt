@@ -15,21 +15,12 @@ namespace AlgoritmProjekt.Characters
         protected float speed;
         protected float startHp;
 
-        protected bool FoundPlayer;
         Pathfinder pathfinder;
         Point startPoint, endPoint;
 
-        Queue<Vector2> waypoints = new Queue<Vector2>();
-        List<Vector2> newPath = new List<Vector2>();
-        List<Vector2> path = new List<Vector2>();
+        protected Queue<Vector2> waypoints = new Queue<Vector2>();
 
         protected int AggroRange = 400;
-
-        //kan raderas när pathfindingen fungerar bra 
-        public Queue<Vector2> Way
-        {
-            get { return waypoints; }
-        }
 
         float DistanceToWaypoint
         {
@@ -49,7 +40,6 @@ namespace AlgoritmProjekt.Characters
 
         public void Update(float time, Point targetPoint, TileGrid grid)
         {
-            // if closest node reached
             FindPath(targetPoint, grid);
             UpdatePos();
             
@@ -67,36 +57,18 @@ namespace AlgoritmProjekt.Characters
             spriteBatch.Draw(texture, waypoints.Peek(), null, color, 0, origin, 1, SpriteEffects.None, 1);
         }
 
-        protected void FindPath(Point targetPoint, TileGrid grid)
+        protected bool FindPath(Point targetPoint, TileGrid grid)
         {
             if (Range(targetPoint) < AggroRange && waypoints.Count() == 0)
             {
                 waypoints.Clear();
-                pathfinder = new Pathfinder(grid); //kan man spara prestanda genom att inte skapa ny varje gång?
+                pathfinder = new Pathfinder(grid); 
                 startPoint = myPoint;
                 endPoint = targetPoint;
-
-                newPath.Clear();
                 waypoints = pathfinder.FindPath(startPoint, endPoint);
-              
-                
-                //if (path != null && path.Count < 5)
-                //{
-                //    FoundPlayer = true;
-                //    foreach (Vector2 point in path)
-                //    {
-                //        foreach (Vector2 pathpos in path)
-                //        { //inte säker på om detta med size i pathpos är rätt - gjorde det för offsets
-                //            pathPos = new Vector2(pathpos.X - (size / 2), pathpos.Y - (size / 2));
-                //            newPath.Add(pathPos);
-                //            waypoints.Enqueue(pathPos);
-                //        }
-                //        break;
-                //    }
-                //}
-
+                return true;
             }
-
+            return false;
         }
 
         protected virtual void UpdatePos()
