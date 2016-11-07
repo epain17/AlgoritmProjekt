@@ -17,6 +17,7 @@ namespace AlgoritmProjekt.Characters
 
         Pathfinder pathfinder;
         Point startPoint, endPoint;
+        protected Vector2 temp;
 
         protected Queue<Vector2> waypoints = new Queue<Vector2>();
 
@@ -26,7 +27,7 @@ namespace AlgoritmProjekt.Characters
         {
             get { return Vector2.Distance(position, waypoints.Peek()); }
         }
-        
+
         public Enemy(Texture2D texture, Vector2 position, int size)
             : base(texture, position, size)
         {
@@ -42,7 +43,7 @@ namespace AlgoritmProjekt.Characters
         {
             FindPath(targetPoint, grid);
             UpdatePos();
-            
+
             if (myHP <= 0)
                 alive = false;
             base.Update(ref time);
@@ -53,8 +54,15 @@ namespace AlgoritmProjekt.Characters
             float healthPercent = hp / startHp;
             Color color = new Color(0.25f / healthPercent, 1 * healthPercent, 1f * healthPercent);
             spriteBatch.Draw(texture, position, null, color, 0, origin, 1, SpriteEffects.None, 1);
-            if(waypoints.Count() != 0)
-            spriteBatch.Draw(texture, waypoints.Peek(), null, color, 0, origin, 1, SpriteEffects.None, 1);
+            if (waypoints.Count() != 0)
+            {
+                foreach (Vector2 waypoint in waypoints)
+                {
+                    spriteBatch.Draw(texture, waypoint, null, color, 0, origin, 0.4f, SpriteEffects.None, 1);
+                }
+                spriteBatch.Draw(texture, temp, null, color, 0, origin, 1, SpriteEffects.None, 1);
+
+            }
         }
 
         protected bool FindPath(Point targetPoint, TileGrid grid)
@@ -62,9 +70,10 @@ namespace AlgoritmProjekt.Characters
             if (Range(targetPoint) < AggroRange && waypoints.Count() == 0)
             {
                 waypoints.Clear();
-                pathfinder = new Pathfinder(grid); 
+                pathfinder = new Pathfinder(grid);
                 startPoint = myPoint;
                 endPoint = targetPoint;
+                temp = new Vector2(endPoint.X * mySize, endPoint.Y * mySize);
                 waypoints = pathfinder.FindPath(startPoint, endPoint);
                 return true;
             }
@@ -91,7 +100,7 @@ namespace AlgoritmProjekt.Characters
 
         protected void AddPlayerWaypointToQueue(Point targetPoint)
         {
-            
+
         }
 
         protected float Range(Point point)
