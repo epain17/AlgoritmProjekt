@@ -39,6 +39,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Managers\GameManager.cs" />
+    <Compile Include="Managers\HighScore.cs" />
     <Compile Include="Managers\Menu.cs" />
     <Compile Include="Objects\LivingTile.cs" />
     <Compile Include="Objects\Weapons\Empty.cs" />

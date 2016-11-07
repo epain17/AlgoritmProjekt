@@ -29,12 +29,16 @@ namespace AlgoritmProjekt
         SpriteBatch spriteBatch;
         GameManager gameManager;
         Menu menu;
+        HighScore scoreScreen;
         SpriteFont font;
         Texture2D smoothTex;
 
         string LevelName = "SaveTest.json";
         int screenWidth = 800, screenHeight = 600;
         int tileSize = 32;
+
+        List<int> scores = new List<int>();
+        List<string> names = new List<string>();
 
         public Game1()
         {
@@ -59,6 +63,11 @@ namespace AlgoritmProjekt
                 createHollowRectangle(tileSize, tileSize, GraphicsDevice), createHollowRectangle(3, 3, GraphicsDevice));
             smoothTex = Content.Load<Texture2D>("circle");
             menu = new Menu(screenWidth, screenHeight, font, new Vector2(screenWidth / 2, screenHeight / 2), smoothTex);
+            scoreScreen = new HighScore(createSolidRectangle((int)(screenWidth * 0.5f), (int)(screenHeight * 0.75f), GraphicsDevice), new Vector2(screenWidth * 0.25f, screenHeight * 0.1f), font);
+            scores.Add(15500);
+            scores.Add(15);
+            names.Add("Hampus");
+            names.Add("Emil");
         }
 
         protected override void UnloadContent()
@@ -75,10 +84,11 @@ namespace AlgoritmProjekt
                 gameManager = new GameManager(screenWidth, screenHeight, tileSize, font, LevelName, createSolidRectangle(tileSize, tileSize, GraphicsDevice),
                                 createHollowRectangle(tileSize, tileSize, GraphicsDevice), createHollowRectangle(3, 3, GraphicsDevice));
                 RELOADGAMEPLAY = false;
+                menu.run = Menu.RunTime.Continued;
                 gameState = GameState.gamePlay;
             }
 
-            HandleScreens(gameTime);
+            UpdateScreens(gameTime);
 
             base.Update(gameTime);
         }
@@ -97,12 +107,17 @@ namespace AlgoritmProjekt
                 case GameState.gamePlay:
                     gameManager.Draw(spriteBatch);
                     break;
+                case GameState.highscore:
+                    spriteBatch.Begin();
+                    scoreScreen.Draw(spriteBatch, names, scores);
+                    spriteBatch.End();
+                    break;
             }
 
             base.Draw(gameTime);
         }
 
-        private void HandleScreens(GameTime gameTime)
+        private void UpdateScreens(GameTime gameTime)
         {
             switch (gameState)
             {
@@ -123,6 +138,7 @@ namespace AlgoritmProjekt
                         gameState = GameState.menu;
                     break;
                 case GameState.highscore: //HIGHSCORES
+                    scoreScreen.Update();
                     break;
             }
         }
