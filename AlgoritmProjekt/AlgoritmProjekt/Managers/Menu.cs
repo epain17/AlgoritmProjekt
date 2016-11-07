@@ -14,12 +14,12 @@ namespace AlgoritmProjekt.Screens
 {
     class Menu
     {
-        protected enum RunTime
+        public enum RunTime
         {
             FirstLoad,
             Continued,
         }
-        protected RunTime run = RunTime.FirstLoad;
+        public RunTime run = RunTime.FirstLoad;
         List<string> buttons = new List<string>();
         SpriteFont font;
         Vector2 position;
@@ -126,12 +126,11 @@ namespace AlgoritmProjekt.Screens
                         //new game
                         Game1.RELOADGAMEPLAY = true;
                         Game1.LoadJsonLevel = true;
-                        //Game1.gameState = Game1.GameState.gamePlay;
-                        run = RunTime.Continued;
                         selected = 0;
                         break;
                     case 2:
                         //highscore
+                        Game1.gameState = Game1.GameState.highscore;
                         break;
                     case 3:
                         Game1.EXIT = true;
