@@ -41,7 +41,7 @@ namespace AlgoritmProjekt.Managers
                 else
                     break;
             }
-            spriteBatch.DrawString(font, "", new Vector2(position.X, position.Y), fontColor);
+            spriteBatch.DrawString(font, "High Scores", new Vector2(position.X + (solidTile.Width / 2), position.Y - 50), Color.LimeGreen, 0, new Vector2((font.MeasureString("HighScores").X / 2), 0), 1.5f, SpriteEffects.None, 0);
         }
     }
 }
