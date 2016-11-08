@@ -91,6 +91,22 @@ namespace AlgoritmProjekt
             sr.Close();
         }
 
+        static string ToString(string userName, int score)
+        {
+            string result;
+            result = userName;
+            result += ",";
+            result += score.ToString() + '\n';
+            return result;
+        }
+
+        public static void WriteScores(string filePath, string key, int value)
+        {
+            StreamWriter writer = new StreamWriter(filePath, true);
+            writer.WriteLine(ToString(key, value));
+            writer.Close();
+        }
+
         protected override void UnloadContent()
         {
         }

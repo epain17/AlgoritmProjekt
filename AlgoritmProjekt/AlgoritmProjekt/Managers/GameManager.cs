@@ -26,7 +26,7 @@ namespace AlgoritmProjekt.Managers
         Camera camera;
 
         Vector2 cameraRecoil;
-        Vector2 recoil;
+        Vector2 recoilDirection;
         int tileSize = 32;
         string timeFont = "Time: ", scoreFont = "Score: ", lifeFont = "Life: ",
             energyFont = "Energy: ", gameOverFont = "Game Over", winFont = "Level Completed";
@@ -39,7 +39,7 @@ namespace AlgoritmProjekt.Managers
         Player player;
         SpriteFont font;
         int score = 0;
-        float TotalTime;
+        float TotalTime, cameraTimer = 40;
 
         bool playerEmit = true;
         int screenWidth, screenHeight;
@@ -116,7 +116,7 @@ namespace AlgoritmProjekt.Managers
             {
                 if (playerEmit)
                 {
-                    emitters.Add(new PlayerEmitter(solidSquare, player.myPosition));
+                    emitters.Add(new PlayerDeathEmitter(solidSquare, player.myPosition));
                     playerEmit = false;
                 }
                 return true;
@@ -236,7 +236,8 @@ namespace AlgoritmProjekt.Managers
 
             foreach (Enemy enemy in enemies)
             {
-                enemy.Update(time/*, player.myPoint, grid*/);
+                enemy.Update(time/*, player.myPoint, grid*/); 
+
                 enemy.SetQueue(player.PlayerTrail(), player.myPoint, grid);
             }
 
@@ -315,18 +316,29 @@ namespace AlgoritmProjekt.Managers
         private void HandleCamera()
         {
             if (player.ShotsFired)
+                cameraTimer = 0;
+            else
+                cameraTimer++;
+
+            if (cameraTimer >  3)
             {
                 cameraRecoil = player.myPosition;
-                recoil = player.myPosition - new Vector2(xhair.myPosition.X, xhair.myPosition.Y);
-                recoil.Normalize();
-
-                //player.myPosition += recoil * player.RecoilPower;
-
-                cameraRecoil += recoil * player.RecoilPower;
-                camera.Update(cameraRecoil);
+                recoilDirection = player.myPosition - new Vector2(xhair.myPosition.X, xhair.myPosition.Y);
+                recoilDirection.Normalize();
             }
-            else
-                camera.Update(player.myPosition);
+            cameraRecoil += recoilDirection * 4;
+            camera.Update(cameraRecoil);
+
+            //if (player.ShotsFired)
+            //{
+            //    cameraRecoil = player.myPosition;
+            //    recoilDirection = player.myPosition - new Vector2(xhair.myPosition.X, xhair.myPosition.Y);
+            //    recoilDirection.Normalize();
+            //    cameraRecoil += recoilDirection * player.RecoilPower;
+            //    camera.Update(cameraRecoil);
+            //}
+            //else
+            //    camera.Update(player.myPosition);
         }
 
         private void Collisions()

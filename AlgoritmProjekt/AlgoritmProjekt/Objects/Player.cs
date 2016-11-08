@@ -82,15 +82,6 @@ namespace AlgoritmProjekt.Characters
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, position, null, Color.LimeGreen * colorAlpha, 0, origin, 1, SpriteEffects.None, 1);
-            if (followed.Count() != 0)
-            {
-                foreach (Vector2 v in followed)
-                {
-                    spriteBatch.Draw(texture, v, null, Color.LimeGreen * colorAlpha, 0, origin, 1, SpriteEffects.None, 1);
-
-                }
-
-            }
         }
 
         #region Player input
