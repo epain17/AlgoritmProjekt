@@ -236,9 +236,8 @@ namespace AlgoritmProjekt.Managers
 
             foreach (Enemy enemy in enemies)
             {
-                enemy.Update(time/*, player.myPoint, grid*/); 
+                enemy.Update(time, player.myPoint, grid); 
 
-                enemy.SetQueue(player.PlayerTrail(), player.myPoint, grid);
             }
 
             foreach (Emitter emitter in emitters)

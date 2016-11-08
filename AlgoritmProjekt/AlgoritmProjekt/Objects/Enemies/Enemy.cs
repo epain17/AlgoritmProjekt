@@ -40,9 +40,9 @@ namespace AlgoritmProjekt.Characters
             speed = 100f;
         }
 
-        public void Update(float time/*, Point targetPoint, TileGrid grid*/)
-        {
-            //FindPath(targetPoint, grid);
+        public void Update(float time, Point targetPoint, TileGrid grid)
+        { 
+            FindPath(targetPoint, grid);
             UpdatePos();
 
             if (myHP <= 0)
@@ -55,8 +55,7 @@ namespace AlgoritmProjekt.Characters
             float healthPercent = hp / startHp;
             Color color = new Color(0.25f / healthPercent, 1 * healthPercent, 1f * healthPercent);
             spriteBatch.Draw(texture, position, null, color, 0, origin, 1, SpriteEffects.None, 1);
-            //if(waypoints.Count() != 0)
-            //spriteBatch.Draw(texture, waypoints.Peek(), null, color, 0, origin, 1, SpriteEffects.None, 1);
+          
         }
 
         public int FindPath(Point targetPoint, TileGrid grid)
@@ -79,14 +78,14 @@ namespace AlgoritmProjekt.Characters
 
         protected virtual void UpdatePos()
         {
-            if (mainQue != null)
+            if (waypoints != null)
             {
-                if (mainQue.Count > 0)
+                if (waypoints.Count > 0)
                 {
                     if (DistanceToWaypoint < 1.5f)
                     {
-                        position = mainQue.Peek();
-                        mainQue.Dequeue();
+                        position = waypoints.Peek();
+                        waypoints.Dequeue();
                     }
                     else
                     {
@@ -107,13 +106,30 @@ namespace AlgoritmProjekt.Characters
                 return mainQue = waypoints;
             }
 
-            //else if(FindPath(targetPoint, grid) == 1)
-            //{
-            //    return mainQue = queue;
-            //}
-
             return null;
         }
+
+        //public void SetQueue(Queue<Vector2> queue, Point targetPoint, TileGrid grid)
+        //{
+        //    if (Range(targetPoint) < AggroRange && waypoints.Count() == 0)
+        //    {
+        //        queue = FindPath(targetPoint, grid);
+        //        Console.WriteLine("Used Pathfinder");
+        //    }
+
+        //    else if (Range(targetPoint) < AggroRange)
+        //    {
+        //        waypoints = queue;
+        //        Console.WriteLine("used playerqueue");
+        //    }
+
+        //    //else if(FindPath(targetPoint, grid) == 1)
+        //    //{
+        //    //    return mainQue = queue;
+        //    //}
+
+
+        //}
 
         protected float Range(Point point)
         {

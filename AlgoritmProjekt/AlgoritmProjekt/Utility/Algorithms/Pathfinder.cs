@@ -19,6 +19,11 @@ namespace AlgoritmProjekt
         internal bool InClosedList;
         internal float DistanceToGoal;
         internal float DistanceTraveled;
+
+        //public SearchNode(int posX, int posY)
+        //{
+        //    this.Position = new Point(posX, posY);
+        //}
     }
     class Pathfinder
     {
@@ -48,6 +53,7 @@ namespace AlgoritmProjekt
             {
                 for (int y = 0; y < levelHeight; y++)
                 {
+                    //ändrat här
                     SearchNode node = new SearchNode();
                     node.Position = new Point(x, y);
                     node.Walkable = grid.CheckWalkable(x, y) == 0;
@@ -179,7 +185,45 @@ namespace AlgoritmProjekt
                 return new Queue<Vector2>();
             }
             return null;
+
+
         }
+
+        //SearchNode Jump(int cX, int cY, int dX, int dY, SearchNode startNode, SearchNode endNode, SearchNode currentNode)
+        //{
+        //    int nextX = cX + dX;
+        //    int nextY = cY + dY;
+
+        //    if (currentNode.Walkable == false)
+        //    {
+        //        return null;
+        //    }
+
+        //    if (nextX == endNode.Position.X && nextY == endNode.Position.Y)
+        //    {
+        //        return new SearchNode(nextX, nextY);
+        //    }
+
+        //    if (dX != 0 && dY != 0)
+        //    {
+        //        //return currentNode = new SearchNode(nextX, nextY);
+        //        if (Jump(nextX, nextY, dX, 0, startNode, endNode, currentNode) != null ||
+        //            Jump(nextX, nextY, 0, dY, startNode, endNode, currentNode) != null)
+        //        {
+        //            return currentNode = new SearchNode(nextX, nextY);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if(dX != 0)
+        //        {
+
+        //        }
+        //    }
+
+        //}
+
+
 
         private void ResetSearchNode()
         {
