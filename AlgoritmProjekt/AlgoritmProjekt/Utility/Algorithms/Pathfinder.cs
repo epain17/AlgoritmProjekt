@@ -181,6 +181,15 @@ namespace AlgoritmProjekt
             return null;
         }
 
+        private int ManhattanDistance(SearchNode startNode, SearchNode endNode)
+        {
+            return (Math.Abs(endNode.Position.X - startNode.Position.X) + Math.Abs(endNode.Position.Y - startNode.Position.Y));
+        }
+
+        //Point IdentifySuccessors(SearchNode currentNode, SearchNode startNode, SearchNode endNode)
+        //{
+        //    Point
+        //}
         private void ResetSearchNode()
         {
             openList.Clear();
