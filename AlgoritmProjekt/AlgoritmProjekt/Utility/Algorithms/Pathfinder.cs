@@ -181,15 +181,8 @@ namespace AlgoritmProjekt
             return null;
         }
 
-        private int ManhattanDistance(SearchNode startNode, SearchNode endNode)
-        {
-            return (Math.Abs(endNode.Position.X - startNode.Position.X) + Math.Abs(endNode.Position.Y - startNode.Position.Y));
-        }
 
-        //Point IdentifySuccessors(SearchNode currentNode, SearchNode startNode, SearchNode endNode)
-        //{
-        //    Point
-        //}
+
         private void ResetSearchNode()
         {
             openList.Clear();
@@ -246,5 +239,41 @@ namespace AlgoritmProjekt
             }
             return finalPath;
         }
+
+
+        //private int ManhattanDistance(SearchNode startNode, SearchNode endNode)
+        //{
+        //    return (Math.Abs(endNode.Position.X - startNode.Position.X) + Math.Abs(endNode.Position.Y - startNode.Position.Y));
+        //}
+
+        //List<SearchNode> IdentifySuccessors(SearchNode currentNode, SearchNode startNode, SearchNode endNode)
+        //{
+        //    foreach (SearchNode node in openList)
+        //    {
+        //        int dX = (node.Position.X - currentNode.Position.X);
+        //        int dY = (node.Position.Y - currentNode.Position.Y);
+
+        //        var jumpPoint = jump(currentNode.Position.X,
+        //            currentNode.Position.Y, dX, dY, startNode, endNode);
+
+        //        if (jumpPoint) closedList.Add(jumpPoint);
+        //    }
+
+        //    return closedList;
+
+        //}
+
+        //SearchNode Jump(int cnX, int cnY, int dX, int dY, SearchNode start, SearchNode end, TileGrid grid)
+        //{
+        //    int nextX = cnX + dX;
+        //    int nextY = cnY + dY;
+
+        //    if (grid.CheckWalkable(nextX, nextY) == 0)
+        //    {
+        //        return null;
+        //    }
+
+        //    if(next == end.Position.X && )
+        //}
     }
 }
