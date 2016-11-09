@@ -47,7 +47,7 @@ namespace AlgoritmProjekt.Characters
 
         //För follow player
         private Queue<Vector2> followed = new Queue<Vector2>();
-        private LinkedList<Vector2> finalQue = new LinkedList<Vector2>();
+        private List<Vector2> checkList = new List<Vector2>();
 
         public bool ShotsFired
         {
@@ -82,13 +82,9 @@ namespace AlgoritmProjekt.Characters
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, position, null, Color.LimeGreen * colorAlpha, 0, origin, 1, SpriteEffects.None, 1);
-            if (followed.Count() != 0)
+            foreach (Vector2 v in followed)
             {
-                foreach (Vector2 v in followed)
-                {
-                    spriteBatch.Draw(texture, v, null, Color.LimeGreen * colorAlpha, 0, origin, 1, SpriteEffects.None, 1);
-
-                }
+                spriteBatch.Draw(texture, v, null, Color.LimeGreen * colorAlpha, 0, origin, 1, SpriteEffects.None, 1);
 
             }
         }
@@ -228,34 +224,47 @@ namespace AlgoritmProjekt.Characters
         }
         #endregion
 
-        public Queue<Vector2> PlayerTrail()
-        {
-            //followed.Clear();
-
-            //if (finalQue.Count == 0)
-            //{
-            //    finalQue.AddFirst(new Vector2((myPoint.X * mySize), (myPoint.Y * mySize)));
-            //}
-
-            //else if (!finalQue.Contains(new Vector2((myPoint.X * mySize), (myPoint.Y * mySize))))
-            //{
-            //    finalQue.AddFirst(new Vector2((myPoint.X * mySize), (myPoint.Y * mySize)));
-            //}
-
-            //else if (finalQue.First() == (new Vector2((myPoint.X * mySize), (myPoint.Y * mySize))))
-            //{
-            //    finalQue.RemoveFirst();
-            //}
-            //foreach(Vector2 v in finalQue)
-            //{
-            //    followed.Enqueue(v);
-            //}
+        //public Queue<Vector2> PlayerTrail()
+        //{
+        //    followed.Clear();
 
 
-            return followed;
+        //    while(followed.Count() < 6)
+        //    {
+
+        //        if (followed.Count == 0)
+        //        {
+        //            followed.Enqueue(new Vector2((myPoint.X * mySize), (myPoint.Y * mySize)));
+        //        }
+
+        //        else if (followed.Peek() != (new Vector2((myPoint.X * mySize), (myPoint.Y * mySize))))
+        //        {
+        //            followed.Enqueue(new Vector2((myPoint.X * mySize), (myPoint.Y * mySize)));
+        //        }
+
+        //        else
+        //        {
+        //            followed.Enqueue(new Vector2((myPoint.X * mySize), (myPoint.Y * mySize)));
+        //        }
+
+        //        //else if (followed.Peek() == (new Vector2((myPoint.X * mySize), (myPoint.Y * mySize))) && followed.Count() > 2)
+        //        //{
+        //        //    followed.Dequeue();
+        //        //}
+
+        //        //Console.WriteLine(followed.Count());
+
+        //    }
+               
+        //        return followed;
+                    
+                
+
+
+
+           
 
         }
 
 
     }
-}

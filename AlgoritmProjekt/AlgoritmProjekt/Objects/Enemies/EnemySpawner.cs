@@ -12,8 +12,8 @@ namespace AlgoritmProjekt.Objects
 {
     class EnemySpawner : Enemy
     {
-        float spawnTimer = 0;
-        float timeLimit = 5;
+        float spawnTimer = 5;
+        float timeLimit = 3;
 
         public EnemySpawner(Texture2D texture, Vector2 position, int size)
             : base(texture, position, size)
@@ -31,16 +31,14 @@ namespace AlgoritmProjekt.Objects
             if (Vector2.Distance(player, myPosition) < 400)
             {
                 FindPath(targetPoint, grid);
-                Random rand = new Random();
                 spawnTimer += time;
-                if (spawnTimer >= timeLimit + rand.Next(-2, 5) && waypoints.Count < 10 && waypoints.Count != 0)
+                if (spawnTimer >= timeLimit && waypoints.Count < 12 && waypoints.Count != 0)
                 {
                     spawnTimer = 0;
                     SpawnEnemies(ref enemies);
                 }
                 else
                     waypoints.Clear();
-
             }
         }
 

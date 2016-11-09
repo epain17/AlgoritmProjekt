@@ -87,6 +87,8 @@ namespace AlgoritmProjekt.Screens
                         }
                         break;
                 }
+                spriteBatch.Draw(texture, new Rectangle(screenWidth / 2 - (int)font.MeasureString("Enter The Cubes").X * 2, (int)(screenHeight * 0.15f) + (int)font.MeasureString("Enter The Cubes").Y / 4, (int)font.MeasureString("Enter The Cubes").X * 4, (int)font.MeasureString("Enter The Cubes").Y * 4), Color.Black);
+                spriteBatch.DrawString(font, "Enter The Cubes", new Vector2(screenWidth / 2, screenHeight * 0.15f), Color.LimeGreen, 0, new Vector2(font.MeasureString("Enter The Cubes").X / 2, 0), 2.5f, SpriteEffects.None, 0);
             }
         }
 

@@ -24,14 +24,18 @@ namespace AlgoritmProjekt
             menu,
             gamePlay,
             highscore,
+            enterUser,
         }
         public static GameState gameState = GameState.menu;
         public static bool EXIT = false, RELOADGAMEPLAY = false, LoadJsonLevel = true;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        //Screens
         GameManager gameManager;
         Menu menu;
         HighScore scoreScreen;
+        EnterUser newUser;
+
         SpriteFont font;
         Texture2D smoothTex;
 
@@ -44,6 +48,8 @@ namespace AlgoritmProjekt
         List<string> scoreStrings = new List<string>();
         HashTable hashTable;
         int hashSize;
+
+        float switchScreenTimer;
 
         public Game1()
         {
@@ -69,8 +75,9 @@ namespace AlgoritmProjekt
             smoothTex = Content.Load<Texture2D>("circle");
             menu = new Menu(screenWidth, screenHeight, font, new Vector2(screenWidth / 2, screenHeight / 2), smoothTex);
             scoreScreen = new HighScore(createSolidRectangle((int)(screenWidth * 0.5f), (int)(screenHeight * 0.75f), GraphicsDevice), new Vector2(screenWidth * 0.25f, screenHeight * 0.1f), font);
+            newUser = new EnterUser(font, createSolidRectangle((int)(screenWidth * 0.5f), (int)(screenHeight * 0.5f), GraphicsDevice), screenWidth, screenHeight);
             scores.Add(15500);
-            scores.Add(15);
+            scores.Add(15499);
             names.Add("Hampus");
             names.Add("Emil");
             hashTable = new HashTable(hashSize);
@@ -81,14 +88,32 @@ namespace AlgoritmProjekt
             StreamReader sr = new StreamReader(filePath);
             string readLine = sr.ReadLine();
             string[] strings = readLine.Split(',');
+            hashTable.Push(strings[0], strings[1]);
 
             while (!sr.EndOfStream)
             {
                 readLine = sr.ReadLine();
                 strings = readLine.Split(',');
+                hashTable.Push(strings[0], strings[1]);
             }
             hashSize = strings.Length;
             sr.Close();
+        }
+
+        static string ToString(string userName, int score)
+        {
+            string result;
+            result = userName;
+            result += ",";
+            result += score.ToString() + '\n';
+            return result;
+        }
+
+        public static void WriteScores(string filePath, string key, int value)
+        {
+            StreamWriter writer = new StreamWriter(filePath, true);
+            writer.WriteLine(ToString(key, value));
+            writer.Close();
         }
 
         protected override void UnloadContent()
@@ -97,6 +122,8 @@ namespace AlgoritmProjekt
 
         protected override void Update(GameTime gameTime)
         {
+            string test = Console.ReadLine();
+            Console.WriteLine(test);
             KeyMouseReader.Update();
             if (EXIT)
                 Exit();
@@ -134,6 +161,11 @@ namespace AlgoritmProjekt
                     scoreScreen.Draw(spriteBatch, names, scores);
                     spriteBatch.End();
                     break;
+                case GameState.enterUser:
+                    spriteBatch.Begin();
+                    newUser.Draw(spriteBatch);
+                    spriteBatch.End();
+                    break;
             }
 
             base.Draw(gameTime);
@@ -149,13 +181,15 @@ namespace AlgoritmProjekt
                 case GameState.gamePlay: //GAMEPLAY
                     gameManager.Update(gameTime);
                     if (gameManager.GameOver())
-                        if (KeyMouseReader.KeyPressed(Keys.Space) ||
-                            KeyMouseReader.KeyPressed(Keys.Enter) ||
-                            KeyMouseReader.KeyPressed(Keys.Escape))
+                    {
+                        switchScreenTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                        if (switchScreenTimer > 3)
                         {
-                            menu = new Menu(screenWidth, screenHeight, font, new Vector2(screenWidth / 2, screenHeight / 2), smoothTex);
-                            gameState = GameState.menu;
+                            //menu = new Menu(screenWidth, screenHeight, font, new Vector2(screenWidth / 2, screenHeight / 2), smoothTex);
+                            //gameState = GameState.menu;
+                            gameState = GameState.enterUser;
                         }
+                    }
                     if (KeyMouseReader.KeyPressed(Keys.Escape))
                         gameState = GameState.menu;
                     break;
@@ -164,6 +198,9 @@ namespace AlgoritmProjekt
                     scoreScreen.Update();
                     if (KeyMouseReader.KeyPressed(Keys.Escape))
                         gameState = GameState.menu;
+                    break;
+                case GameState.enterUser: //ENTER USER
+                    newUser.Update();
                     break;
             }
         }

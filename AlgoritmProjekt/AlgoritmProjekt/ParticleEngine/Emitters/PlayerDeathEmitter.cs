@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace AlgoritmProjekt.ParticleEngine.Emitters
 {
-    class PlayerEmitter : Emitter
+    class PlayerDeathEmitter : Emitter
     {
         Texture2D texture;
 
-        public PlayerEmitter(Texture2D texture, Vector2 position) 
+        public PlayerDeathEmitter(Texture2D texture, Vector2 position) 
             : base(position)
          {
             this.texture = texture;
