@@ -131,9 +131,9 @@ namespace AlgoritmProjekt.Managers
             spriteBatch.DrawString(font, lifeFont + player.myHP, new Vector2(-camera.CameraPos.X, screenHeight - font.MeasureString(lifeFont).Y - camera.CameraPos.Y), Color.LimeGreen);
             spriteBatch.DrawString(font, energyFont + (int)player.EnergyMeter, new Vector2(screenWidth - (font.MeasureString(energyFont).X + (tileSize * 3)) - camera.CameraPos.X, screenHeight - font.MeasureString(energyFont).Y - camera.CameraPos.Y), Color.LimeGreen);
             if (GameOver())
-                spriteBatch.DrawString(font, gameOverFont, new Vector2(350 - camera.CameraPos.X, 200 - camera.CameraPos.Y), Color.Red, 0, Vector2.Zero, 1.5f, SpriteEffects.None, 0);
+                spriteBatch.DrawString(font, gameOverFont, new Vector2(screenWidth / 2 - camera.CameraPos.X, screenHeight * 0.25f - camera.CameraPos.Y), Color.Red, 0, new Vector2(font.MeasureString(gameOverFont).X / 2, font.MeasureString(gameOverFont).Y / 2), 1.5f, SpriteEffects.None, 0);
             if (Winner())
-                spriteBatch.DrawString(font, winFont, new Vector2(350 - camera.CameraPos.X, 200 - camera.CameraPos.Y), Color.Red, 0, new Vector2(40, 0), 1.5f, SpriteEffects.None, 0);
+                spriteBatch.DrawString(font, winFont, new Vector2(screenWidth / 2 - camera.CameraPos.X, screenHeight * 0.25f - camera.CameraPos.Y), Color.Red, 0, new Vector2(font.MeasureString(winFont).X / 2, font.MeasureString(winFont).Y / 2), 1.5f, SpriteEffects.None, 0);
 
         }
 
@@ -327,17 +327,6 @@ namespace AlgoritmProjekt.Managers
             }
             cameraRecoil += recoilDirection * 4;
             camera.Update(cameraRecoil);
-
-            //if (player.ShotsFired)
-            //{
-            //    cameraRecoil = player.myPosition;
-            //    recoilDirection = player.myPosition - new Vector2(xhair.myPosition.X, xhair.myPosition.Y);
-            //    recoilDirection.Normalize();
-            //    cameraRecoil += recoilDirection * player.RecoilPower;
-            //    camera.Update(cameraRecoil);
-            //}
-            //else
-            //    camera.Update(player.myPosition);
         }
 
         private void Collisions()

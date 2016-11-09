@@ -41,6 +41,7 @@
     <Compile Include="Managers\GameManager.cs" />
     <Compile Include="Managers\HighScore.cs" />
     <Compile Include="Managers\Menu.cs" />
+    <Compile Include="Managers\EnterUser.cs" />
     <Compile Include="Objects\LivingTile.cs" />
     <Compile Include="Objects\Projectiles\FireBullet.cs" />
     <Compile Include="Objects\Weapons\Empty.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Objects\Player.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Grid\TileGrid.cs" />
+    <Compile Include="Utility\Constants.cs" />
     <Compile Include="Utility\CrossHair.cs" />
     <Compile Include="Utility\json\JsonSerialization.cs" />
     <Compile Include="Utility\KeyMouseReader.cs" />
