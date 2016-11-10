@@ -301,7 +301,7 @@ namespace AlgoritmProjekt.Managers
             else
                 cameraTimer += time; 
 
-            if (cameraTimer > 1)
+            if (cameraTimer > 0.25f)
             {
                 cameraRecoil = player.myPosition;
                 recoilDirection = player.myPosition - new Vector2(xhair.myPosition.X, xhair.myPosition.Y);
