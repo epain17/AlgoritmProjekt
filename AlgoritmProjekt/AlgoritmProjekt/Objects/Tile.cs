@@ -17,11 +17,16 @@ namespace AlgoritmProjekt
     class Tile
     {
         protected Texture2D texture;
-        protected Vector2 position, velocity, acceleration;
+        protected Vector2 position, velocity, acceleration, startPos;
         protected Rectangle hitBox;
         protected int size;
         protected bool occupied = false;
         protected Vector2 origin;
+
+        public Vector2 myStartPos
+        {
+            get { return startPos; }
+        }
 
         public int mySize
         {
@@ -74,6 +79,7 @@ namespace AlgoritmProjekt
             this.origin = new Vector2(size / 2, size / 2);
             this.velocity = Vector2.Zero;
             this.acceleration = Vector2.Zero;
+            this.startPos = position;
         }
 
         public virtual void Update(ref float time)

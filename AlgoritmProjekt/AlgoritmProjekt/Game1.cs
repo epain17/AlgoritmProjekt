@@ -61,7 +61,7 @@ namespace AlgoritmProjekt
         {
             graphics.PreferredBackBufferWidth = screenWidth;
             graphics.PreferredBackBufferHeight = screenHeight;
-            graphics.IsFullScreen = true;
+            //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
             base.Initialize();
         }
@@ -168,7 +168,7 @@ namespace AlgoritmProjekt
                 case GameState.highscore:
                     spriteBatch.Begin();
                     menu.Draw(spriteBatch);
-                        scoreScreen.Draw(spriteBatch, keys);
+                    scoreScreen.Draw(spriteBatch, keys);
                     spriteBatch.End();
                     break;
                 case GameState.enterUser:
@@ -189,23 +189,24 @@ namespace AlgoritmProjekt
                     menu.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
                     break;
                 case GameState.gamePlay: //GAMEPLAY
+                    gameManager.Update(gameTime);
+
                     if (gameManager.GameOver())
                     {
                         switchScreenTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
                         if (switchScreenTimer > 4 ||
                             KeyMouseReader.KeyPressed(Keys.Escape) ||
                             KeyMouseReader.KeyPressed(Keys.Space))
                         {
-                            //menu = new Menu(screenWidth, screenHeight, font, new Vector2(screenWidth / 2, screenHeight / 2), smoothTex);
-                            //gameState = GameState.menu;
+                            switchScreenTimer = 0;
                             gameState = GameState.enterUser;
+                            menu.run = Menu.RunTime.FirstLoad;
                         }
                     }
-                    else
-                        gameManager.Update(gameTime);
-
-                    if (KeyMouseReader.KeyPressed(Keys.Escape))
+                    else if (KeyMouseReader.KeyPressed(Keys.Escape))
                         gameState = GameState.menu;
+
                     break;
                 case GameState.highscore: //HIGHSCORES
                     menu.Update((float)gameTime.ElapsedGameTime.TotalSeconds);

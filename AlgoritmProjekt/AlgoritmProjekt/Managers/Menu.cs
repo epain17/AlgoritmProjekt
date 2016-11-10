@@ -97,6 +97,8 @@ namespace AlgoritmProjekt.Screens
             switch (run)
             {
                 case RunTime.FirstLoad:
+                    if(selected == 0)
+                        selected = 1;
                     if (KeyMouseReader.KeyPressed(Keys.W) && selected > 1)
                         selected--;
                     else if (KeyMouseReader.KeyPressed(Keys.W) && selected == 1)

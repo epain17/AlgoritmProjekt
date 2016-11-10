@@ -41,6 +41,7 @@ namespace AlgoritmProjekt.Managers
             
             for (int i = 0; i < key.Count; i++)
             {
+
                 string text = i + 1 + ".       " + key[i] + "           " + hashTable.GetValue(key[i]);
                 if (i < 10)
                     spriteBatch.DrawString(font, text, new Vector2(position.X + font.MeasureString("1").X, position.Y + i * font.MeasureString(text).Y), fontColor);

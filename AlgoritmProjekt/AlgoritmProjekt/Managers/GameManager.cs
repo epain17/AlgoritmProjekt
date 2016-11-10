@@ -81,7 +81,7 @@ namespace AlgoritmProjekt.Managers
             //Ordningen är viktig - kameran tar emot på ett elastiskt sätt mot väggarna
             UpdateObjects((float)gameTime.ElapsedGameTime.TotalSeconds);
             xhair.Update(camera.CameraPos, player.myPosition);
-            HandleCamera();
+            HandleCamera((float)gameTime.ElapsedGameTime.TotalSeconds);
             foreach (Weapon weapon in weapons)//ligger efter kameran så att objektet inte släpar efter
             {
                 weapon.Update(camera.CameraPos, screenWidth, screenHeight);
@@ -163,12 +163,11 @@ namespace AlgoritmProjekt.Managers
             foreach (Enemy enemy in enemies)
             {
                 enemy.Draw(spriteBatch);
-                //spriteBatch.Draw(createRectangle(3, 3, graphicsDevice), enemy.myPosition, Color.Red);
             }
 
             if (!GameOver())
                 player.Draw(spriteBatch);
-            //spriteBatch.Draw(createRectangle(3, 3, graphicsDevice), player.myPosition, Color.Red);
+
             foreach (Weapon weapon in weapons)
             {
                 if (weapon.moveMe)
@@ -212,12 +211,12 @@ namespace AlgoritmProjekt.Managers
                 {
                     spawners[i].Update(ref enemies, player.myPosition, time, player.myPoint, grid);
                 }
-            }
 
-            foreach (Enemy enemy in enemies)
-            {
-                enemy.Update(time, player.myPoint, grid); 
+                foreach (Enemy enemy in enemies)
+                {
+                    enemy.Update(time, player.myPoint, grid);
 
+                }
             }
 
             foreach (Emitter emitter in emitters)
@@ -292,20 +291,20 @@ namespace AlgoritmProjekt.Managers
             }
         }
 
-        private void HandleCamera()
+        private void HandleCamera(float time)
         {
             if (player.ShotsFired)
                 cameraTimer = 0;
             else
-                cameraTimer++;
+                cameraTimer += time; 
 
-            if (cameraTimer >  3)
+            if (cameraTimer > 1)
             {
                 cameraRecoil = player.myPosition;
                 recoilDirection = player.myPosition - new Vector2(xhair.myPosition.X, xhair.myPosition.Y);
                 recoilDirection.Normalize();
             }
-            cameraRecoil += recoilDirection * 4;
+            cameraRecoil += (recoilDirection * 150) * time;
             camera.Update(cameraRecoil);
         }
 

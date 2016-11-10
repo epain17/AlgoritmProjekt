@@ -103,6 +103,19 @@ namespace AlgoritmProjekt.Utility.Algorithms
                 table[hashIndex].AddFirst(entry);
                 insertionOrder.AddLast(value);
             }
+            else
+            {
+                while(table[hashIndex].Contains(new Entry(key, null)))
+                {
+                    hashIndex++;
+                    if (hashIndex == table.Length - 1)
+                        hashIndex = 0;
+                }
+                Entry entry = new Entry(key, value);
+                table[hashIndex].AddFirst(entry);
+                insertionOrder.AddLast(value);
+
+            }
         }
 
         /// <summary>
