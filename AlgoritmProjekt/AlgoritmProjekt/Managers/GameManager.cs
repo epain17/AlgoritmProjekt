@@ -75,6 +75,7 @@ namespace AlgoritmProjekt.Managers
 
         public void Update(GameTime gameTime)
         {
+           // Console.WriteLine(enemies.Count());
             globalTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (!Winner())
                 TotalTime += globalTime;

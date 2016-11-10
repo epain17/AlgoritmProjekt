@@ -18,6 +18,8 @@ namespace AlgoritmProjekt
     {
         protected Texture2D texture;
         protected Vector2 position, velocity, acceleration, startPos;
+        protected Point startPoinT;
+
         protected Rectangle hitBox;
         protected int size;
         protected bool occupied = false;
@@ -64,7 +66,7 @@ namespace AlgoritmProjekt
         
         public Point myStartPoint
         {
-            get { return new Point((int)startPos.X / size, (int)startPos.Y / size); }
+            get { return startPoinT; }
         }
 
         public virtual bool CheckMyCollision(Tile target)

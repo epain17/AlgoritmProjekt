@@ -29,14 +29,14 @@ namespace AlgoritmProjekt.Characters
             get { return Vector2.Distance(position, waypoints.Peek()); }
         }
 
-        public Enemy(Texture2D texture, Vector2 position, Vector2 regroup,  int size)
+        public Enemy(Texture2D texture, Vector2 position/*, Vector2 regroup*/,  int size)
             : base(texture, position, size)
         {
             this.texture = texture;
             this.position = position;
             this.size = size;
             this.hp = 3;
-            this.startPos = regroup;
+            //this.startPos = regroup;
             startHp = hp;
             speed = 100f;
         }
