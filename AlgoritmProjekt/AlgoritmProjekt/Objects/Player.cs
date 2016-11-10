@@ -176,15 +176,15 @@ namespace AlgoritmProjekt.Characters
             {
                 case WeaponType.Pistol:
                     shotInterval += time;
-                    RecoilPower = 5f;
+                    RecoilPower = 50f;
                     break;
                 case WeaponType.ShotGun:
                     shotInterval += time * 0.5f;
-                    RecoilPower = 12;
+                    RecoilPower = 120;
                     break;
                 case WeaponType.MachineGun:
                     shotInterval += time * 2.5f;
-                    RecoilPower = 8;
+                    RecoilPower = 80;
                     break;
             }
         }

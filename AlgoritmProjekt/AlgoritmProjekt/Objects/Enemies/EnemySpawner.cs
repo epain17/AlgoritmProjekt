@@ -31,15 +31,19 @@ namespace AlgoritmProjekt.Objects
                 alive = false;
             if (Vector2.Distance(player, myPosition) < 400)
             {
-                FindPath(targetPoint, grid);
                 spawnTimer += time;
-                if (spawnTimer >= timeLimit && waypoints.Count < 12 && waypoints.Count != 0)
+                if (spawnTimer >= timeLimit)
                 {
-                    spawnTimer = 0;
-                    SpawnEnemies(ref enemies);
+                    FindPath(targetPoint, grid);
+                    if (waypoints.Count < 12 && waypoints.Count != 0)
+                    {
+                        spawnTimer = 0;
+                        SpawnEnemies(ref enemies);
+                    }
+                    else
+                        waypoints.Clear();
                 }
-                else
-                    waypoints.Clear();
+                
             }
         }
 
