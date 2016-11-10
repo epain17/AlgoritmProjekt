@@ -61,6 +61,11 @@ namespace AlgoritmProjekt
         {
             get { return new Point((int)position.X / size, (int)position.Y / size); }
         }
+        
+        public Point myStartPoint
+        {
+            get { return new Point((int)startPos.X / size, (int)startPos.Y / size); }
+        }
 
         public virtual bool CheckMyCollision(Tile target)
         {

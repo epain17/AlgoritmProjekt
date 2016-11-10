@@ -11,7 +11,7 @@ namespace AlgoritmProjekt.Objects.Projectiles
 {
     class Projectile : LivingTile
     {
-        Vector2 direction, startPos;
+        Vector2 direction;
         float speed;
 
 
@@ -47,7 +47,6 @@ namespace AlgoritmProjekt.Objects.Projectiles
             velocity = direction * speed * time;
             position += velocity * time;
             LifeCycle(time);
-            //base.Update(time);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
