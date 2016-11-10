@@ -31,7 +31,9 @@ namespace AlgoritmProjekt.Managers
 
         public void Update()
         {
-            if (KeyMouseReader.KeyPressed(Keys.Escape))
+            if (KeyMouseReader.KeyPressed(Keys.Escape) ||
+                KeyMouseReader.KeyPressed(Keys.Space) ||
+                KeyMouseReader.KeyPressed(Keys.Enter))
                 Game1.gameState = Game1.GameState.menu;
         }
 
@@ -42,7 +44,7 @@ namespace AlgoritmProjekt.Managers
             for (int i = 0; i < key.Count; i++)
             {
 
-                string text = i + 1 + ".       " + key[i] + "           " + hashTable.GetValue(key[i]);
+                string text = i + 1 + ".                " + key[i] + "                    " + hashTable.GetValue(key[i]);
                 if (i < 10)
                     spriteBatch.DrawString(font, text, new Vector2(position.X + font.MeasureString("1").X, position.Y + i * font.MeasureString(text).Y), fontColor);
                 else
