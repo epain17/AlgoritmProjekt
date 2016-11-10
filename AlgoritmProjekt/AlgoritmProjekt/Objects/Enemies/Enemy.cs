@@ -29,13 +29,14 @@ namespace AlgoritmProjekt.Characters
             get { return Vector2.Distance(position, waypoints.Peek()); }
         }
 
-        public Enemy(Texture2D texture, Vector2 position, int size)
+        public Enemy(Texture2D texture, Vector2 position, Vector2 regroup,  int size)
             : base(texture, position, size)
         {
             this.texture = texture;
             this.position = position;
             this.size = size;
             this.hp = 3;
+            this.startPos = regroup;
             startHp = hp;
             speed = 100f;
         }
@@ -58,22 +59,26 @@ namespace AlgoritmProjekt.Characters
           
         }
 
-        public int FindPath(Point targetPoint, TileGrid grid)
+        public void FindPath(Point targetPoint, TileGrid grid)
         {
-            if (Range(targetPoint) < AggroRange && waypoints.Count() == 0)
+            if (Range(targetPoint) < AggroRange && waypoints.Count() == 0 && targetPoint != null)
             {
                 waypoints.Clear();
                 pathfinder = new Pathfinder(grid);
                 startPoint = myPoint;
                 endPoint = targetPoint;
                 waypoints = pathfinder.FindPath(startPoint, endPoint);
-                return 0;
+                
             }
-            else if (Range(targetPoint) < AggroRange)
-            {
-                return 1;
-            }
-            return 2;
+            //else if (Range(targetPoint) > AggroRange && waypoints.Count() == 0 && targetPoint == null)
+            //{
+            //    waypoints.Clear();
+            //    pathfinder = new Pathfinder(grid);
+            //    startPoint = myPoint;
+            //    endPoint;
+            //    waypoints = pathfinder.FindPath(startPoint, endPoint);
+            //}
+           
         }
 
         protected virtual void UpdatePos()
@@ -99,37 +104,17 @@ namespace AlgoritmProjekt.Characters
             }
         }
 
-        public Queue<Vector2> SetQueue(Queue<Vector2> queue, Point targetPoint, TileGrid grid)
-        {
-            if (targetPoint != null && FindPath(targetPoint, grid) == 0)
-            {
-                return mainQue = waypoints;
-            }
-
-            return null;
-        }
-
-        //public void SetQueue(Queue<Vector2> queue, Point targetPoint, TileGrid grid)
+        //public Queue<Vector2> SetQueue(Queue<Vector2> queue, Point targetPoint, TileGrid grid)
         //{
-        //    if (Range(targetPoint) < AggroRange && waypoints.Count() == 0)
+        //    if (targetPoint != null && FindPath(targetPoint, grid) == 0)
         //    {
-        //        queue = FindPath(targetPoint, grid);
-        //        Console.WriteLine("Used Pathfinder");
+        //        return mainQue = waypoints;
         //    }
 
-        //    else if (Range(targetPoint) < AggroRange)
-        //    {
-        //        waypoints = queue;
-        //        Console.WriteLine("used playerqueue");
-        //    }
-
-        //    //else if(FindPath(targetPoint, grid) == 1)
-        //    //{
-        //    //    return mainQue = queue;
-        //    //}
-
-
+        //    return null;
         //}
+
+        
 
         protected float Range(Point point)
         {
