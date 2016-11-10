@@ -12,6 +12,7 @@ namespace AlgoritmProjekt.Objects
 {
     class EnemySpawner : Enemy
     {
+        bool iSpawn = true;
         float spawnTimer = 5;
         float timeLimit = 3;
 
@@ -31,15 +32,16 @@ namespace AlgoritmProjekt.Objects
                 alive = false;
             if (Vector2.Distance(player, myPosition) < 400)
             {
-                FindPath(targetPoint, grid);
                 spawnTimer += time;
-                if (spawnTimer >= timeLimit && waypoints.Count < 12 && waypoints.Count != 0)
+                if (spawnTimer >= timeLimit)
                 {
+                    FindPath(targetPoint, grid);
                     spawnTimer = 0;
-                    SpawnEnemies(ref enemies);
+                    if (waypoints.Count < 12 && waypoints.Count != 0)
+                        SpawnEnemies(ref enemies);
+                    else
+                        waypoints.Clear();
                 }
-                else
-                    waypoints.Clear();
             }
         }
 

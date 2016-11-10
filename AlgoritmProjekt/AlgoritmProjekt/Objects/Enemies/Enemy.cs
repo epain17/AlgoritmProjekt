@@ -52,7 +52,6 @@ namespace AlgoritmProjekt.Characters
             {
                 FindPath(targetPoint, grid);
             }
-
             else if (FoundPlayer(targetPoint) == 2 && myPoint != pr)
             {
                 FindPath(pr, grid);
