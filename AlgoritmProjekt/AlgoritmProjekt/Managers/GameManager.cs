@@ -301,14 +301,14 @@ namespace AlgoritmProjekt.Managers
             else
                 cameraTimer += time; 
 
-            if (cameraTimer > 0.25f)
+            if (cameraTimer > 0.1f)
             {
                 cameraRecoil = player.myPosition;
                 recoilDirection = player.myPosition - new Vector2(xhair.myPosition.X, xhair.myPosition.Y);
                 recoilDirection.Normalize();
             }
 
-            cameraRecoil += (recoilDirection * 150) * time;
+            cameraRecoil += (recoilDirection * time * player.RecoilPower);
             camera.Update(cameraRecoil);
         }
 
