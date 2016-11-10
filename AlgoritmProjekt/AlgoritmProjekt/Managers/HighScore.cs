@@ -1,4 +1,5 @@
 ﻿using AlgoritmProjekt.Input;
+using AlgoritmProjekt.Utility.Algorithms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -16,13 +17,14 @@ namespace AlgoritmProjekt.Managers
         Vector2 position;
         SpriteFont font;
         Color fontColor, texColor;
+        HashTable hashTable;
 
-
-        public HighScore(Texture2D solidTile, Vector2 position, SpriteFont font)
+        public HighScore(Texture2D solidTile, Vector2 position, SpriteFont font, HashTable hashTable)
         {
             this.solidTile = solidTile;
             this.position = position;
             this.font = font;
+            this.hashTable = hashTable;
             fontColor = Color.White;
             texColor = Color.DarkGreen;
         }
@@ -33,14 +35,15 @@ namespace AlgoritmProjekt.Managers
                 Game1.gameState = Game1.GameState.menu;
         }
 
-        public void Draw(SpriteBatch spriteBatch, List<string> names, List<int> scores)
+        public void Draw(SpriteBatch spriteBatch, List<string> key)
         {
             spriteBatch.Draw(solidTile, position, texColor);
-            for (int i = 0; i < scores.Count; i++)
+            
+            for (int i = 0; i < key.Count; i++)
             {
-                string text = i + 1 + ".   " + names[i] + "      " + scores[i];
+                string text = i + 1 + ".       " + key[i] + "           " + hashTable.GetValue(key[i]);
                 if (i < 10)
-                    spriteBatch.DrawString(font, text, new Vector2(position.X + font.MeasureString("1").X, position.Y + i*font.MeasureString(text).Y), fontColor);
+                    spriteBatch.DrawString(font, text, new Vector2(position.X + font.MeasureString("1").X, position.Y + i * font.MeasureString(text).Y), fontColor);
                 else
                     break;
             }

@@ -26,7 +26,7 @@ namespace AlgoritmProjekt
             highscore,
             enterUser,
         }
-        public static GameState gameState = GameState.menu;
+        public static GameState gameState = GameState.enterUser;
         public static bool EXIT = false, RELOADGAMEPLAY = false, LoadJsonLevel = true;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -43,9 +43,9 @@ namespace AlgoritmProjekt
         int screenWidth = 800, screenHeight = 600;
         int tileSize = 32;
 
-        List<int> scores = new List<int>();
-        List<string> names = new List<string>();
-        List<string> scoreStrings = new List<string>();
+        List<string> keys = new List<string>();
+        List<string> values = new List<string>();
+
         HashTable hashTable;
         int hashSize;
 
@@ -61,7 +61,7 @@ namespace AlgoritmProjekt
         {
             graphics.PreferredBackBufferWidth = screenWidth;
             graphics.PreferredBackBufferHeight = screenHeight;
-            //graphics.IsFullScreen = true;
+            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
             base.Initialize();
         }
@@ -74,29 +74,39 @@ namespace AlgoritmProjekt
                 createHollowRectangle(tileSize, tileSize, GraphicsDevice), createHollowRectangle(3, 3, GraphicsDevice));
             smoothTex = Content.Load<Texture2D>("circle");
             menu = new Menu(screenWidth, screenHeight, font, new Vector2(screenWidth / 2, screenHeight / 2), smoothTex);
-            scoreScreen = new HighScore(createSolidRectangle((int)(screenWidth * 0.5f), (int)(screenHeight * 0.75f), GraphicsDevice), new Vector2(screenWidth * 0.25f, screenHeight * 0.1f), font);
             newUser = new EnterUser(font, createSolidRectangle((int)(screenWidth * 0.5f), (int)(screenHeight * 0.5f), GraphicsDevice), screenWidth, screenHeight);
-            scores.Add(15500);
-            scores.Add(15499);
-            names.Add("Hampus");
-            names.Add("Emil");
-            hashTable = new HashTable(hashSize);
+
+
+            ReadScoresToHashTable(Constants.filePath);
+            scoreScreen = new HighScore(createSolidRectangle((int)(screenWidth * 0.5f), (int)(screenHeight * 0.75f), GraphicsDevice), new Vector2(screenWidth * 0.25f, screenHeight * 0.1f), font, hashTable);
         }
 
-        void ReadScores(string filePath)
+        void ReadScoresToHashTable(string filePath)
         {
             StreamReader sr = new StreamReader(filePath);
             string readLine = sr.ReadLine();
             string[] strings = readLine.Split(',');
-            hashTable.Push(strings[0], strings[1]);
+            keys.Add(strings[0]);
+            values.Add(strings[1]);
+            hashSize++;
 
             while (!sr.EndOfStream)
             {
                 readLine = sr.ReadLine();
-                strings = readLine.Split(',');
-                hashTable.Push(strings[0], strings[1]);
+                if (readLine != "")
+                {
+                    strings = readLine.Split(',');
+                    keys.Add(strings[0]);
+                    values.Add(strings[1]);
+                    hashSize++;
+                }
             }
-            hashSize = strings.Length;
+            hashTable = new HashTable(hashSize);
+
+            for (int i = 0; i < hashSize; i++)
+            {
+                hashTable.Push(keys[i], values[i]);
+            }
             sr.Close();
         }
 
@@ -158,7 +168,7 @@ namespace AlgoritmProjekt
                 case GameState.highscore:
                     spriteBatch.Begin();
                     menu.Draw(spriteBatch);
-                    scoreScreen.Draw(spriteBatch, names, scores);
+                        scoreScreen.Draw(spriteBatch, keys);
                     spriteBatch.End();
                     break;
                 case GameState.enterUser:
@@ -179,17 +189,21 @@ namespace AlgoritmProjekt
                     menu.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
                     break;
                 case GameState.gamePlay: //GAMEPLAY
-                    gameManager.Update(gameTime);
                     if (gameManager.GameOver())
                     {
                         switchScreenTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-                        if (switchScreenTimer > 3)
+                        if (switchScreenTimer > 4 ||
+                            KeyMouseReader.KeyPressed(Keys.Escape) ||
+                            KeyMouseReader.KeyPressed(Keys.Space))
                         {
                             //menu = new Menu(screenWidth, screenHeight, font, new Vector2(screenWidth / 2, screenHeight / 2), smoothTex);
                             //gameState = GameState.menu;
                             gameState = GameState.enterUser;
                         }
                     }
+                    else
+                        gameManager.Update(gameTime);
+
                     if (KeyMouseReader.KeyPressed(Keys.Escape))
                         gameState = GameState.menu;
                     break;

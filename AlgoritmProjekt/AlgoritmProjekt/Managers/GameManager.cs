@@ -118,6 +118,7 @@ namespace AlgoritmProjekt.Managers
                 {
                     emitters.Add(new PlayerDeathEmitter(solidSquare, player.myPosition));
                     playerEmit = false;
+                    Constants.totalScore = score;
                 }
                 return true;
             }
@@ -135,27 +136,6 @@ namespace AlgoritmProjekt.Managers
             if (Winner())
                 spriteBatch.DrawString(font, winFont, new Vector2(screenWidth / 2 - camera.CameraPos.X, screenHeight * 0.25f - camera.CameraPos.Y), Color.Red, 0, new Vector2(font.MeasureString(winFont).X / 2, font.MeasureString(winFont).Y / 2), 1.5f, SpriteEffects.None, 0);
 
-        }
-
-        //not in use
-        private void DrawWaypoints(SpriteBatch spriteBatch)
-        {
-            //spriteBatch.Draw(smallSquare, new Vector2(xhair.myPosition.X - 1.5f, xhair.myPosition.Y - 1.5f), Color.Red);
-            //foreach (Enemy enemy in enemies)
-            //{
-            //    foreach (Vector2 v in enemy.Way)
-            //    {
-            //        spriteBatch.Draw(createRectangle(3, 3, graphicsDevice), new Vector2(v.X, v.Y), Color.Yellow);
-            //    }
-            //}
-
-            //foreach (Enemy enemy in enemies)
-            //{
-            //    foreach (Vector2 v in enemy.Way)
-            //    {
-            //        spriteBatch.Draw(createRectangle(3, 3, graphicsDevice), new Vector2(v.X, v.Y), Color.Yellow);
-            //    }
-            //}
         }
 
         private void DrawObjects(SpriteBatch spriteBatch)
