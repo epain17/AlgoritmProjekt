@@ -43,7 +43,6 @@ namespace AlgoritmProjekt.Managers
 
         bool playerEmit = true;
         int screenWidth, screenHeight;
-        float globalTime;
 
         List<Weapon> weapons = new List<Weapon>();
 
@@ -75,15 +74,14 @@ namespace AlgoritmProjekt.Managers
 
         public void Update(GameTime gameTime)
         {
-            globalTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (!Winner())
-                TotalTime += globalTime;
+                TotalTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
             PlayerShoots();
 
             //Ordningen är viktig - kameran tar emot på ett elastiskt sätt mot väggarna
-            UpdateObjects(globalTime);
+            UpdateObjects((float)gameTime.ElapsedGameTime.TotalSeconds);
             xhair.Update(camera.CameraPos, player.myPosition);
-            HandleCamera(globalTime);
+            HandleCamera();
             foreach (Weapon weapon in weapons)//ligger efter kameran så att objektet inte släpar efter
             {
                 weapon.Update(camera.CameraPos, screenWidth, screenHeight);
@@ -293,21 +291,20 @@ namespace AlgoritmProjekt.Managers
             }
         }
 
-        private void HandleCamera(float time)
+        private void HandleCamera()
         {
             if (player.ShotsFired)
                 cameraTimer = 0;
             else
-                cameraTimer += time; 
+                cameraTimer++;
 
-            if (cameraTimer > 1)
+            if (cameraTimer > 3)
             {
                 cameraRecoil = player.myPosition;
                 recoilDirection = player.myPosition - new Vector2(xhair.myPosition.X, xhair.myPosition.Y);
                 recoilDirection.Normalize();
             }
-
-            cameraRecoil += (recoilDirection * 150) * time;
+            cameraRecoil += recoilDirection * 4;
             camera.Update(cameraRecoil);
         }
 

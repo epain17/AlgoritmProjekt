@@ -13,37 +13,26 @@ namespace AlgoritmProjekt.Managers
 {
     class EnterUser
     {
-        enum Navigate
+        public enum Navigate
         {
             ChangingLetter,
             NavigateButtons,
         }
-        Navigate navigate = Navigate.NavigateButtons;
-
-        enum LetterSlot
-        {
-            first,
-            second,
-            third,
-        }
-        LetterSlot letterSlot = LetterSlot.first;
+        public Navigate navigate = Navigate.NavigateButtons;
 
         List<string> navigatedButtons = new List<string>();
+        char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+        char[] letterSlots = new char[3];
+        int selected, letterSlotIndex, alphabetIndex;
+        string userName;
 
         Vector2 buttonPos;
 
-        SpriteFont font;
-        Texture2D texture;
-        int screenWidth, screenHeight;
-
         Vector2 fontOrigin, texOrigin, screenCenter;
+        int screenWidth, screenHeight;
+        Texture2D texture;
+        SpriteFont font;
         string title;
-
-        int selected = 0, letterSlotIndex = -1, firstLetterIndex, secondLetterIndex, thirdLetterIndex;
-
-        char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
-        char[] letterSlots = new char[3];
-        string userName;
 
         public EnterUser(SpriteFont font, Texture2D texture, int screenWidth, int screenHeight)
         {
@@ -59,15 +48,11 @@ namespace AlgoritmProjekt.Managers
             navigatedButtons.Add("Enter");
             navigatedButtons.Add("Exit");
             buttonPos = new Vector2(screenCenter.X - texOrigin.X / 2, screenCenter.Y + texOrigin.Y - font.MeasureString(navigatedButtons[0]).Y);
-            for (int i = 0; i < letterSlots.Length; i++)
-            {
-                letterSlots[i] = alphabet[0];
-            }
+            InitialState();
         }
 
         public void Update()
         {
-            Console.WriteLine(userName);
             UpdateInput();
         }
 
@@ -91,69 +76,85 @@ namespace AlgoritmProjekt.Managers
             }
         }
 
+        void InitialState()
+        {
+            for (int i = 0; i < letterSlots.Length; i++)
+            {
+                letterSlots[i] = alphabet[0];
+            }
+            selected = 0;
+            letterSlotIndex = -1;
+            alphabetIndex = 0;
+            userName = null;
+            navigate = Navigate.NavigateButtons;
+        }
+
         void UpdateInput()
         {
+            Console.WriteLine(userName);
+
             switch (navigate)
             {
                 case Navigate.NavigateButtons:
-                    if (KeyMouseReader.KeyPressed(Keys.Enter) && navigatedButtons[selected] == "Enter")
-                    {
-                        letterSlotIndex = 0;
-                        userName = null;
-                        navigate = Navigate.ChangingLetter;
-                        letterSlot = LetterSlot.first;
-                    }
-                    else if (KeyMouseReader.KeyPressed(Keys.Enter) && navigatedButtons[selected] == "Exit")
-                        Game1.gameState = Game1.GameState.menu;
-
-                    if (KeyMouseReader.KeyPressed(Keys.D) && selected < 1)
-                    {
-                        selected++;
-                    }
-                    else if (KeyMouseReader.KeyPressed(Keys.A) && selected > 0)
-                    {
-                        selected--;
-                    }
+                    ExecuteSelectedButton();
+                    SwitchButton();
                     break;
                 case Navigate.ChangingLetter:
-                    switch (letterSlot)
-                    {
-                        case LetterSlot.first:
-                            ChangeLetter(ref firstLetterIndex, alphabet.Length - 1);
-                            letterSlots[letterSlotIndex] = alphabet[firstLetterIndex];
-
-                            AddToString(firstLetterIndex);
-                            break;
-                        case LetterSlot.second:
-                            ChangeLetter(ref secondLetterIndex, alphabet.Length - 1);
-                            letterSlots[letterSlotIndex] = alphabet[secondLetterIndex];
-
-                            AddToString(secondLetterIndex);
-                            break;
-                        case LetterSlot.third:
-                            ChangeLetter(ref thirdLetterIndex, alphabet.Length - 1);
-                            letterSlots[letterSlotIndex] = alphabet[thirdLetterIndex];
-
-                            AddToString(thirdLetterIndex);
-
-                            break;
-                    }
+                    letterSlots[letterSlotIndex] = alphabet[alphabetIndex];
+                    ChangeLetter(ref alphabetIndex, alphabet.Length - 1);
+                    AddToString();
+                    RemoveFromString();
                     break;
             }
         }
 
-        private void AddToString(int alphabetInt)
+        private void ExecuteSelectedButton()
+        {
+            if (KeyMouseReader.KeyPressed(Keys.Enter) && navigatedButtons[selected] == "Enter")
+            {
+                letterSlotIndex = 0;
+                userName = null;
+                navigate = Navigate.ChangingLetter;
+            }
+            else if (KeyMouseReader.KeyPressed(Keys.Enter) && navigatedButtons[selected] == "Exit")
+                Game1.gameState = Game1.GameState.menu;
+        }
+
+        private void SwitchButton()
+        {
+            if (KeyMouseReader.KeyPressed(Keys.D) && selected < 1)
+            {
+                selected++;
+            }
+            else if (KeyMouseReader.KeyPressed(Keys.A) && selected > 0)
+            {
+                selected--;
+            }
+        }
+
+        private void AddToString()
         {
             if (KeyMouseReader.KeyPressed(Keys.Enter))
             {
-                userName += alphabet[alphabetInt].ToString();
+                userName += alphabet[alphabetIndex].ToString();
                 letterSlotIndex++;
+                alphabetIndex = 0;
             }
 
             if (letterSlotIndex == 3)
             {
                 Game1.WriteScores(Constants.filePath, userName, Constants.totalScore);
+                Game1.ReadScoresToHashTable(Constants.filePath);
                 Game1.gameState = Game1.GameState.menu;
+                InitialState();
+            }
+        }
+
+        private void RemoveFromString()
+        {
+            if (KeyMouseReader.KeyPressed(Keys.Escape))
+            {
+                InitialState();
             }
         }
 

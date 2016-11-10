@@ -26,7 +26,7 @@ namespace AlgoritmProjekt
             highscore,
             enterUser,
         }
-        public static GameState gameState = GameState.enterUser;
+        public static GameState gameState = GameState.menu;
         public static bool EXIT = false, RELOADGAMEPLAY = false, LoadJsonLevel = true;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -41,13 +41,13 @@ namespace AlgoritmProjekt
 
         string LevelName = "SaveTest.json";
         int screenWidth = 800, screenHeight = 600;
-        int tileSize = 32;
+        int tileSize = Constants.tileSize;
 
-        List<string> keys = new List<string>();
-        List<string> values = new List<string>();
+        static List<string> keys = new List<string>();
+        static List<string> values = new List<string>();
 
-        HashTable hashTable;
-        int hashSize;
+        static HashTable hashTable;
+        static int hashSize;
 
         float switchScreenTimer;
 
@@ -81,8 +81,16 @@ namespace AlgoritmProjekt
             scoreScreen = new HighScore(createSolidRectangle((int)(screenWidth * 0.5f), (int)(screenHeight * 0.75f), GraphicsDevice), new Vector2(screenWidth * 0.25f, screenHeight * 0.1f), font, hashTable);
         }
 
-        void ReadScoresToHashTable(string filePath)
+        public static void ReadScoresToHashTable(string filePath)
         {
+            if (hashTable != null)
+            {
+                hashTable = null;
+                keys = new List<string>();
+                values = new List<string>();
+                hashSize = 0;
+            }
+
             StreamReader sr = new StreamReader(filePath);
             string readLine = sr.ReadLine();
             string[] strings = readLine.Split(',');
@@ -191,7 +199,7 @@ namespace AlgoritmProjekt
                 case GameState.gamePlay: //GAMEPLAY
                     gameManager.Update(gameTime);
 
-                    if (gameManager.GameOver())
+                    if (gameManager.GameOver() || gameManager.Winner())
                     {
                         switchScreenTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
