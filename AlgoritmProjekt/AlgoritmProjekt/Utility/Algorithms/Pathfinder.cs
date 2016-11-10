@@ -112,7 +112,8 @@ namespace AlgoritmProjekt
             ResetSearchNode();
 
             if (endPoint.X > 0 && endPoint.Y > 0)
-            {//sätt dynamiskt
+            {
+                //sätt dynamiskt
                 SearchNode startNode = searchNodes[startPoint.X, startPoint.Y];
                 SearchNode endNode = searchNodes[endPoint.X, endPoint.Y];
 
@@ -120,6 +121,17 @@ namespace AlgoritmProjekt
                 {
                     startNode = searchNodes[previous.X, previous.Y];
                 }
+
+                if(endNode == null)
+                {
+                    endNode = searchNodes[previous.X, previous.Y];
+                }
+
+                if (startPoint == endPoint)
+                {
+                    return new Queue<Vector2>();
+                }
+
                 if (startNode != null)
                 {
                     startNode.InOpenList = true;
@@ -229,6 +241,12 @@ namespace AlgoritmProjekt
         {
             closedList.Add(endNode);
             SearchNode parentTile = endNode.Parent;
+
+            //Senaste
+            if(parentTile == null )
+            {
+                return null;
+            }
 
             while (parentTile != startNode)
             {

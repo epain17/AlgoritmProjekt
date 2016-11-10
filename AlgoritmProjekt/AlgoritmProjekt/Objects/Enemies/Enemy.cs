@@ -21,10 +21,9 @@ namespace AlgoritmProjekt.Characters
         protected Queue<Vector2> waypoints = new Queue<Vector2>();
 
         private Point pr;
-        private bool backToBase = true;
 
 
-        protected int AggroRange = 400;
+        protected int AggroRange = 200;
 
         float DistanceToWaypoint
         {
@@ -41,7 +40,7 @@ namespace AlgoritmProjekt.Characters
             this.startPos = regroup;
 
             startHp = hp;
-            speed = 100f;
+            speed = 110f;
 
             pr = new Point((int)regroup.X / mySize, (int)regroup.Y / mySize);
         }
@@ -51,9 +50,10 @@ namespace AlgoritmProjekt.Characters
             if (FoundPlayer(targetPoint) == 1)
             {
                 FindPath(targetPoint, grid);
+
             }
 
-            else if (FoundPlayer(targetPoint) == 2 && myPoint != pr)
+            else if (FoundPlayer(targetPoint) == 2)
             {
                 FindPath(pr, grid);
             }
@@ -75,15 +75,18 @@ namespace AlgoritmProjekt.Characters
 
         public void FindPath(Point targetPoint, TileGrid grid)
         {
-
-            if (waypoints.Count() == 0 && targetPoint != null)
+            if (waypoints != null)
             {
+                if (waypoints.Count() == 0 && targetPoint != myPoint)
+                {
 
-                pathfinder = new Pathfinder(grid);
-                waypoints.Clear();
-                startPoint = myPoint;
-                endPoint = targetPoint;
-                waypoints = pathfinder.FindPath(startPoint, endPoint, previous);
+                    pathfinder = new Pathfinder(grid);
+                    waypoints.Clear();
+                    startPoint = myPoint;
+                    endPoint = targetPoint;
+                    waypoints = pathfinder.FindPath(startPoint, endPoint, previous);
+                }
+
             }
 
         }
@@ -114,17 +117,16 @@ namespace AlgoritmProjekt.Characters
 
         private int FoundPlayer(Point TP)
         {
-            if (Range(TP) < AggroRange && backToBase == true)
+            if (Range(TP) < AggroRange)
             {
                 return 1;
             }
 
-            else if (Range(TP) > AggroRange && myPoint != pr && backToBase == true)
+            else if (Range(TP) > AggroRange && myPoint != pr)
             {
                 return 2;
             }
 
-            backToBase = false;
             return 0;
         }
 
