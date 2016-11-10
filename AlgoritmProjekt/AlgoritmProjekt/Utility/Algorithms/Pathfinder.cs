@@ -102,7 +102,7 @@ namespace AlgoritmProjekt
 
         }
 
-        public Queue<Vector2> FindPath(Point startPoint, Point endPoint)
+        public Queue<Vector2> FindPath(Point startPoint, Point endPoint, Point previous)
         {
             if (startPoint == endPoint)
             {
@@ -116,6 +116,10 @@ namespace AlgoritmProjekt
                 SearchNode startNode = searchNodes[startPoint.X, startPoint.Y];
                 SearchNode endNode = searchNodes[endPoint.X, endPoint.Y];
 
+                if (startNode == null)
+                {
+                    startNode = searchNodes[previous.X, previous.Y];
+                }
                 if (startNode != null)
                 {
                     startNode.InOpenList = true;

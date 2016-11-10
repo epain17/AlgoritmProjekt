@@ -16,11 +16,13 @@ namespace AlgoritmProjekt.Characters
         protected float startHp;
 
         Pathfinder pathfinder;
-        Point startPoint, endPoint;
+        Point startPoint, endPoint, previous;
 
         protected Queue<Vector2> waypoints = new Queue<Vector2>();
 
-        private Queue<Vector2> mainQue;
+        private Point pr;
+        private bool backToBase = true;
+
 
         protected int AggroRange = 400;
 
@@ -29,21 +31,33 @@ namespace AlgoritmProjekt.Characters
             get { return Vector2.Distance(position, waypoints.Peek()); }
         }
 
-        public Enemy(Texture2D texture, Vector2 position/*, Vector2 regroup*/,  int size)
+        public Enemy(Texture2D texture, Vector2 position, Vector2 regroup, int size)
             : base(texture, position, size)
         {
             this.texture = texture;
             this.position = position;
             this.size = size;
             this.hp = 3;
-            //this.startPos = regroup;
+            this.startPos = regroup;
+
             startHp = hp;
             speed = 100f;
+
+            pr = new Point((int)regroup.X / mySize, (int)regroup.Y / mySize);
         }
 
         public void Update(float time, Point targetPoint, TileGrid grid)
-        { 
-            FindPath(targetPoint, grid);
+        {
+            if (FoundPlayer(targetPoint) == 1)
+            {
+                FindPath(targetPoint, grid);
+            }
+
+            else if (FoundPlayer(targetPoint) == 2 && myPoint != pr)
+            {
+                FindPath(pr, grid);
+            }
+
             UpdatePos();
 
             if (myHP <= 0)
@@ -56,29 +70,22 @@ namespace AlgoritmProjekt.Characters
             float healthPercent = hp / startHp;
             Color color = new Color(0.25f / healthPercent, 1 * healthPercent, 1f * healthPercent);
             spriteBatch.Draw(texture, position, null, color, 0, origin, 1, SpriteEffects.None, 1);
-          
+
         }
 
         public void FindPath(Point targetPoint, TileGrid grid)
         {
-            if (Range(targetPoint) < AggroRange && waypoints.Count() == 0 && targetPoint != null)
+
+            if (waypoints.Count() == 0 && targetPoint != null)
             {
-                waypoints.Clear();
+
                 pathfinder = new Pathfinder(grid);
+                waypoints.Clear();
                 startPoint = myPoint;
                 endPoint = targetPoint;
-                waypoints = pathfinder.FindPath(startPoint, endPoint);
-                
+                waypoints = pathfinder.FindPath(startPoint, endPoint, previous);
             }
-            //else if (Range(targetPoint) > AggroRange && waypoints.Count() == 0 && targetPoint == null)
-            //{
-            //    waypoints.Clear();
-            //    pathfinder = new Pathfinder(grid);
-            //    startPoint = myPoint;
-            //    endPoint;
-            //    waypoints = pathfinder.FindPath(startPoint, endPoint);
-            //}
-           
+
         }
 
         protected virtual void UpdatePos()
@@ -90,6 +97,7 @@ namespace AlgoritmProjekt.Characters
                     if (DistanceToWaypoint < 1.5f)
                     {
                         position = waypoints.Peek();
+                        previous = new Point((int)waypoints.Peek().X / mySize, (int)waypoints.Peek().Y / mySize);
                         waypoints.Dequeue();
                     }
                     else
@@ -104,17 +112,21 @@ namespace AlgoritmProjekt.Characters
             }
         }
 
-        //public Queue<Vector2> SetQueue(Queue<Vector2> queue, Point targetPoint, TileGrid grid)
-        //{
-        //    if (targetPoint != null && FindPath(targetPoint, grid) == 0)
-        //    {
-        //        return mainQue = waypoints;
-        //    }
+        private int FoundPlayer(Point TP)
+        {
+            if (Range(TP) < AggroRange && backToBase == true)
+            {
+                return 1;
+            }
 
-        //    return null;
-        //}
+            else if (Range(TP) > AggroRange && myPoint != pr && backToBase == true)
+            {
+                return 2;
+            }
 
-        
+            backToBase = false;
+            return 0;
+        }
 
         protected float Range(Point point)
         {

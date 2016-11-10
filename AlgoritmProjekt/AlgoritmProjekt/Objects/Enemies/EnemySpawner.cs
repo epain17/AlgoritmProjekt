@@ -15,12 +15,12 @@ namespace AlgoritmProjekt.Objects
         float spawnTimer = 5;
         float timeLimit = 3;
 
-        public EnemySpawner(Texture2D texture, Vector2 position,/* Vector2 regroup,*/ int size)
-            : base(texture, position/*, regroup*/, size)
+        public EnemySpawner(Texture2D texture, Vector2 position, Vector2 regroup, int size)
+            : base(texture, position, regroup, size)
         {
             this.texture = texture;
             this.position = position;
-            //this.startPos = regroup;
+            this.startPos = regroup;
             this.size = size;
             this.hp = 3;
         }
@@ -53,7 +53,7 @@ namespace AlgoritmProjekt.Objects
 
         void SpawnEnemies(ref List<Enemy> enemies)
         {
-            enemies.Add(new Enemy(texture, position/*, startPos*/, size));
+            enemies.Add(new Enemy(texture, position, startPos, size));
         }
     }
 }
