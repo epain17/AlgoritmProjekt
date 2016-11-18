@@ -42,6 +42,7 @@
     <Compile Include="Managers\HighScore.cs" />
     <Compile Include="Managers\Menu.cs" />
     <Compile Include="Managers\EnterUser.cs" />
+    <Compile Include="Objects\Enemies\StandardEnemy.cs" />
     <Compile Include="Objects\LivingTile.cs" />
     <Compile Include="Objects\Projectiles\FireBullet.cs" />
     <Compile Include="Objects\Weapons\Empty.cs" />

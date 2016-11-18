@@ -61,7 +61,7 @@ namespace AlgoritmProjekt
         {
             graphics.PreferredBackBufferWidth = screenWidth;
             graphics.PreferredBackBufferHeight = screenHeight;
-            //graphics.IsFullScreen = true;
+            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
             base.Initialize();
         }
@@ -85,9 +85,9 @@ namespace AlgoritmProjekt
         {
             if (hashTable != null)
             {
-                hashTable = null;
-                keys = new List<string>();
-                values = new List<string>();
+                //hashTable = null;
+                keys.Clear();
+                values.Clear();
                 hashSize = 0;
             }
 

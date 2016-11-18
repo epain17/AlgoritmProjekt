@@ -40,7 +40,7 @@ namespace AlgoritmProjekt.Utility
                     int x, y;
                     x = jsonTiles[i].PositionX;
                     y = jsonTiles[i].PositionY;
-                    enemies.Add(new EnemySpawner(texture, new Vector2(x, y), new Vector2(x,y), size));
+                    enemies.Add(new EnemySpawner(texture, new Vector2(x, y), size));
                 }
             }
         }

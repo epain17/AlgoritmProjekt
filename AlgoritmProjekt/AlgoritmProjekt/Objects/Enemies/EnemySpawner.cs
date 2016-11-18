@@ -1,5 +1,6 @@
 ﻿using AlgoritmProjekt.Characters;
 using AlgoritmProjekt.Grid;
+using AlgoritmProjekt.Objects.Enemies;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -13,23 +14,25 @@ namespace AlgoritmProjekt.Objects
     class EnemySpawner : Enemy
     {
         float spawnTimer = 5;
-        float timeLimit = 3;
+        float timeLimit = 2;
 
-        public EnemySpawner(Texture2D texture, Vector2 position, Vector2 regroup, int size)
-            : base(texture, position, regroup, size)
+        public EnemySpawner(Texture2D texture, Vector2 position, int size)
+            : base(texture, position, size)
         {
             this.texture = texture;
             this.position = position;
-            this.startPos = regroup;
+            this.startPos = position;
             this.size = size;
             this.hp = 3;
+            this.startHp = hp;
+            this.aggroRange = 400;
         }
 
         public void Update(ref List<Enemy> enemies, Vector2 player, float time, Point targetPoint, TileGrid grid)
         {
             if (myHP <= 0)
                 alive = false;
-            if (Vector2.Distance(player, myPosition) < 400)
+            if (Vector2.Distance(player, myPosition) < aggroRange)
             {
                 spawnTimer += time;
                 if (spawnTimer >= timeLimit)
@@ -55,9 +58,9 @@ namespace AlgoritmProjekt.Objects
             spriteBatch.Draw(texture, position, null, color, 0, origin, 1, SpriteEffects.None, 1);
         }
 
-        void SpawnEnemies(ref List<Enemy> enemies)
+        protected void SpawnEnemies(ref List<Enemy> enemies)
         {
-            enemies.Add(new Enemy(texture, position, startPos, size));
+            enemies.Add(new StandardEnemy(texture, position, 150, aggroRange, size, startHp));
         }
     }
 }

@@ -61,7 +61,6 @@ namespace AlgoritmProjekt.Managers
             grid = new TileGrid(hollowSquare, tileSize, 100, 50);
             xhair = new CrossHair(hollowSquare, smallHollowSquare, new Vector2(200, 200), tileSize);
 
-
             LoadLevel.LoadingLevel(filePath, ref jsonTiles, ref walls,
                 ref spawners, ref player, ref solidSquare, ref hollowSquare, ref smallHollowSquare, tileSize);
             foreach (Wall wall in walls)
@@ -109,7 +108,10 @@ namespace AlgoritmProjekt.Managers
         public bool Winner()
         {
             if (spawners.Count() == 0)
+            {
+                Constants.totalScore = score;
                 return true;
+            }
             return false;
         }
 

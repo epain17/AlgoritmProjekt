@@ -13,7 +13,7 @@ namespace AlgoritmProjekt.Characters
     class Enemy : LivingTile
     {
         protected float speed;
-        protected float startHp;
+        protected int startHp;
 
         Pathfinder pathfinder;
         Point startPoint, endPoint, previous;
@@ -23,26 +23,26 @@ namespace AlgoritmProjekt.Characters
         private Point pr;
 
 
-        protected int AggroRange = 200;
+        protected int aggroRange = 400;
 
         float DistanceToWaypoint
         {
             get { return Vector2.Distance(position, waypoints.Peek()); }
         }
 
-        public Enemy(Texture2D texture, Vector2 position, Vector2 regroup, int size)
+        public Enemy(Texture2D texture, Vector2 position, int size)
             : base(texture, position, size)
         {
             this.texture = texture;
             this.position = position;
+            this.startPos = position;
             this.size = size;
             this.hp = 3;
-            this.startPos = regroup;
 
             startHp = hp;
             speed = 110f;
 
-            pr = new Point((int)regroup.X / mySize, (int)regroup.Y / mySize);
+            pr = new Point((int)startPos.X / mySize, (int)startPos.Y / mySize);
         }
 
         public void Update(float time, Point targetPoint, TileGrid grid)
@@ -52,7 +52,6 @@ namespace AlgoritmProjekt.Characters
                 FindPath(targetPoint, grid);
 
             }
-
             else if (FoundPlayer(targetPoint) == 2)
             {
                 FindPath(pr, grid);
@@ -79,7 +78,6 @@ namespace AlgoritmProjekt.Characters
             {
                 if (waypoints.Count() == 0 && targetPoint != myPoint)
                 {
-
                     pathfinder = new Pathfinder(grid);
                     waypoints.Clear();
                     startPoint = myPoint;
@@ -117,12 +115,12 @@ namespace AlgoritmProjekt.Characters
 
         private int FoundPlayer(Point TP)
         {
-            if (Range(TP) < AggroRange)
+            if (Range(TP) < aggroRange)
             {
                 return 1;
             }
 
-            else if (Range(TP) > AggroRange && myPoint != pr)
+            else if (Range(TP) > aggroRange && myPoint != pr)
             {
                 return 2;
             }
