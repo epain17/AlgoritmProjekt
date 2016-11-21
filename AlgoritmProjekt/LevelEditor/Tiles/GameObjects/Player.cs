@@ -12,8 +12,8 @@ namespace LevelEditor.Tiles.GameObjects
     class Player : Tile
     {
 
-        public Player(Texture2D texture, Vector2 position, int size)
-            :base(texture, position, size)
+        public Player(Texture2D texture, Vector2 position, int size, SpriteFont font)
+            :base(texture, position, size, font)
         {
             this.texture = texture;
             this.position = position;

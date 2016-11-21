@@ -12,11 +12,48 @@ namespace LevelEditor
     /// </summary>
     public class Game1 : Game
     {
+        public enum NavigationTabs
+        {
+            SetGrid,
+            ChooseTool,
+            ChooseCategory,
+            ChooseObject,
+        }
+        public static NavigationTabs navigateTabs = NavigationTabs.SetGrid;
+
+        public enum ChooseTools
+        {
+            AddTiles,
+            RemoveTiles,
+            SaveLevel,
+        }
+        public static ChooseTools chooseTool = ChooseTools.AddTiles;
+
+        public enum ChooseCategory
+        {
+            Characters,
+            Environment,
+            Weapons,
+        }
+        public static ChooseCategory chooseCategory = ChooseCategory.Characters;
+
+        public enum ChooseObject
+        {
+            Player,
+            Enemy,
+            EnemySpawner,
+            Wall,
+            Pistol
+        }
+        public static ChooseObject chooseObject = ChooseObject.Player;
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         TileGrid grid;
+        Hud hud;
 
         Texture2D hollowTile, solidTile;
+        SpriteFont font;
 
         public Game1()
         {
@@ -48,9 +85,12 @@ namespace LevelEditor
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            font = Content.Load<SpriteFont>("font");
             hollowTile = createHollowRectangle(Constants.tileSize, Constants.tileSize, GraphicsDevice);
             solidTile = createSolidRectangle(Constants.tileSize, Constants.tileSize, GraphicsDevice);
-            grid = new TileGrid(hollowTile, solidTile, Constants.tileSize, Constants.columns, Constants.rows);
+            grid = new TileGrid(hollowTile, solidTile, Constants.tileSize, Constants.columns, Constants.rows, font);
+
+            hud = new Hud(createSolidRectangle(800, Constants.tileSize * 2, GraphicsDevice), font, new Vector2(0, 600 - (Constants.tileSize * 2)));
             // TODO: use this.Content to load your game content here
         }
 
@@ -70,10 +110,76 @@ namespace LevelEditor
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
             KeyMouseReader.Update();
             grid.Update(new Vector2(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y));
+            if (chooseObject == ChooseObject.Player)
+                grid.tileType = TileGrid.TileType.AddPlayer;
+            else if (chooseObject == ChooseObject.Wall)
+                grid.tileType = TileGrid.TileType.AddWall;
+
+            if (navigateTabs == NavigationTabs.SetGrid)
+            {
+                SetGrid();
+            }
+            else
+            {
+                hud.Update();
+            }
+            switch (navigateTabs)
+            {
+                case NavigationTabs.ChooseTool:
+                    if (KeyMouseReader.KeyPressed(Keys.Escape))
+                        navigateTabs = NavigationTabs.SetGrid;
+
+                    if (KeyMouseReader.KeyPressed(Keys.Enter))
+                    {
+                        if (hud.selected == 0)
+                        {
+                            chooseTool = ChooseTools.AddTiles;
+                            navigateTabs = NavigationTabs.ChooseCategory;
+                        }
+                        else if (hud.selected == 1)
+                            chooseTool = ChooseTools.RemoveTiles;
+                        else if (hud.selected == 2)
+                            chooseTool = ChooseTools.SaveLevel;
+                        hud.selected = 0;
+
+                    }
+                    break;
+                case NavigationTabs.ChooseCategory:
+                    if (KeyMouseReader.KeyPressed(Keys.Escape))
+                        navigateTabs = NavigationTabs.ChooseTool;
+
+                    if (KeyMouseReader.KeyPressed(Keys.Enter))
+                    {
+                        if (hud.selected == 0)
+                            chooseCategory = ChooseCategory.Characters;
+                        else if (hud.selected == 1)
+                            chooseCategory = ChooseCategory.Environment;
+                        else if (hud.selected == 2)
+                            chooseCategory = ChooseCategory.Weapons;
+                        hud.selected = 0;
+                        navigateTabs = NavigationTabs.ChooseObject;
+                    }
+                        break;
+                case NavigationTabs.ChooseObject:
+                    if (KeyMouseReader.KeyPressed(Keys.Escape))
+                        navigateTabs = NavigationTabs.ChooseCategory;
+
+                    if (KeyMouseReader.KeyPressed(Keys.Enter))
+                    {
+                        if (hud.selected == 0)
+                            chooseObject = ChooseObject.Player;
+                        else if (hud.selected == 1)
+                            chooseObject = ChooseObject.Enemy;
+                        else if (hud.selected == 2)
+                            chooseObject = ChooseObject.EnemySpawner;
+                        hud.selected = 0;
+                        navigateTabs = NavigationTabs.ChooseObject;
+                    }
+                    break;
+            }
+
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -88,9 +194,40 @@ namespace LevelEditor
             GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
             grid.Draw(spriteBatch);
+            hud.Draw(spriteBatch);
             // TODO: Add your drawing code here
             spriteBatch.End();
             base.Draw(gameTime);
+        }
+
+        void SetGrid()
+        {
+            if (KeyMouseReader.DelayedKeyPressed(Keys.Enter))
+            {
+                navigateTabs = NavigationTabs.ChooseTool;
+            }
+
+
+            if (KeyMouseReader.KeyPressed(Keys.D))
+            {
+                Constants.columns++;
+                grid = new TileGrid(hollowTile, solidTile, Constants.tileSize, Constants.columns, Constants.rows, font);
+            }
+            else if (KeyMouseReader.KeyPressed(Keys.A) && Constants.columns > 1)
+            {
+                Constants.columns--;
+                grid = new TileGrid(hollowTile, solidTile, Constants.tileSize, Constants.columns, Constants.rows, font);
+            }
+            else if (KeyMouseReader.KeyPressed(Keys.S))
+            {
+                Constants.rows++;
+                grid = new TileGrid(hollowTile, solidTile, Constants.tileSize, Constants.columns, Constants.rows, font);
+            }
+            else if (KeyMouseReader.KeyPressed(Keys.W) && Constants.rows > 1)
+            {
+                Constants.rows--;
+                grid = new TileGrid(hollowTile, solidTile, Constants.tileSize, Constants.columns, Constants.rows, font);
+            }
         }
 
         Texture2D createSolidRectangle(int width, int height, GraphicsDevice graphicsDevice)
@@ -101,7 +238,7 @@ namespace LevelEditor
             // Colour the entire texture transparent first.             
             for (int i = 0; i < data.Length; i++)
             {
-                data[i] = new Color(0.5f, 0.5f, 0.5f, 0.25f);
+                data[i] = new Color(0.85f, 0.85f, 0.85f, 0.85f);
             }
             for (int i = 0; i < width; i++)
             {

@@ -1,5 +1,6 @@
 ﻿
 using AlgoritmProjekt.Utility.json;
+using LevelEditor;
 using LevelEditor.Tiles.GameObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,14 +14,15 @@ namespace AlgoritmProjekt.Tiles
 {
     class TileGrid
     {
-        enum AddTile
+        public enum TileType
         {
             AddPlayer,
             AddWall,
             AddSpawner,
-            RemoveTile,
         }
-        AddTile addTile = AddTile.AddPlayer;
+        public TileType tileType = TileType.AddWall;
+
+        
 
         public int width, height;
         Texture2D hollowTile, solidTile;
@@ -28,33 +30,37 @@ namespace AlgoritmProjekt.Tiles
         int size;
         JsonObject jsonTile;
         List<JsonObject> jsonTiles = new List<JsonObject>();
+        SpriteFont font;
 
         int level = 00;
         List<Tile> tiles = new List<Tile>();
         Player player;
 
-        public TileGrid(Texture2D hollowTile, Texture2D solidTile, int size, int columns, int rows)
+        public TileGrid(Texture2D hollowTile, Texture2D solidTile, int size, int columns, int rows, SpriteFont font)
         {
             this.hollowTile = hollowTile;
             this.solidTile = solidTile;
             this.size = size;
             this.width = columns;
             this.height = rows;
+            this.font = font;
             
             CreateTileGrid();
         }
 
         public void Update(Vector2 mouse)
         {
-            for (int i = 0; i < width; i++)
-            {
-                for (int j = 0; j < height; j++)
+            if(Game1.navigateTabs == Game1.NavigationTabs.ChooseObject) {
+                for (int i = 0; i < width; i++)
                 {
-                    if (tileGrid[i, j].Hovering(mouse))
+                    for (int j = 0; j < height; j++)
                     {
-                        if (tileGrid[i, j].Clicked())
+                        if (tileGrid[i, j].Hovering(mouse))
                         {
-                            CreateNewTile(tileGrid[i, j].myPosition);
+                            if (tileGrid[i, j].Clicked())
+                            {
+                                CreateNewTile(tileGrid[i, j].myPosition);
+                            }
                         }
                     }
                 }
@@ -63,13 +69,13 @@ namespace AlgoritmProjekt.Tiles
 
         private void CreateNewTile(Vector2 position)
         {
-            switch (addTile)
+            switch (tileType)
             {
-                case AddTile.AddPlayer:
-                    player = new Player(solidTile,position, size);
+                case TileType.AddPlayer:
+                    player = new Player(solidTile, position, size, font);
                     break;
-                case AddTile.AddWall:
-                    Wall wall = new Wall();
+                case TileType.AddWall:
+                    tiles.Add(new Wall(solidTile, position, size, font));
                     break;
             }
         }
@@ -86,6 +92,22 @@ namespace AlgoritmProjekt.Tiles
                 }
             if (player != null)
                 player.Draw(spriteBatch);
+            foreach (Tile tile in tiles)
+            {
+                tile.Draw(spriteBatch);
+            }
+        }
+
+        public void SetOccupiedGrid(Tile target)
+        {
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    if (tileGrid[i, j].amIOccupied(target))
+                        tileGrid[i, j].iamOccupied = true;
+                }
+            }
         }
 
         public void CreateTileGrid()
@@ -95,14 +117,13 @@ namespace AlgoritmProjekt.Tiles
             {
                 for (int j = 0; j < height; j++)
                 {
-                    tileGrid[i, j] = new Tile(hollowTile, new Vector2(0 + i * size, 0 + j * size), size);
+                    tileGrid[i, j] = new Tile(hollowTile, new Vector2(0 + i * size, 0 + j * size), size, font);
                 }
             }
         }
 
         public void SaveToJsonFile()
         {
-            // if constants.save
             for (int i = 0; i < width; i++)
             {
                 for (int j = 0; j < height; j++)
@@ -111,7 +132,10 @@ namespace AlgoritmProjekt.Tiles
                     jsonTiles.Add(jsonTile);
                 }
             }
-            JsonSerialization.WriteToJsonFile<List<JsonObject>>("Level" + level + ".json", jsonTiles);
+
+            jsonTiles.Add(new JsonObject() { Name = "Player", PositionX = (int)player.myPosition.X, PositionY = (int)player.myPosition.Y });
+
+            JsonSerialization.WriteToJsonFile<List<JsonObject>>("Level" + level + ".json", jsonTiles, false);
         }
     }
 }

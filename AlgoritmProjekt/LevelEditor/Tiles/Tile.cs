@@ -23,7 +23,7 @@ namespace AlgoritmProjekt.Tiles
         protected int size;
         protected bool occupied = false;
         protected Vector2 origin;
-
+        protected SpriteFont font;
         protected Color color;
 
         public string myName
@@ -60,19 +60,22 @@ namespace AlgoritmProjekt.Tiles
             return false;
         }
 
-        public Tile(Texture2D texture, Vector2 position, int size)
+        public Tile(Texture2D texture, Vector2 position, int size, SpriteFont font)
         {
             this.size = size;
             this.texture = texture;
             this.position = new Vector2(position.X + (size / 2), position.Y + (size / 2));
             this.origin = new Vector2(size / 2, size / 2);
-            this.name = "Tile";
+            this.name = " ";
+            this.font = font;
             color = Color.DarkBlue;
         }
 
         public virtual void Draw(SpriteBatch spritebatch)
         {
             spritebatch.Draw(texture, position, null, color, 0, origin, 1, SpriteEffects.None, 1);
+            if (!iamOccupied)
+                spritebatch.DrawString(font, name, position, Color.White, 0, new Vector2(font.MeasureString(name).X / 2, font.MeasureString(name).Y / 2), 1, SpriteEffects.None, 0);
         }
 
         public bool Hovering(Vector2 mouse)
@@ -95,7 +98,6 @@ namespace AlgoritmProjekt.Tiles
         {
             if (KeyMouseReader.LeftClick() && !iamOccupied)
             {
-                iamOccupied = true;
                 color = Color.Red;
                 return true;
             }
