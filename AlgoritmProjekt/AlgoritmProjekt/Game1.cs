@@ -61,7 +61,7 @@ namespace AlgoritmProjekt
         {
             graphics.PreferredBackBufferWidth = screenWidth;
             graphics.PreferredBackBufferHeight = screenHeight;
-            graphics.IsFullScreen = true;
+            //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
             base.Initialize();
         }
@@ -140,8 +140,6 @@ namespace AlgoritmProjekt
 
         protected override void Update(GameTime gameTime)
         {
-            string test = Console.ReadLine();
-            Console.WriteLine(test);
             KeyMouseReader.Update();
             if (EXIT)
                 Exit();

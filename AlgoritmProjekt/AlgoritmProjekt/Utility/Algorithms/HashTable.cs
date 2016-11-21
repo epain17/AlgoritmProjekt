@@ -36,6 +36,7 @@ namespace AlgoritmProjekt.Utility.Algorithms
     class HashTable
     {
         LinkedList<object> insertionOrder = new LinkedList<object>();
+        List<Entry> descOrder = new List<Entry>();
         LinkedList<Entry>[] table;
 
         /// <summary>
@@ -143,9 +144,10 @@ namespace AlgoritmProjekt.Utility.Algorithms
             return null;
         }
 
-        //public LinkedList<object> GetOrderedValueList()
-        //{
-
-        //}
+        
+        public void SortDescending()
+        {
+            
+        }
     }
 }

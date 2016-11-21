@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlgoritmProjekt", "AlgoritmProjekt\AlgoritmProjekt.csproj", "{54B56EC5-CD9C-4EB8-B8EE-EA08BE971521}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LevelEditor", "LevelEditor\LevelEditor.csproj", "{147CAA12-7F48-4146-998A-DEF344AFD4F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -15,6 +17,10 @@ Global
 		{54B56EC5-CD9C-4EB8-B8EE-EA08BE971521}.Debug|x86.Build.0 = Debug|x86
 		{54B56EC5-CD9C-4EB8-B8EE-EA08BE971521}.Release|x86.ActiveCfg = Release|x86
 		{54B56EC5-CD9C-4EB8-B8EE-EA08BE971521}.Release|x86.Build.0 = Release|x86
+		{147CAA12-7F48-4146-998A-DEF344AFD4F6}.Debug|x86.ActiveCfg = Debug|x86
+		{147CAA12-7F48-4146-998A-DEF344AFD4F6}.Debug|x86.Build.0 = Debug|x86
+		{147CAA12-7F48-4146-998A-DEF344AFD4F6}.Release|x86.ActiveCfg = Release|x86
+		{147CAA12-7F48-4146-998A-DEF344AFD4F6}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

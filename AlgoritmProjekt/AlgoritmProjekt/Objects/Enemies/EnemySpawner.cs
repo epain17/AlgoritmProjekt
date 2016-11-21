@@ -1,6 +1,5 @@
 ﻿using AlgoritmProjekt.Characters;
 using AlgoritmProjekt.Grid;
-using AlgoritmProjekt.Objects.Enemies;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -11,10 +10,37 @@ using System.Threading.Tasks;
 
 namespace AlgoritmProjekt.Objects
 {
+    internal class SpawnedEnemy : Enemy
+    {
+
+        internal SpawnedEnemy(Texture2D texture, Vector2 position, float speed, int aggroRange, int size, int hp)
+            : base(texture, position, size)
+        {
+            this.texture = texture;
+            this.position = position;
+            this.startPos = position;
+            this.speed = speed;
+            this.aggroRange = aggroRange;
+            this.size = size;
+            this.hp = hp;
+        }
+
+        public override void Update(ref float time)
+        {
+            base.Update(ref time);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+        }
+    }
+
     class EnemySpawner : Enemy
     {
         float spawnTimer = 5;
         float timeLimit = 2;
+        int waypointLimiter = 12;
 
         public EnemySpawner(Texture2D texture, Vector2 position, int size)
             : base(texture, position, size)
@@ -38,7 +64,7 @@ namespace AlgoritmProjekt.Objects
                 if (spawnTimer >= timeLimit)
                 {
                     FindPath(targetPoint, grid);
-                    if (waypoints.Count < 12 && waypoints.Count != 0)
+                    if (waypoints.Count < waypointLimiter && waypoints.Count != 0)
                     {
                         spawnTimer = 0;
                         SpawnEnemies(ref enemies);
@@ -46,7 +72,6 @@ namespace AlgoritmProjekt.Objects
                     else
                         waypoints.Clear();
                 }
-                
             }
         }
 
@@ -60,7 +85,7 @@ namespace AlgoritmProjekt.Objects
 
         protected void SpawnEnemies(ref List<Enemy> enemies)
         {
-            enemies.Add(new StandardEnemy(texture, position, 150, aggroRange, size, startHp));
+            enemies.Add(new SpawnedEnemy(texture, position, 150, aggroRange, size, startHp));
         }
     }
 }

@@ -62,7 +62,7 @@ namespace AlgoritmProjekt.Objects.Projectiles
 
         void LifeCycle(float time)
         {
-            if (Vector2.Distance(position, startPos) > size * 12)
+            if (Vector2.Distance(position, startPos) > size * 11)
             {
                 alive = false;
             }
