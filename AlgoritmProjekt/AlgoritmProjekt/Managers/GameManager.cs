@@ -239,7 +239,9 @@ namespace AlgoritmProjekt.Managers
         {
             if (player.ShotsFired)
             {
+
                 Random rand = new Random();
+                emitters.Add(new NeonPulse(solidSquare, player.myPosition));
                 player.ShotsFired = false;
 
                 switch (player.weaponState)
