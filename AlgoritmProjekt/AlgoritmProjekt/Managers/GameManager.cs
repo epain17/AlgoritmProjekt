@@ -61,8 +61,8 @@ namespace AlgoritmProjekt.Managers
             grid = new TileGrid(hollowSquare, tileSize, 100, 50);
             xhair = new CrossHair(hollowSquare, smallHollowSquare, new Vector2(200, 200), tileSize);
 
-            LoadLevel.LoadingLevel(filePath, ref jsonTiles, ref walls,
-                ref spawners, ref player, ref solidSquare, ref hollowSquare, ref smallHollowSquare, tileSize);
+            LoadLevel.LoadingLevel(filePath, font, ref jsonTiles, ref walls,
+                ref spawners, ref player, ref weapons, ref solidSquare, ref hollowSquare, ref smallHollowSquare, tileSize);
             foreach (Wall wall in walls)
             {
                 grid.SetOccupiedGrid(wall);

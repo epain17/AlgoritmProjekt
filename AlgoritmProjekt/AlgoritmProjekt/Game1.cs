@@ -39,7 +39,7 @@ namespace AlgoritmProjekt
         SpriteFont font;
         Texture2D smoothTex;
 
-        string LevelName = "SaveTest.json";
+        string LevelName = "Level0.json";
         int screenWidth = 800, screenHeight = 600;
         int tileSize = Constants.tileSize;
 

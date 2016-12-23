@@ -34,7 +34,7 @@ namespace AlgoritmProjekt.Grid
             {
                 for (int j = 0; j < height; j++)
                 {
-                    tileGrid[i, j] = new Tile(tileTex, new Vector2(0 + i * size, 0 + j * size), size);
+                    tileGrid[i, j] = new Tile(tileTex, new Vector2((size / 2) + i * size, (size / 2) + j * size), size);
                 }
             }
         }

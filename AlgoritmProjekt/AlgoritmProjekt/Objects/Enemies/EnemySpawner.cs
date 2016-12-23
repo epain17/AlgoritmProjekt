@@ -64,13 +64,17 @@ namespace AlgoritmProjekt.Objects
                 if (spawnTimer >= timeLimit)
                 {
                     FindPath(targetPoint, grid);
-                    if (waypoints.Count < waypointLimiter && waypoints.Count != 0)
+                    if (waypoints != null)
                     {
-                        spawnTimer = 0;
-                        SpawnEnemies(ref enemies);
+
+                        if (waypoints.Count < waypointLimiter && waypoints.Count != 0)
+                        {
+                            spawnTimer = 0;
+                            SpawnEnemies(ref enemies);
+                        }
+                        else
+                            waypoints.Clear();
                     }
-                    else
-                        waypoints.Clear();
                 }
             }
         }

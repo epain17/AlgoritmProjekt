@@ -19,10 +19,11 @@ namespace AlgoritmProjekt.Tiles
             AddPlayer,
             AddWall,
             AddSpawner,
+            AddPistol,
         }
         public TileType tileType = TileType.AddWall;
 
-        
+
 
         public int width, height;
         Texture2D hollowTile, solidTile;
@@ -34,6 +35,7 @@ namespace AlgoritmProjekt.Tiles
 
         int level = 00;
         List<Tile> tiles = new List<Tile>();
+        Pistol pistol;
         Player player;
 
         public TileGrid(Texture2D hollowTile, Texture2D solidTile, int size, int columns, int rows, SpriteFont font)
@@ -44,13 +46,16 @@ namespace AlgoritmProjekt.Tiles
             this.width = columns;
             this.height = rows;
             this.font = font;
-            
+
             CreateTileGrid();
         }
 
         public void Update(Vector2 mouse)
         {
-            if(Game1.navigateTabs == Game1.NavigationTabs.ChooseObject) {
+
+
+            if (Game1.navigateTabs == Game1.NavigationTabs.ChooseObject)
+            {
                 for (int i = 0; i < width; i++)
                 {
                     for (int j = 0; j < height; j++)
@@ -60,6 +65,12 @@ namespace AlgoritmProjekt.Tiles
                             if (tileGrid[i, j].Clicked())
                             {
                                 CreateNewTile(tileGrid[i, j].myPosition);
+                                foreach (Tile tile in tiles)
+                                {
+                                    //if (tile is Wall)
+                                        SetOccupiedGrid(tile);
+                                }
+
                             }
                         }
                     }
@@ -76,6 +87,12 @@ namespace AlgoritmProjekt.Tiles
                     break;
                 case TileType.AddWall:
                     tiles.Add(new Wall(solidTile, position, size, font));
+                    break;
+                case TileType.AddSpawner:
+                    tiles.Add(new EnemySpawner(solidTile, position, size, font));
+                    break;
+                case TileType.AddPistol:
+                    tiles.Add(new Pistol(solidTile, position, size, font));
                     break;
             }
         }
@@ -131,6 +148,10 @@ namespace AlgoritmProjekt.Tiles
                     jsonTile = new JsonObject() { Name = "Grid", PositionX = (int)tileGrid[i, j].myPosition.X, PositionY = (int)tileGrid[i, j].myPosition.Y };
                     jsonTiles.Add(jsonTile);
                 }
+            }
+            foreach (Tile tile in tiles)
+            {
+                jsonTiles.Add(new JsonObject() { Name = tile.myName, PositionX = (int)tile.myPosition.X, PositionY = (int)tile.myPosition.Y });
             }
 
             jsonTiles.Add(new JsonObject() { Name = "Player", PositionX = (int)player.myPosition.X, PositionY = (int)player.myPosition.Y });

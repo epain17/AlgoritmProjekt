@@ -28,17 +28,19 @@ namespace LevelEditor.Extras
         List<string> environment = new List<string>();
         List<string> weapons = new List<string>();
 
-
-
+        int screenWidth;
+        int screenHeight;
         public int selected = -1;
         Color color;
 
-        public Hud(Texture2D texture, SpriteFont font, Vector2 position)
+        public Hud(Texture2D texture, SpriteFont font, Vector2 position, int screenWidth, int screenHeight)
         {
             this.texture = texture;
             this.font = font;
             this.position = position;
             this.textPos = position;
+            this.screenWidth = screenWidth;
+            this.screenHeight = screenHeight;
 
             hudTitles.Add("Set Grid");
             hudTitles.Add("Tools");
@@ -57,17 +59,18 @@ namespace LevelEditor.Extras
             categories.Add("Weapons");
 
             characters.Add("Player");
-            characters.Add("Enemy");
+            //characters.Add("Enemy");
             characters.Add("Spawner");
 
             environment.Add("Wall");
-            environment.Add("Trap");
+            //environment.Add("Trap");
 
             weapons.Add("Pistol");
         }
 
-        public void Update()
+        public void Update(Vector2 cameraPos)
         {
+            position = new Vector2(0 - cameraPos.X, 600 - texture.Height - cameraPos.Y);
             if (Game1.navigateTabs == Game1.NavigationTabs.ChooseTool)
                 ManipulateSelected(navigateToolButtons);
             else if (Game1.navigateTabs == Game1.NavigationTabs.ChooseCategory)
@@ -103,6 +106,7 @@ namespace LevelEditor.Extras
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            
             spriteBatch.Draw(texture, position, Color.DarkSlateGray);
             DrawTitles(spriteBatch);
             DrawSetGridButtons(spriteBatch);
@@ -118,13 +122,13 @@ namespace LevelEditor.Extras
                 switch (Game1.chooseCategory)
                 {
                     case Game1.ChooseCategory.Characters:
-                        spriteBatch.DrawString(font, characters[selected], new Vector2(position.X + 600, position.Y + (font.MeasureString(categories[selected]).Y * (1 + 1))), color);
+                        spriteBatch.DrawString(font, characters[selected], new Vector2(position.X + 450, position.Y + (font.MeasureString(categories[selected]).Y * (1 + 1))), color);
                         break;
                     case Game1.ChooseCategory.Environment:
-                        spriteBatch.DrawString(font, environment[selected], new Vector2(position.X + 600, position.Y + (font.MeasureString(environment[selected]).Y * (1 + 1))), color);
+                        spriteBatch.DrawString(font, environment[selected], new Vector2(position.X + 450, position.Y + (font.MeasureString(environment[selected]).Y * (1 + 1))), color);
                         break;
                     case Game1.ChooseCategory.Weapons:
-                        spriteBatch.DrawString(font, weapons[selected], new Vector2(position.X + 600, position.Y + (font.MeasureString(weapons[selected]).Y * (1 + 1))), color);
+                        spriteBatch.DrawString(font, weapons[selected], new Vector2(position.X + 450, position.Y + (font.MeasureString(weapons[selected]).Y * (1 + 1))), color);
                         break;
                 }
             }
@@ -138,7 +142,7 @@ namespace LevelEditor.Extras
                     color = (i == selected) ? Color.White : Color.Gray;
                 else
                     color = Color.Gray;
-                spriteBatch.DrawString(font, categories[i], new Vector2(position.X + 400, position.Y + (font.MeasureString(categories[i]).Y * (i + 1))), color);
+                spriteBatch.DrawString(font, categories[i], new Vector2(position.X + 300, position.Y + (font.MeasureString(categories[i]).Y * (i + 1))), color);
             }
         }
 
@@ -150,7 +154,7 @@ namespace LevelEditor.Extras
                     color = (i == selected) ? Color.White : Color.Gray;
                 else
                     color = Color.Gray;
-                spriteBatch.DrawString(font, navigateToolButtons[i], new Vector2(position.X + 200, position.Y + (font.MeasureString(navigateToolButtons[i]).Y * (i + 1))), color);
+                spriteBatch.DrawString(font, navigateToolButtons[i], new Vector2(position.X + 150, position.Y + (font.MeasureString(navigateToolButtons[i]).Y * (i + 1))), color);
             }
         }
 
@@ -176,28 +180,28 @@ namespace LevelEditor.Extras
                     for (int i = 0; i < hudTitles.Count; i++)
                     {
                         color = (hudTitles[i] == "Set Grid") ? Color.Lime : Color.Green;
-                        spriteBatch.DrawString(font, hudTitles[i], new Vector2(position.X + (200 * i), position.Y + (font.MeasureString(hudTitles[0]).Y * 0)), color);
+                        spriteBatch.DrawString(font, hudTitles[i], new Vector2(position.X + (150 * i), position.Y + (font.MeasureString(hudTitles[0]).Y * 0)), color);
                     }
                     break;
                 case Game1.NavigationTabs.ChooseTool:
                     for (int i = 0; i < hudTitles.Count; i++)
                     {
                         color = (hudTitles[i] == "Tools") ? Color.Lime : Color.Green;
-                        spriteBatch.DrawString(font, hudTitles[i], new Vector2(position.X + (200 * i), position.Y + (font.MeasureString(hudTitles[0]).Y * 0)), color);
+                        spriteBatch.DrawString(font, hudTitles[i], new Vector2(position.X + (150 * i), position.Y + (font.MeasureString(hudTitles[0]).Y * 0)), color);
                     }
                     break;
                 case Game1.NavigationTabs.ChooseCategory:
                     for (int i = 0; i < hudTitles.Count; i++)
                     {
                         color = (hudTitles[i] == "Category") ? Color.Lime : Color.Green;
-                        spriteBatch.DrawString(font, hudTitles[i], new Vector2(position.X + (200 * i), position.Y + (font.MeasureString(hudTitles[0]).Y * 0)), color);
+                        spriteBatch.DrawString(font, hudTitles[i], new Vector2(position.X + (150 * i), position.Y + (font.MeasureString(hudTitles[0]).Y * 0)), color);
                     }
                     break;
                 case Game1.NavigationTabs.ChooseObject:
                     for (int i = 0; i < hudTitles.Count; i++)
                     {
                         color = (hudTitles[i] == "Objects") ? Color.Lime : Color.Green;
-                        spriteBatch.DrawString(font, hudTitles[i], new Vector2(position.X + (200 * i), position.Y + (font.MeasureString(hudTitles[0]).Y * 0)), color);
+                        spriteBatch.DrawString(font, hudTitles[i], new Vector2(position.X + (150 * i), position.Y + (font.MeasureString(hudTitles[0]).Y * 0)), color);
                     }
                     break;
             }

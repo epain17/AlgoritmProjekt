@@ -4,6 +4,7 @@ using LevelEditor.Extras;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace LevelEditor
 {
@@ -51,7 +52,7 @@ namespace LevelEditor
         SpriteBatch spriteBatch;
         TileGrid grid;
         Hud hud;
-
+        Camera camera;
         Texture2D hollowTile, solidTile;
         SpriteFont font;
 
@@ -89,8 +90,9 @@ namespace LevelEditor
             hollowTile = createHollowRectangle(Constants.tileSize, Constants.tileSize, GraphicsDevice);
             solidTile = createSolidRectangle(Constants.tileSize, Constants.tileSize, GraphicsDevice);
             grid = new TileGrid(hollowTile, solidTile, Constants.tileSize, Constants.columns, Constants.rows, font);
-
-            hud = new Hud(createSolidRectangle(800, Constants.tileSize * 2, GraphicsDevice), font, new Vector2(0, 600 - (Constants.tileSize * 2)));
+            camera = new Camera(new Rectangle(0, 0, Constants.windowWidth / 2, Constants.windowHeight / 2), new Rectangle(0, 0, Constants.windowWidth * 4, Constants.windowHeight * 4));
+            hud = new Hud(createSolidRectangle(800, Constants.tileSize * 3, GraphicsDevice), font, new Vector2(0, 580 - (Constants.tileSize * 2)), 800, 600);
+            camera.Update(Vector2.Zero);
             // TODO: use this.Content to load your game content here
         }
 
@@ -111,20 +113,34 @@ namespace LevelEditor
         protected override void Update(GameTime gameTime)
         {
             KeyMouseReader.Update();
+            if(KeyMouseReader.RightClick())
+            camera.Update(new Vector2(KeyMouseReader.mouseState.X - camera.CameraPos.X, KeyMouseReader.mouseState.Y - camera.CameraPos.Y));
             grid.Update(new Vector2(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y));
-            if (chooseObject == ChooseObject.Player)
-                grid.tileType = TileGrid.TileType.AddPlayer;
-            else if (chooseObject == ChooseObject.Wall)
-                grid.tileType = TileGrid.TileType.AddWall;
+            if (navigateTabs == NavigationTabs.ChooseObject)
+            {
+                if (chooseObject == ChooseObject.Player)
+                    grid.tileType = TileGrid.TileType.AddPlayer;
+                else if (chooseObject == ChooseObject.Wall)
+                    grid.tileType = TileGrid.TileType.AddWall;
+                else if (chooseObject == ChooseObject.EnemySpawner)
+                    grid.tileType = TileGrid.TileType.AddSpawner;
+                else if (chooseObject == ChooseObject.Pistol)
+                    grid.tileType = TileGrid.TileType.AddPistol;
+            }
+            hud.Update(camera.CameraPos);
 
             if (navigateTabs == NavigationTabs.SetGrid)
             {
                 SetGrid();
             }
-            else
+            else if(navigateTabs == NavigationTabs.ChooseTool && chooseTool == ChooseTools.SaveLevel)
             {
-                hud.Update();
+                grid.SaveToJsonFile();
+                Console.WriteLine("SAVED");
+                chooseTool = ChooseTools.AddTiles;
+                hud.selected = 0;
             }
+
             switch (navigateTabs)
             {
                 case NavigationTabs.ChooseTool:
@@ -168,14 +184,27 @@ namespace LevelEditor
 
                     if (KeyMouseReader.KeyPressed(Keys.Enter))
                     {
-                        if (hud.selected == 0)
-                            chooseObject = ChooseObject.Player;
-                        else if (hud.selected == 1)
-                            chooseObject = ChooseObject.Enemy;
-                        else if (hud.selected == 2)
-                            chooseObject = ChooseObject.EnemySpawner;
-                        hud.selected = 0;
-                        navigateTabs = NavigationTabs.ChooseObject;
+                        if (chooseCategory == ChooseCategory.Characters)
+                        {
+                            if (hud.selected == 0)
+                                chooseObject = ChooseObject.Player;
+                            else if (hud.selected == 1)
+                                chooseObject = ChooseObject.EnemySpawner;
+                            else if (hud.selected == 2)
+                                chooseObject = ChooseObject.Enemy;
+                        }
+                        else if (chooseCategory == ChooseCategory.Environment)
+                        {
+                            if (hud.selected == 0)
+                            {
+                                chooseObject = ChooseObject.Wall;
+                            }
+                        }
+                        else if (chooseCategory == ChooseCategory.Weapons)
+                        {
+                            if (hud.selected == 0)
+                                chooseObject = ChooseObject.Pistol;
+                        }
                     }
                     break;
             }
@@ -192,7 +221,7 @@ namespace LevelEditor
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, camera.TranslationMatrix);
             grid.Draw(spriteBatch);
             hud.Draw(spriteBatch);
             // TODO: Add your drawing code here

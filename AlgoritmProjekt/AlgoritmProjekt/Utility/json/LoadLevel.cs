@@ -1,5 +1,6 @@
 ﻿using AlgoritmProjekt.Characters;
 using AlgoritmProjekt.Objects;
+using AlgoritmProjekt.Objects.Weapons;
 using AlgoritmProjekt.Utility.json;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -19,7 +20,7 @@ namespace AlgoritmProjekt.Utility
 
             for (int i = 0; i < jsonTiles.Count; i++)
             {
-                if(jsonTiles[i].Name == "Surface")
+                if(jsonTiles[i].Name == "Wall")
                 {
                     int x, y;
                     x = jsonTiles[i].PositionX;
@@ -35,7 +36,7 @@ namespace AlgoritmProjekt.Utility
 
             for (int i = 0; i < jsonTiles.Count; i++)
             {
-                if (jsonTiles[i].Name == "Spikes")
+                if (jsonTiles[i].Name == "Spawner")
                 {
                     int x, y;
                     x = jsonTiles[i].PositionX;
@@ -61,8 +62,25 @@ namespace AlgoritmProjekt.Utility
             }
         }
 
-        public static void LoadingLevel(string filePath, ref List<JsonObject> jsonTiles, ref List<Wall> walls, 
-            ref List<EnemySpawner> spawners, ref Player player, ref Texture2D solidSquare, ref Texture2D hollowSquare, ref Texture2D smallHollowSquare, int size)
+        static void JsonWeapons(ref List<Weapon> weapons, SpriteFont font, ref List<JsonObject> jsonTiles, ref Texture2D texture, string filePath, int size)
+        {
+            jsonTiles = JsonSerialization.ReadFromJsonFile<List<JsonObject>>(filePath);
+
+            for (int i = 0; i < jsonTiles.Count; i++)
+            {
+                if (jsonTiles[i].Name == "Pistol")
+                {
+                    int x, y;
+                    x = jsonTiles[i].PositionX;
+                    y = jsonTiles[i].PositionY;
+                    weapons.Add(new Pistol(texture, font, new Vector2(x, y),size));
+                }
+            }
+        }
+
+
+        public static void LoadingLevel(string filePath, SpriteFont font, ref List<JsonObject> jsonTiles, ref List<Wall> walls, 
+            ref List<EnemySpawner> spawners, ref Player player, ref List<Weapon> weapons, ref Texture2D solidSquare, ref Texture2D hollowSquare, ref Texture2D smallHollowSquare, int size)
         {
             if(Game1.LoadJsonLevel && filePath != null)
             {
@@ -71,6 +89,7 @@ namespace AlgoritmProjekt.Utility
                 JsonPlayer(ref player, ref jsonTiles, ref solidSquare, ref smallHollowSquare, filePath, size);
                 JsonEnemySpawner(ref spawners, ref jsonTiles, ref hollowSquare, filePath, size);
                 JsonWalls(ref walls, ref jsonTiles, ref solidSquare, filePath, size);
+                JsonWeapons(ref weapons, font, ref jsonTiles, ref solidSquare, filePath, size);
             }
         }
     }
