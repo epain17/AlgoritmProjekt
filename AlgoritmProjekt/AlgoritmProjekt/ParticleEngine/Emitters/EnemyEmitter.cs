@@ -22,9 +22,9 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
             velocity = Vector2.Zero;
         }
 
-        public override void Update(float time)
+        public override void Update(ref float time)
         {
-            base.Update(time);
+            base.Update(ref time);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

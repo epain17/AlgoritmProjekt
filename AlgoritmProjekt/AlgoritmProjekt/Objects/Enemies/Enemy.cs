@@ -10,9 +10,8 @@ using System.Text;
 
 namespace AlgoritmProjekt.Characters
 {
-    class Enemy : LivingTile
+    class Enemy : MovingTile
     {
-        protected float speed;
         protected int startHp;
 
         Pathfinder pathfinder;
@@ -21,43 +20,41 @@ namespace AlgoritmProjekt.Characters
         protected Queue<Vector2> waypoints = new Queue<Vector2>();
 
         private Point pr;
+        protected int aggroRange;
 
-
-        protected int aggroRange = 400;
-
-        float DistanceToWaypoint
+        float DistanceToWaypoint(TileGrid grid)
         {
-            get { return Vector2.Distance(position, waypoints.Peek()); }
+            return Vector2.Distance(position, grid.ReturnTilePosition(waypoints.Peek())); 
         }
 
         public Enemy(Texture2D texture, Vector2 position, int size)
             : base(texture, position, size)
         {
-            this.texture = texture;
+            this.myTexture = texture;
             this.position = position;
             this.startPos = position;
             this.size = size;
-            this.hp = 3;
+            this.hp = 2;
+            this.aggroRange = 400;
 
             startHp = hp;
-            speed = 110f;
-
+            speed = 80;
             pr = new Point((int)startPos.X / mySize, (int)startPos.Y / mySize);
         }
 
         public void Update(float time, Point targetPoint, TileGrid grid)
         {
-            if (FoundPlayer(targetPoint) == 1)
+            if (FindTarget(targetPoint))
             {
                 FindPath(targetPoint, grid);
 
             }
-            else if (FoundPlayer(targetPoint) == 2)
+            else if (FindTarget(targetPoint))
             {
                 FindPath(pr, grid);
             }
 
-            UpdatePos();
+            UpdatePos(grid);
 
             if (myHP <= 0)
                 alive = false;
@@ -68,8 +65,7 @@ namespace AlgoritmProjekt.Characters
         {
             float healthPercent = hp / startHp;
             Color color = new Color(0.25f / healthPercent, 1 * healthPercent, 1f * healthPercent);
-            spriteBatch.Draw(texture, position, null, color, 0, origin, 1, SpriteEffects.None, 1);
-
+            spriteBatch.Draw(myTexture, position, null, color, 0, origin, 1, SpriteEffects.None, 1);
         }
 
         public void FindPath(Point targetPoint, TileGrid grid)
@@ -82,56 +78,35 @@ namespace AlgoritmProjekt.Characters
                     waypoints.Clear();
                     startPoint = myPoint;
                     endPoint = targetPoint;
-                    waypoints = pathfinder.FindPath(startPoint, endPoint, previous);
+                    waypoints = pathfinder.FindPointPath(startPoint, endPoint, previous);
                 }
-
             }
-
         }
 
-        protected virtual void UpdatePos()
+        protected virtual void UpdatePos(TileGrid grid)
         {
             if (waypoints != null)
             {
                 if (waypoints.Count > 0)
                 {
-                    if (DistanceToWaypoint < 1.5f)
+                    if (DistanceToWaypoint(grid) < 1.5f)
                     {
-                        position = waypoints.Peek();
+                        position = grid.ReturnTilePosition(waypoints.Peek());
                         previous = new Point((int)waypoints.Peek().X / mySize, (int)waypoints.Peek().Y / mySize);
                         waypoints.Dequeue();
                     }
                     else
                     {
-                        Vector2 direction = waypoints.Peek() - position;
-                        direction.Normalize();
-                        velocity = Vector2.Multiply(direction, speed);
+                        SetDirection(grid.ReturnTilePosition(waypoints.Peek()));
                     }
                 }
-                else
-                    velocity = Vector2.Zero;
             }
         }
 
-        private int FoundPlayer(Point TP)
-        {
-            if (Range(TP) < aggroRange)
-            {
-                return 1;
-            }
-
-            else if (Range(TP) > aggroRange && myPoint != pr)
-            {
-                return 2;
-            }
-
-            return 0;
-        }
-
-        protected float Range(Point point)
+        protected bool FindTarget(Point point)
         {
             Vector2 range = new Vector2(point.X * size, point.Y * size);
-            return Vector2.Distance(this.position, range);
+            return Vector2.Distance(this.position, range) < aggroRange;
         }
     }
 }

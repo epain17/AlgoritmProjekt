@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace AlgoritmProjekt.Objects.Weapons
 {
-    class LazerGun : Weapon
+    class ShotGun : Item
     {
-        public LazerGun(Texture2D texture, SpriteFont font, Vector2 position, int size)
-            : base(texture, font, position, size)
+
+
+        public ShotGun(Texture2D texture, Vector2 position, int size)
+            : base(texture, position, size)
         {
-            this.texture = texture;
-            this.font = font;
+            this.myTexture = texture;
             this.position = position;
             this.size = size;
-            this.text = "Lazor";
         }
 
-        public override void Update(Vector2 camera, int screenWidth, int screenHeight)
+        public override void Update()
         {
-            base.Update(camera, screenWidth, screenHeight);
+
         }
 
         public override void Draw(SpriteBatch spritebatch)
@@ -31,3 +31,4 @@ namespace AlgoritmProjekt.Objects.Weapons
         }
     }
 }
+

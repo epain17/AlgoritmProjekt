@@ -16,7 +16,7 @@ namespace AlgoritmProjekt.Objects
         internal SpawnedEnemy(Texture2D texture, Vector2 position, float speed, int aggroRange, int size, int hp)
             : base(texture, position, size)
         {
-            this.texture = texture;
+            this.myTexture = texture;
             this.position = position;
             this.startPos = position;
             this.speed = speed;
@@ -40,25 +40,25 @@ namespace AlgoritmProjekt.Objects
     {
         float spawnTimer = 5;
         float timeLimit = 2;
-        int waypointLimiter = 12;
+        int waypointLimiter = 10;
 
         public EnemySpawner(Texture2D texture, Vector2 position, int size)
             : base(texture, position, size)
         {
-            this.texture = texture;
+            this.myTexture = texture;
             this.position = position;
             this.startPos = position;
             this.size = size;
-            this.hp = 3;
+            this.hp = 5;
             this.startHp = hp;
-            this.aggroRange = 400;
+            this.aggroRange = size * 10;
         }
 
         public void Update(ref List<Enemy> enemies, Vector2 player, float time, Point targetPoint, TileGrid grid)
         {
             if (myHP <= 0)
                 alive = false;
-            if (Vector2.Distance(player, myPosition) < aggroRange)
+            if (Vector2.Distance(player, myPosition) <= aggroRange)
             {
                 spawnTimer += time;
                 if (spawnTimer >= timeLimit)
@@ -67,7 +67,7 @@ namespace AlgoritmProjekt.Objects
                     if (waypoints != null)
                     {
 
-                        if (waypoints.Count < waypointLimiter && waypoints.Count != 0)
+                        if (waypoints.Count <= waypointLimiter && waypoints.Count != 0)
                         {
                             spawnTimer = 0;
                             SpawnEnemies(ref enemies);
@@ -81,15 +81,15 @@ namespace AlgoritmProjekt.Objects
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, position, null, Color.Purple, 0, origin, 1, SpriteEffects.None, 1);
+            spriteBatch.Draw(myTexture, position, null, Color.Purple, 0, origin, 1, SpriteEffects.None, 1);
             float healthPercent = hp / startHp;
             Color color = new Color(1, 0, 0.5f * healthPercent);
-            spriteBatch.Draw(texture, position, null, color, 0, origin, 1, SpriteEffects.None, 1);
+            spriteBatch.Draw(myTexture, position, null, color, 0, origin, 1, SpriteEffects.None, 1);
         }
 
         protected void SpawnEnemies(ref List<Enemy> enemies)
         {
-            enemies.Add(new SpawnedEnemy(texture, position, 150, aggroRange, size, startHp));
+            enemies.Add(new SpawnedEnemy(myTexture, position, 80, aggroRange, size, 2));
         }
     }
 }

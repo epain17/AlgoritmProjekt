@@ -1,5 +1,7 @@
 ﻿using AlgoritmProjekt.Characters;
+using AlgoritmProjekt.Grid;
 using AlgoritmProjekt.Objects;
+using AlgoritmProjekt.Objects.Environment;
 using AlgoritmProjekt.Objects.Weapons;
 using AlgoritmProjekt.Utility.json;
 using Microsoft.Xna.Framework;
@@ -14,13 +16,28 @@ namespace AlgoritmProjekt.Utility
 {
     class LoadLevel
     {
-        static void JsonWalls(ref List<Wall> walls, ref List<JsonObject> jsonTiles, ref Texture2D texture, string filePath, int size)
+        static void JsonGrid(ref TileGrid grid, ref List<JsonObject> jsonTiles, ref Texture2D texture, string filePath, int size)
         {
             jsonTiles = JsonSerialization.ReadFromJsonFile<List<JsonObject>>(filePath);
 
             for (int i = 0; i < jsonTiles.Count; i++)
             {
-                if(jsonTiles[i].Name == "Wall")
+                if (jsonTiles[i].Name == "Grid")
+                {
+                    grid = new TileGrid(texture, size, jsonTiles[i].PositionX, jsonTiles[i].PositionY);
+                }
+            }
+        }
+
+        static void JsonWalls(ref List<Wall> walls, ref List<JsonObject> jsonTiles, ref Texture2D texture, string filePath, int size)
+        {
+            if (walls != null)
+                walls.Clear();
+            jsonTiles = JsonSerialization.ReadFromJsonFile<List<JsonObject>>(filePath);
+
+            for (int i = 0; i < jsonTiles.Count; i++)
+            {
+                if (jsonTiles[i].Name == "Wall")
                 {
                     int x, y;
                     x = jsonTiles[i].PositionX;
@@ -30,8 +47,26 @@ namespace AlgoritmProjekt.Utility
             }
         }
 
+        static void JsonTeleports(ref Teleporter teleport, ref List<JsonObject> jsonTiles, ref Texture2D texture, ref Texture2D smoothTexture, string filePath, int size)
+        {
+            jsonTiles = JsonSerialization.ReadFromJsonFile<List<JsonObject>>(filePath);
+
+            for (int i = 0; i < jsonTiles.Count; i++)
+            {
+                if (jsonTiles[i].Name == "Tele")
+                {
+                    Vector2 pos;
+                    pos.X = jsonTiles[i].PositionX;
+                    pos.Y = jsonTiles[i].PositionY;
+                    teleport = new Teleporter(texture, smoothTexture, pos, size);
+                }
+            }
+        }
+
         static void JsonEnemySpawner(ref List<EnemySpawner> enemies, ref List<JsonObject> jsonTiles, ref Texture2D texture, string filePath, int size)
         {
+            if (enemies != null)
+                enemies.Clear();
             jsonTiles = JsonSerialization.ReadFromJsonFile<List<JsonObject>>(filePath);
 
             for (int i = 0; i < jsonTiles.Count; i++)
@@ -54,16 +89,18 @@ namespace AlgoritmProjekt.Utility
             {
                 if (jsonTiles[i].Name == "Player")
                 {
-                    int x, y;
-                    x = jsonTiles[i].PositionX;
-                    y = jsonTiles[i].PositionY;
-                    player = (new Player(texture, new Vector2(x, y), size));
+                    Vector2 pos;
+                    pos.X = jsonTiles[i].PositionX;
+                    pos.Y = jsonTiles[i].PositionY;
+                    player.myPosition = pos;
                 }
             }
         }
 
-        static void JsonWeapons(ref List<Weapon> weapons, SpriteFont font, ref List<JsonObject> jsonTiles, ref Texture2D texture, string filePath, int size)
+        static void JsonPistol(ref List<Item> weapons, ref List<JsonObject> jsonTiles, ref Texture2D texture, string filePath, int size)
         {
+            if (weapons != null)
+                weapons.Clear();
             jsonTiles = JsonSerialization.ReadFromJsonFile<List<JsonObject>>(filePath);
 
             for (int i = 0; i < jsonTiles.Count; i++)
@@ -73,23 +110,26 @@ namespace AlgoritmProjekt.Utility
                     int x, y;
                     x = jsonTiles[i].PositionX;
                     y = jsonTiles[i].PositionY;
-                    weapons.Add(new Pistol(texture, font, new Vector2(x, y),size));
+                    weapons.Add(new Pistol(texture, new Vector2(x, y), size));
                 }
             }
         }
 
 
-        public static void LoadingLevel(string filePath, SpriteFont font, ref List<JsonObject> jsonTiles, ref List<Wall> walls, 
-            ref List<EnemySpawner> spawners, ref Player player, ref List<Weapon> weapons, ref Texture2D solidSquare, ref Texture2D hollowSquare, ref Texture2D smallHollowSquare, int size)
+        public static void LoadingLevel(string filePath, ref List<JsonObject> jsonTiles, ref TileGrid grid, ref List<Wall> walls,
+            ref List<EnemySpawner> spawners, ref Player player, ref List<Item> weapons, ref Texture2D solidSquare,
+            ref Teleporter teleport, ref Texture2D hollowSquare, ref Texture2D smallHollowSquare, ref Texture2D smoothTexture, int size)
         {
-            if(Game1.LoadJsonLevel && filePath != null)
+            if (filePath != null)
             {
                 Game1.LoadJsonLevel = false;
                 jsonTiles = null;
+                JsonGrid(ref grid, ref jsonTiles, ref hollowSquare, filePath, size);
                 JsonPlayer(ref player, ref jsonTiles, ref solidSquare, ref smallHollowSquare, filePath, size);
                 JsonEnemySpawner(ref spawners, ref jsonTiles, ref hollowSquare, filePath, size);
                 JsonWalls(ref walls, ref jsonTiles, ref solidSquare, filePath, size);
-                JsonWeapons(ref weapons, font, ref jsonTiles, ref solidSquare, filePath, size);
+                JsonPistol(ref weapons, ref jsonTiles, ref solidSquare, filePath, size);
+                JsonTeleports(ref teleport, ref jsonTiles, ref solidSquare, ref smoothTexture, filePath, size);
             }
         }
     }

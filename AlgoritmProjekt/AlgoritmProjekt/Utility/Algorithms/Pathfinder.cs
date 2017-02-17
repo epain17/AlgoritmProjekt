@@ -52,7 +52,7 @@ namespace AlgoritmProjekt
                     node.Position = new Point(x, y);
                     node.Walkable = grid.CheckWalkable(x, y) == 0;
 
-                    if (node.Walkable == true)
+                    if (node.Walkable)
                     {
                         node.Neighbors = new SearchNode[8];
                         searchNodes[x, y] = node;
@@ -102,7 +102,7 @@ namespace AlgoritmProjekt
 
         }
 
-        public Queue<Vector2> FindPath(Point startPoint, Point endPoint, Point previous)
+        public Queue<Vector2> FindPointPath(Point startPoint, Point endPoint, Point previous)
         {
             if (startPoint == endPoint)
             {
@@ -197,8 +197,6 @@ namespace AlgoritmProjekt
             return null;
         }
 
-
-
         private void ResetSearchNode()
         {
             openList.Clear();
@@ -261,41 +259,5 @@ namespace AlgoritmProjekt
             }
             return finalPath;
         }
-
-
-        //private int ManhattanDistance(SearchNode startNode, SearchNode endNode)
-        //{
-        //    return (Math.Abs(endNode.Position.X - startNode.Position.X) + Math.Abs(endNode.Position.Y - startNode.Position.Y));
-        //}
-
-        //List<SearchNode> IdentifySuccessors(SearchNode currentNode, SearchNode startNode, SearchNode endNode)
-        //{
-        //    foreach (SearchNode node in openList)
-        //    {
-        //        int dX = (node.Position.X - currentNode.Position.X);
-        //        int dY = (node.Position.Y - currentNode.Position.Y);
-
-        //        var jumpPoint = jump(currentNode.Position.X,
-        //            currentNode.Position.Y, dX, dY, startNode, endNode);
-
-        //        if (jumpPoint) closedList.Add(jumpPoint);
-        //    }
-
-        //    return closedList;
-
-        //}
-
-        //SearchNode Jump(int cnX, int cnY, int dX, int dY, SearchNode start, SearchNode end, TileGrid grid)
-        //{
-        //    int nextX = cnX + dX;
-        //    int nextY = cnY + dY;
-
-        //    if (grid.CheckWalkable(nextX, nextY) == 0)
-        //    {
-        //        return null;
-        //    }
-
-        //    if(next == end.Position.X && )
-        //}
     }
 }

@@ -9,11 +9,10 @@ using System.Threading.Tasks;
 
 namespace AlgoritmProjekt.Objects.Projectiles
 {
-    class Projectile : LivingTile
+    class Projectile : MovingTile
     {
-        Vector2 direction;
-        float speed;
 
+        int tileRange;
 
         public Vector2 Position
         {
@@ -33,36 +32,31 @@ namespace AlgoritmProjekt.Objects.Projectiles
         public Projectile(Texture2D texture, Vector2 position, int size, Vector2 targetVect)
             : base(texture, position, size)
         {
-            this.texture = texture;
+            this.myTexture = texture;
             this.position = position;
             this.alive = true;
             this.size = size;
             this.startPos = position;
-            speed = 20000;
-            Shoot(targetVect);
+            tileRange = 8;
+            speed = 200;
+            SetDirection(targetVect);
+            velocity = direction * speed;
         }
 
         public override void Update(ref float time)
         {
-            velocity = direction * speed * time;
             position += velocity * time;
             LifeCycle(time);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, position, Color.White);
-        }
-
-        public void Shoot(Vector2 targetVect)
-        {
-            direction = targetVect - position;
-            direction.Normalize();
+            spriteBatch.Draw(myTexture, position, Color.White);
         }
 
         void LifeCycle(float time)
         {
-            if (Vector2.Distance(position, startPos) > size * 11)
+            if (Vector2.Distance(position, startPos) > size * tileRange)
             {
                 alive = false;
             }

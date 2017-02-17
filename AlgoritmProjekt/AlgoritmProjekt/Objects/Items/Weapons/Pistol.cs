@@ -8,22 +8,20 @@ using System.Threading.Tasks;
 
 namespace AlgoritmProjekt.Objects.Weapons
 {
-    class MachineGun : Weapon
+    class Pistol : Item
     {
 
-        public MachineGun(Texture2D texture, SpriteFont font, Vector2 position, int size)
-            : base(texture, font, position, size)
+        public Pistol(Texture2D texture, Vector2 position, int size)
+            : base(texture, position, size)
         {
-            this.texture = texture;
-            this.font = font;
+            this.myTexture = texture;
             this.position = position;
             this.size = size;
-            this.text = "Speedy Gun";
         }
 
-        public override void Update(Vector2 camera, int screenWidth, int screenHeight)
+        public override void Update()
         {
-            base.Update(camera, screenWidth, screenHeight);
+
         }
 
         public override void Draw(SpriteBatch spritebatch)

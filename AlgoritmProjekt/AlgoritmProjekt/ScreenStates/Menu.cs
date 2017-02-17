@@ -164,7 +164,7 @@ namespace AlgoritmProjekt.Screens
 
             foreach (Emitter emitter in emitters)
             {
-                emitter.Update(time);
+                emitter.Update(ref time);
             }
 
             for (int i = emitters.Count - 1; i >= 0; i--)

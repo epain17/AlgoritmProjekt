@@ -9,7 +9,6 @@ using System;
 using AlgoritmProjekt.Utility;
 using AlgoritmProjekt.Managers;
 using AlgoritmProjekt.Screens;
-using AlgoritmProjekt.Utility.Algorithms;
 using System.IO;
 
 namespace AlgoritmProjekt
@@ -38,16 +37,11 @@ namespace AlgoritmProjekt
 
         SpriteFont font;
         Texture2D smoothTex;
-
-        string LevelName = "Level0.json";
-        int screenWidth = 800, screenHeight = 600;
+        int screenWidth = Constants.screenWidth, screenHeight = Constants.screenHeight;
         int tileSize = Constants.tileSize;
 
         static List<string> keys = new List<string>();
         static List<string> values = new List<string>();
-
-        static HashTable hashTable;
-        static int hashSize;
 
         float switchScreenTimer;
 
@@ -61,7 +55,7 @@ namespace AlgoritmProjekt
         {
             graphics.PreferredBackBufferWidth = screenWidth;
             graphics.PreferredBackBufferHeight = screenHeight;
-            graphics.IsFullScreen = true;
+            //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
             base.Initialize();
         }
@@ -70,33 +64,23 @@ namespace AlgoritmProjekt
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("font");
-            gameManager = new GameManager(screenWidth, screenHeight, tileSize, font, LevelName, createSolidRectangle(tileSize, tileSize, GraphicsDevice),
-                createHollowRectangle(tileSize, tileSize, GraphicsDevice), createHollowRectangle(3, 3, GraphicsDevice));
             smoothTex = Content.Load<Texture2D>("circle");
+            gameManager = new GameManager(screenWidth, screenHeight, tileSize, font, createSolidRectangle(tileSize, tileSize, GraphicsDevice),
+                createHollowRectangle(tileSize, tileSize, GraphicsDevice), createHollowRectangle(3, 3, GraphicsDevice), smoothTex);
             menu = new Menu(screenWidth, screenHeight, font, new Vector2(screenWidth / 2, screenHeight / 2), smoothTex);
             newUser = new EnterUser(font, createSolidRectangle((int)(screenWidth * 0.5f), (int)(screenHeight * 0.5f), GraphicsDevice), screenWidth, screenHeight);
 
-
-            ReadScoresToHashTable(Constants.filePath);
-            scoreScreen = new HighScore(createSolidRectangle((int)(screenWidth * 0.5f), (int)(screenHeight * 0.75f), GraphicsDevice), new Vector2(screenWidth * 0.25f, screenHeight * 0.1f), font, hashTable);
+            ReadScoresToHashTable(Constants.scoreFilePath);
+            scoreScreen = new HighScore(createSolidRectangle((int)(screenWidth * 0.5f), (int)(screenHeight * 0.75f), GraphicsDevice), new Vector2(screenWidth * 0.25f, screenHeight * 0.1f), font);
         }
 
         public static void ReadScoresToHashTable(string filePath)
         {
-            if (hashTable != null)
-            {
-                //hashTable = null;
-                keys.Clear();
-                values.Clear();
-                hashSize = 0;
-            }
-
             StreamReader sr = new StreamReader(filePath);
             string readLine = sr.ReadLine();
             string[] strings = readLine.Split(',');
             keys.Add(strings[0]);
             values.Add(strings[1]);
-            hashSize++;
 
             while (!sr.EndOfStream)
             {
@@ -106,14 +90,7 @@ namespace AlgoritmProjekt
                     strings = readLine.Split(',');
                     keys.Add(strings[0]);
                     values.Add(strings[1]);
-                    hashSize++;
                 }
-            }
-            hashTable = new HashTable(hashSize);
-
-            for (int i = 0; i < hashSize; i++)
-            {
-                hashTable.Push(keys[i], values[i]);
             }
             sr.Close();
         }
@@ -145,8 +122,8 @@ namespace AlgoritmProjekt
                 Exit();
             if (RELOADGAMEPLAY)
             {
-                gameManager = new GameManager(screenWidth, screenHeight, tileSize, font, LevelName, createSolidRectangle(tileSize, tileSize, GraphicsDevice),
-                                createHollowRectangle(tileSize, tileSize, GraphicsDevice), createHollowRectangle(3, 3, GraphicsDevice));
+                gameManager = new GameManager(screenWidth, screenHeight, tileSize, font, createSolidRectangle(tileSize, tileSize, GraphicsDevice),
+                                createHollowRectangle(tileSize, tileSize, GraphicsDevice), createHollowRectangle(3, 3, GraphicsDevice), smoothTex);
                 RELOADGAMEPLAY = false;
                 menu.run = Menu.RunTime.Continued;
                 gameState = GameState.gamePlay;
@@ -174,7 +151,7 @@ namespace AlgoritmProjekt
                 case GameState.highscore:
                     spriteBatch.Begin();
                     menu.Draw(spriteBatch);
-                    scoreScreen.Draw(spriteBatch, keys);
+                    scoreScreen.Draw(spriteBatch, keys, values);
                     spriteBatch.End();
                     break;
                 case GameState.enterUser:
@@ -210,7 +187,8 @@ namespace AlgoritmProjekt
                             menu.run = Menu.RunTime.FirstLoad;
                         }
                     }
-                    else if (KeyMouseReader.KeyPressed(Keys.Escape))
+                    else
+                    if (KeyMouseReader.KeyPressed(Keys.Escape))
                         gameState = GameState.menu;
 
                     break;

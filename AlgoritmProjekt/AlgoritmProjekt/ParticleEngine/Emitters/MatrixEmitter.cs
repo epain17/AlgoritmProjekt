@@ -21,9 +21,9 @@ namespace AlgoritmProjekt.Managers.ParticleEngine.Emitters
             this.velocity.Y = 4;
         }
 
-        public override void Update(float time)
+        public override void Update(ref float time)
         {
-            base.Update(time);
+            base.Update(ref time);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

@@ -44,6 +44,7 @@ namespace LevelEditor
             Enemy,
             EnemySpawner,
             Wall,
+            Teleport,
             Pistol
         }
         public static ChooseObject chooseObject = ChooseObject.Player;
@@ -122,6 +123,8 @@ namespace LevelEditor
                     grid.tileType = TileGrid.TileType.AddPlayer;
                 else if (chooseObject == ChooseObject.Wall)
                     grid.tileType = TileGrid.TileType.AddWall;
+                else if (chooseObject == ChooseObject.Teleport)
+                    grid.tileType = TileGrid.TileType.AddTeleport;
                 else if (chooseObject == ChooseObject.EnemySpawner)
                     grid.tileType = TileGrid.TileType.AddSpawner;
                 else if (chooseObject == ChooseObject.Pistol)
@@ -199,6 +202,8 @@ namespace LevelEditor
                             {
                                 chooseObject = ChooseObject.Wall;
                             }
+                            else if (hud.selected == 1)
+                                chooseObject = ChooseObject.Teleport;
                         }
                         else if (chooseCategory == ChooseCategory.Weapons)
                         {

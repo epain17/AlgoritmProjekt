@@ -143,8 +143,8 @@ namespace AlgoritmProjekt.Managers
 
             if (letterSlotIndex == 3)
             {
-                Game1.WriteScores(Constants.filePath, userName, Constants.totalScore);
-                Game1.ReadScoresToHashTable(Constants.filePath);
+                Game1.WriteScores(Constants.scoreFilePath, userName, Constants.totalScore);
+                Game1.ReadScoresToHashTable(Constants.scoreFilePath);
                 Game1.gameState = Game1.GameState.menu;
                 InitialState();
             }

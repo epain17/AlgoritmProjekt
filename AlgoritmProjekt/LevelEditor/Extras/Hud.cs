@@ -63,7 +63,7 @@ namespace LevelEditor.Extras
             characters.Add("Spawner");
 
             environment.Add("Wall");
-            //environment.Add("Trap");
+            environment.Add("Tele");
 
             weapons.Add("Pistol");
         }

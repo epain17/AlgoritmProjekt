@@ -11,7 +11,6 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
     class FontParticle : Particle
     {
         SpriteFont font;
-        float startLife;
         Random rand = new Random();
         int stringNR;
 
@@ -24,7 +23,6 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
             this.lifeTime = lifeTime;
             this.size = size;
             this.color = Color.White;
-            this.startLife = lifeTime;
             stringNR = rand.Next(0, 10);
             origin = new Vector2(font.Texture.Width / 2, font.Texture.Height / 2);
         }
@@ -40,7 +38,6 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            
             spriteBatch.DrawString(font, "" + stringNR, position, color, 0, origin, 0.7f, SpriteEffects.None, 0);
         }
     }

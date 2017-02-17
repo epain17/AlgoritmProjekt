@@ -2,6 +2,7 @@
 using AlgoritmProjekt.Utility.json;
 using LevelEditor;
 using LevelEditor.Tiles.GameObjects;
+using LevelEditor.Tiles.GameObjects.Environment;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -18,6 +19,7 @@ namespace AlgoritmProjekt.Tiles
         {
             AddPlayer,
             AddWall,
+            AddTeleport,
             AddSpawner,
             AddPistol,
         }
@@ -33,9 +35,8 @@ namespace AlgoritmProjekt.Tiles
         List<JsonObject> jsonTiles = new List<JsonObject>();
         SpriteFont font;
 
-        int level = 00;
+        int level = 1;
         List<Tile> tiles = new List<Tile>();
-        Pistol pistol;
         Player player;
 
         public TileGrid(Texture2D hollowTile, Texture2D solidTile, int size, int columns, int rows, SpriteFont font)
@@ -68,7 +69,7 @@ namespace AlgoritmProjekt.Tiles
                                 foreach (Tile tile in tiles)
                                 {
                                     //if (tile is Wall)
-                                        SetOccupiedGrid(tile);
+                                    SetOccupiedGrid(tile);
                                 }
 
                             }
@@ -84,6 +85,9 @@ namespace AlgoritmProjekt.Tiles
             {
                 case TileType.AddPlayer:
                     player = new Player(solidTile, position, size, font);
+                    break;
+                case TileType.AddTeleport:
+                    tiles.Add(new Teleport(solidTile, position, size, font));
                     break;
                 case TileType.AddWall:
                     tiles.Add(new Wall(solidTile, position, size, font));
@@ -141,14 +145,9 @@ namespace AlgoritmProjekt.Tiles
 
         public void SaveToJsonFile()
         {
-            for (int i = 0; i < width; i++)
-            {
-                for (int j = 0; j < height; j++)
-                {
-                    jsonTile = new JsonObject() { Name = "Grid", PositionX = (int)tileGrid[i, j].myPosition.X, PositionY = (int)tileGrid[i, j].myPosition.Y };
-                    jsonTiles.Add(jsonTile);
-                }
-            }
+            jsonTile = new JsonObject() { Name = "Grid", PositionX = width, PositionY = height };
+            jsonTiles.Add(jsonTile);
+
             foreach (Tile tile in tiles)
             {
                 jsonTiles.Add(new JsonObject() { Name = tile.myName, PositionX = (int)tile.myPosition.X, PositionY = (int)tile.myPosition.Y });

@@ -48,6 +48,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tiles\GameObjects\Enemies\Enemy.cs" />
     <Compile Include="Tiles\GameObjects\Enemies\EnemySpawner.cs" />
+    <Compile Include="Tiles\GameObjects\Environment\Teleport.cs" />
     <Compile Include="Tiles\GameObjects\Weapons\Pistol.cs" />
     <Compile Include="Tiles\GameObjects\Player.cs" />
     <Compile Include="Tiles\GameObjects\Environment\Wall.cs" />

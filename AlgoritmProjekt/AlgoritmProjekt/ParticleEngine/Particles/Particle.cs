@@ -13,6 +13,8 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
         protected Vector2 position, velocity, origin;
         protected Color color;
         protected float lifeTime, size;
+        protected float startLife;
+
 
         public float myLifeSpan
         {
@@ -30,6 +32,7 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
             this.position = position;
             this.velocity = velocity;
             this.lifeTime = lifeTime;
+            this.startLife = lifeTime;
             this.size = size;
 
             origin = new Vector2();

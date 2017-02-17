@@ -42,7 +42,7 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
             this.position = position;
         }
 
-        public virtual void Update(float time)
+        public virtual void Update(ref float time)
         {
             RemoveParticles(time);
             myLifeTime -= time;
