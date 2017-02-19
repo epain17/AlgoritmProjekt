@@ -35,7 +35,7 @@ namespace AlgoritmProjekt.Characters
             this.startPos = position;
             this.size = size;
             this.hp = 2;
-            this.aggroRange = 400;
+            this.aggroRange = size * 10;
 
             startHp = hp;
             speed = 80;

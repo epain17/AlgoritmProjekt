@@ -39,14 +39,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Objects\Companion\AICompanion.cs" />
-    <Compile Include="Objects\Enemies\States\EnemyState.cs" />
     <Compile Include="Objects\Enemies\PatrolEnemy.cs" />
-    <Compile Include="Objects\Enemies\States\PatrolEnemyOwnedStates.cs" />
     <Compile Include="ScreenStates\GameManager.cs" />
     <Compile Include="ScreenStates\HighScore.cs" />
     <Compile Include="Utility\AI\FSM\State.cs" />
     <Compile Include="Utility\AI\FSM\StateMachine.cs" />
-    <Compile Include="Utility\AI\Fusm\AIControl.cs" />
+    <Compile Include="Utility\AI\Fusm\FuSMAIControl.cs" />
+    <Compile Include="Utility\AI\Fusm\FuSMMachine.cs" />
+    <Compile Include="Utility\AI\Fusm\FuSMState.cs" />
     <Compile Include="Utility\Handle Levels\LevelHandler.cs" />
     <Compile Include="ScreenStates\Menu.cs" />
     <Compile Include="ScreenStates\EnterUser.cs" />

@@ -1,4 +1,5 @@
-﻿using AlgoritmProjekt.Objects.PlayerRelated;
+﻿using AlgoritmProjekt.Characters;
+using AlgoritmProjekt.Objects.PlayerRelated;
 using AlgoritmProjekt.Objects.PlayerRelated.Actions;
 using AlgoritmProjekt.Objects.Projectiles;
 using Microsoft.Xna.Framework;
@@ -16,6 +17,7 @@ namespace AlgoritmProjekt.Objects.Companion
         Random rand;
         float shotInterval = 0;
         bool shoot;
+        float burst, halter;
 
         public bool TimeToShoot
         {
@@ -27,47 +29,90 @@ namespace AlgoritmProjekt.Objects.Companion
             : base(texture, position, size)
         {
             this.myTexture = texture;
-            this.position = position;
+            this.position = new Vector2(position.X, position.Y - size);
             this.size = size;
-            this.speed = 50;
+            this.burst = 200;
+            this.halter = 50;
+            speed = burst;
+            rand = new Random();
         }
 
         public override void Update(ref float time)
         {
             shotInterval += time;
-            base.Update(ref time);
+
+            direction.Normalize();
+            position += time * speed * direction;
         }
 
-        public void ApproachTarget(MovingTile target)
+        public void AccumulateDirection(Vector2 offset)
         {
-            rand = new Random();
-            if (Vector2.Distance(position, target.myPosition) > size * 3)
+            direction += offset;
+        }
+
+        public void DefaultState(Tile target)
+        {
+            float minDistance = size * 1.5f;
+            float maxDistance = size * 3;
+            float activationLevel = 0;
+            float test = (Vector2.Distance(target.myPosition, position) - maxDistance) / maxDistance;
+            Vector2 deltaPos = new Vector2((target.myPosition.X - position.X) + rand.Next(-size, size), (target.myPosition.Y - position.Y) + rand.Next(-size, size)); ;
+            activationLevel = 1 - test;
+
+            if (Vector2.Distance(position, target.myPosition) < minDistance)
             {
-                speed = target.speed * 1.1f;
-                SetDirection(new Vector2(target.myPosition.X + rand.Next(-size, size), target.myPosition.Y + rand.Next(-size, size)));
+                activationLevel = 0.0001f;
+                speed = halter;
             }
-            else if (Vector2.Distance(position, target.myPosition) < size * 2)
-                speed = target.speed * 0.25f;
+            else
+                speed = burst;
+            if (Vector2.Distance(position, target.myPosition) > maxDistance)
+            {
+                activationLevel = (Vector2.Distance(target.myPosition, position) - maxDistance) / maxDistance;
+            //Console.WriteLine("Default: " + activationLevel);
+            }
+
+            AccumulateDirection(deltaPos * activationLevel);
         }
 
-        public bool AttackTarget(MovingTile target)
+        public void ApproachState(Tile target, Player player)
         {
-            if (Vector2.Distance(position, target.myPosition) < size * 6 && shotInterval > 0.5f)
+            float activationLevel = 0;
+            float approachRange = size * 7;
+            Vector2 deltaPos = target.myPosition - position;
+
+            activationLevel = 1 - (Vector2.Distance(target.myPosition, position) - approachRange) / approachRange;
+            if (Vector2.Distance(player.myPosition, target.myPosition) > approachRange)
+            {
+                activationLevel = 0;
+            }
+            //Console.WriteLine("Approach: " + activationLevel);
+
+            AccumulateDirection(deltaPos * activationLevel);
+        }
+
+        public void EvadeState(Tile target)
+        {
+            float evadeRange = size * 2;
+            float activationLevel = 0;
+            Vector2 deltaPos = target.myPosition - position;
+            if (Vector2.Distance(position, target.myPosition) < evadeRange)
+            {
+                activationLevel = 1 - (Vector2.Distance(position, target.myPosition) - (evadeRange * 40)) / (evadeRange * 40);
+            }
+
+            //Console.WriteLine("Evade: " + activationLevel);
+
+            AccumulateDirection(-deltaPos * activationLevel);
+        }
+
+        public void AttackState(float time, Player player, Tile target)
+        {
+            if (shotInterval > 0.5f && Vector2.Distance(target.myPosition, position) < size * 4)
             {
                 shotInterval = 0;
-                return true;
+                player.Shoot(position, target.myPosition);
             }
-            return false;
-        }
-
-        public void PickUpObject(Tile target)
-        {
-
-        }
-
-        public void EvadeTarget(Tile target)
-        {
-
         }
 
         public override void Draw(SpriteBatch spritebatch)

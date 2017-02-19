@@ -28,8 +28,6 @@ namespace AlgoritmProjekt.Characters
         Texture2D smallHollowSquare, hollowSquare;
         CrossHair xhair;
 
-        //public AICompanion companion;
-
         float colorAlpha = 1;
         float shotInterval = 0;
 
@@ -65,13 +63,10 @@ namespace AlgoritmProjekt.Characters
             weaponStates = new WeaponStates(WeaponStates.WeaponType.None);
             abilities = new InputAbilities(Keys.Space, Keys.LeftControl, Keys.LeftShift);
             xhair = new CrossHair(hollowSquare, smallHollowSquare, position, size);
-
-            //companion = new AICompanion(hollowSquare, position, size);
         }
 
         public void Update(ref float time, TileGrid grid)
         {
-            //companion.Update(ref time, this);
             if (myHP > 0)
             {
                 playerStates.Update(ref time, ref energyMeter, ref colorAlpha, ref speed);
@@ -94,12 +89,6 @@ namespace AlgoritmProjekt.Characters
             }
         }
 
-        public void UpdateAI(Tile target)
-        {
-                //Shoot(companion.myPosition, target.myPosition);
-                //companion.TimeToShoot = false;
-        }
-
         /// <summary>
         /// Used when changing level to reset the target position to the player's new position in the new grid.
         /// </summary>
@@ -119,7 +108,6 @@ namespace AlgoritmProjekt.Characters
                 xhair.Draw(spriteBatch);
             if (myHP > 0)
                 spriteBatch.Draw(myTexture, position, null, Color.LimeGreen * colorAlpha, 0, origin, 1, SpriteEffects.None, 1);
-            //companion.Draw(spriteBatch);
         }
 
         private void UpdateProjectiles(float time)

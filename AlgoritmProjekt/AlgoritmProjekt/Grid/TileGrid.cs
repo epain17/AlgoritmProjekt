@@ -44,7 +44,7 @@ namespace AlgoritmProjekt.Grid
             int tempX, tempY;
             tempX = (int)pos.X / size;
             tempY = (int)pos.Y / size;
-            if (tileGrid[tempX, tempY].iamOccupied)
+            if (tileGrid[tempX, tempY] != null && tileGrid[tempX, tempY].iamOccupied)
                 return false;
             return true;
         }

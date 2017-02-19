@@ -24,16 +24,17 @@ namespace AlgoritmProjekt.Utility.Handle_Levels
     {
         private List<EnemySpawner> spawners = new List<EnemySpawner>();
         private List<JsonObject> jsonTiles = new List<JsonObject>();
-        private List<Emitter> emitters = new List<Emitter>();
-        private List<Item> items = new List<Item>();
         private List<Enemy> enemies = new List<Enemy>();
+        private List<Item> items = new List<Item>();
         private List<Wall> walls = new List<Wall>();
-        protected Player player;
+        TileGrid grid;
         protected Texture2D hollowSquare, smallHollowSquare, solidSquare, smoothTexture;
+        protected List<Emitter> emitters = new List<Emitter>();
         protected bool playerEmit = true;
         protected AICompanion companion;
-        TileGrid grid;
-        Teleporter teleport;
+        protected Teleporter teleport;
+        protected Player player;
+        
 
         public TileGrid GetGrid()
         {
@@ -60,16 +61,25 @@ namespace AlgoritmProjekt.Utility.Handle_Levels
 
         public virtual void Update(float time, Camera camera)
         {
-            companion.ApproachTarget(player);
+            //Console.WriteLine("Companion: " + companion.myPosition);
+            //Console.WriteLine("Player: " + player.myPosition);
+
+            companion.DefaultState(player);
+            foreach (Item item in items)
+                companion.ApproachState(item, player);
+
             ActivateTeleport();
             UpdateObjects(time);
             Collisions(camera);
             RemoveDeadObjects();
+
+            companion.Update(ref time);
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
             DrawObjects(spriteBatch);
+            companion.Draw(spriteBatch);
         }
 
         public virtual void ActivateTeleport()
@@ -122,20 +132,20 @@ namespace AlgoritmProjekt.Utility.Handle_Levels
 
             if (teleport != null)
                 teleport.Draw(spriteBatch);
-            companion.Draw(spriteBatch);
         }
 
         protected virtual void UpdateObjects(float time)
         {
-            companion.Update(ref time);
             foreach (Item item in items)
             {
                 item.Update(ref time);
             }
+
             foreach (Emitter emitter in emitters)
             {
                 emitter.Update(ref time);
             }
+
             if (teleport != null)
                 teleport.Update(ref time);
         }
@@ -154,14 +164,9 @@ namespace AlgoritmProjekt.Utility.Handle_Levels
                     }
                 }
             }
+            // Collide walls
             for (int i = 0; i < player.Projectiles.Count; i++)
             {
-                for (int j = 0; j < enemies.Count; j++)
-                {
-                    if (player.Projectiles[i].CheckMyCollision(enemies[j]))
-                        --enemies[j].myHP;
-                }
-
                 for (int k = 0; k < walls.Count; k++)
                 {
                     player.Projectiles[i].CheckMyCollision(walls[k]);
@@ -171,24 +176,6 @@ namespace AlgoritmProjekt.Utility.Handle_Levels
 
         protected virtual void RemoveDeadObjects()
         {
-            for (int i = enemies.Count - 1; i >= 0; --i)
-            {
-                if (!enemies[i].iamAlive)
-                {
-                    emitters.Add(new EnemyEmitter(hollowSquare, enemies[i].myPosition));
-                    enemies.RemoveAt(i);
-                }
-            }
-
-            for (int i = spawners.Count - 1; i >= 0; --i)
-            {
-                if (!spawners[i].iamAlive)
-                {
-                    emitters.Add(new EnemyEmitter(hollowSquare, spawners[i].myPosition));
-                    spawners.RemoveAt(i);
-                }
-            }
-
             for (int i = emitters.Count - 1; i >= 0; i--)
             {
                 if (!emitters[i].IsAlive)

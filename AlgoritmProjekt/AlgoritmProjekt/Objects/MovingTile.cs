@@ -39,8 +39,7 @@ namespace AlgoritmProjekt.Objects
 
         public override void Update(ref float time)
         {
-            velocity = direction * speed;
-            position += velocity * time;
+            position += direction * speed * time;
         }
 
         public void StopMoving()

@@ -23,12 +23,11 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.Levels
     {
         private List<EnemySpawner> spawners = new List<EnemySpawner>();
         private List<JsonObject> jsonTiles = new List<JsonObject>();
-        private List<Emitter> emitters = new List<Emitter>();
+        //private List<Emitter> emitters = new List<Emitter>();
         private List<Enemy> enemies = new List<Enemy>();
         private List<Wall> walls = new List<Wall>();
         private List<Item> items = new List<Item>();
-        private Player player;
-        Teleporter teleport;
+        //Teleporter teleport;
         TileGrid grid;
         PatrolEnemy testEnemy;
 
@@ -55,22 +54,19 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.Levels
 
         public override void Update(float time, Camera camera)
         {
-
             base.Update(time, camera);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            base.Draw(spriteBatch);
             if (testEnemy != null)
                 testEnemy.Draw(spriteBatch);
-            companion.Draw(spriteBatch);
-
+            base.Draw(spriteBatch);
         }
 
         public override void ActivateTeleport()
         {
-            if (spawners.Count == 0 && enemies.Count == 0 || testEnemy != null && testEnemy.myHP == 0)
+            if (testEnemy != null && testEnemy.myHP <= 0)
                 teleport.IsActive = true;
         }
 
@@ -110,11 +106,6 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.Levels
                 emitter.Draw(spriteBatch);
             }
 
-            foreach (EnemySpawner spawner in spawners)
-            {
-                spawner.Draw(spriteBatch);
-            }
-
             foreach (Enemy enemy in enemies)
             {
                 enemy.Draw(spriteBatch);
@@ -125,29 +116,14 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.Levels
 
         protected override void UpdateObjects(float time)
         {
-            companion.Update(ref time);
-            companion.ApproachTarget(player);
             if (!LoseCondition())
             {
-                for (int i = 0; i < spawners.Count; i++)
-                {
-                    spawners[i].Update(ref enemies, player.myPosition, time, player.myPoint, grid);
-                    if (companion.AttackTarget(spawners[i]))
-                        player.Shoot(companion.myPosition,spawners[i].myPosition);
-
-                }
-
-                foreach (Enemy enemy in enemies)
-                {
-                    enemy.Update(time, player.myPoint, grid);
-                    if (companion.AttackTarget(enemy))
-                        player.Shoot(companion.myPosition, enemy.myPosition);
-                }
                 if (testEnemy != null)
                 {
                     testEnemy.Update(ref time, player, grid);
-                    if (companion.AttackTarget(testEnemy))
-                        player.Shoot(companion.myPosition, testEnemy.myPosition);
+                    companion.AttackState(time, player, testEnemy);
+                    companion.EvadeState(testEnemy);
+                    companion.ApproachState(testEnemy, player);
                 }
             }
 
@@ -160,15 +136,6 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.Levels
 
         protected override void Collisions(Camera camera)
         {
-            foreach (Enemy enemy in enemies)
-            {
-                if (enemy.CheckMyCollision(player) && player.playerStates.status != PlayerStates.Status.Invulnerable)
-                {
-                    player.playerStates.status = PlayerStates.Status.Invulnerable;
-                    --player.myHP;
-                }
-            }
-
             if (testEnemy != null && testEnemy.CheckMyCollision(player) && player.playerStates.status != PlayerStates.Status.Invulnerable)
             {
                 player.playerStates.status = PlayerStates.Status.Invulnerable;
@@ -180,47 +147,17 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.Levels
                 if (testEnemy != null && player.Projectiles[i].CheckMyCollision(testEnemy))
                     --testEnemy.myHP;
 
-                for (int j = 0; j < enemies.Count; j++)
-                {
-                    if (player.Projectiles[i].CheckMyCollision(enemies[j]))
-                        --enemies[j].myHP;
-                }
-
                 for (int k = 0; k < walls.Count; k++)
                 {
                     player.Projectiles[i].CheckMyCollision(walls[k]);
-                }
-
-                for (int l = 0; l < spawners.Count; l++)
-                {
-                    if (player.Projectiles[i].CheckMyCollision(spawners[l]))
-                        --spawners[l].myHP;
                 }
             }
         }
 
         protected override void RemoveDeadObjects()
         {
-            for (int i = enemies.Count - 1; i >= 0; --i)
-            {
-                if (!enemies[i].iamAlive)
-                {
-                    emitters.Add(new EnemyEmitter(hollowSquare, enemies[i].myPosition));
-                    enemies.RemoveAt(i);
-                }
-                else if (Vector2.Distance(player.myPosition, enemies[i].myPosition) > Constants.screenHeight)
-                    enemies.RemoveAt(i);
-            }
             if (testEnemy != null && !testEnemy.iamAlive)
                 testEnemy = null;
-            for (int i = spawners.Count - 1; i >= 0; --i)
-            {
-                if (!spawners[i].iamAlive)
-                {
-                    emitters.Add(new EnemyEmitter(hollowSquare, spawners[i].myPosition));
-                    spawners.RemoveAt(i);
-                }
-            }
 
             for (int i = emitters.Count - 1; i >= 0; i--)
             {

@@ -39,7 +39,7 @@ namespace AlgoritmProjekt.Objects
     class EnemySpawner : Enemy
     {
         float spawnTimer = 5;
-        float timeLimit = 2;
+        float timeLimit = 1f;
         int waypointLimiter = 10;
 
         public EnemySpawner(Texture2D texture, Vector2 position, int size)

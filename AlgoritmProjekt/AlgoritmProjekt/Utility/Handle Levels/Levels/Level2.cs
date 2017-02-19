@@ -23,14 +23,11 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.Levels
     {
         private List<EnemySpawner> spawners = new List<EnemySpawner>();
         private List<JsonObject> jsonTiles = new List<JsonObject>();
-        private List<Emitter> emitters = new List<Emitter>();
+        //private List<Emitter> emitters = new List<Emitter>();
         private List<Enemy> enemies = new List<Enemy>();
         private List<Wall> walls = new List<Wall>();
         private List<Item> items = new List<Item>();
-        private Player player;
-        Teleporter teleport;
         TileGrid grid;
-        PatrolEnemy testEnemy;
 
         public Level2(string filePath, Player player, Texture2D solidSquare, Texture2D hollowSquare,
             Texture2D smallHollowSquare, Texture2D smoothTexture, int tileSize)
@@ -50,26 +47,34 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.Levels
             {
                 grid.SetOccupiedGrid(wall);
             }
-            testEnemy = new PatrolEnemy(solidSquare, spawners[0].myPosition, tileSize, 2, 3, 5);
         }
 
         public override void Update(float time, Camera camera)
         {
-            if (testEnemy != null)
-                testEnemy.Update(ref time, player, grid);
+            foreach (Enemy enemy in enemies)
+            {
+                companion.AttackState(time, player, enemy);
+                companion.EvadeState(enemy);
+                companion.ApproachState(enemy, player);
+            }
+
+            foreach (EnemySpawner spawner in spawners)
+            {
+                companion.AttackState(time, player, spawner);
+                companion.EvadeState(spawner);
+                companion.ApproachState(spawner, player);
+            }
             base.Update(time, camera);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
-            if (testEnemy != null)
-                testEnemy.Draw(spriteBatch);
         }
 
         public override void ActivateTeleport()
         {
-            if (spawners.Count == 0 && enemies.Count == 0 || testEnemy != null && testEnemy.myHP == 0)
+            if (spawners.Count == 0 && enemies.Count == 0)
                 teleport.IsActive = true;
         }
 
@@ -155,17 +160,8 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.Levels
                 }
             }
 
-            if (testEnemy != null && testEnemy.CheckMyCollision(player) && player.playerStates.status != PlayerStates.Status.Invulnerable)
-            {
-                player.playerStates.status = PlayerStates.Status.Invulnerable;
-                --player.myHP;
-            }
-
             for (int i = 0; i < player.Projectiles.Count; i++)
             {
-                if (testEnemy != null && player.Projectiles[i].CheckMyCollision(testEnemy))
-                    --testEnemy.myHP;
-
                 for (int j = 0; j < enemies.Count; j++)
                 {
                     if (player.Projectiles[i].CheckMyCollision(enemies[j]))
@@ -197,8 +193,7 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.Levels
                 else if (Vector2.Distance(player.myPosition, enemies[i].myPosition) > Constants.screenHeight)
                     enemies.RemoveAt(i);
             }
-            if (testEnemy != null && !testEnemy.iamAlive)
-                testEnemy = null;
+
             for (int i = spawners.Count - 1; i >= 0; --i)
             {
                 if (!spawners[i].iamAlive)
