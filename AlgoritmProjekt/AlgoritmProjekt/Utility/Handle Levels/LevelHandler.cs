@@ -40,9 +40,9 @@ namespace AlgoritmProjekt.Managers
             CreateALevel();
         }
 
-        public void Update(float time, Camera camera)
+        public void Update(float time)
         {
-            level.Update(time, camera);
+            level.Update(time);
             ChangeLevel();
         }
 

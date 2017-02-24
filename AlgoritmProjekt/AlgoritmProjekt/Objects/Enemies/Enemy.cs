@@ -15,14 +15,25 @@ namespace AlgoritmProjekt.Characters
         protected int startHp;
 
         Pathfinder pathfinder;
-        Point startPoint, endPoint, previous;
+        public Point startPoint, endPoint, previous;
 
-        protected Queue<Vector2> waypoints = new Queue<Vector2>();
+        public Queue<Vector2> waypoints = new Queue<Vector2>();
 
-        private Point pr;
+        public Point pr;
         protected int aggroRange;
 
-        float DistanceToWaypoint(TileGrid grid)
+
+        protected virtual float HealthPercent()
+        {
+            return (float)((float)hp / (float)startHp);
+        }
+
+        protected virtual Rectangle HealthBar()
+        {
+            return new Rectangle((int)position.X, (int)position.Y - (int)(size * 0.75f), (int)(size * HealthPercent()), (int)(size * 0.25f));
+        }
+
+        public float DistanceToWaypoint(TileGrid grid)
         {
             return Vector2.Distance(position, grid.ReturnTilePosition(waypoints.Peek())); 
         }
@@ -63,9 +74,9 @@ namespace AlgoritmProjekt.Characters
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            float healthPercent = hp / startHp;
-            Color color = new Color(0.25f / healthPercent, 1 * healthPercent, 1f * healthPercent);
+            Color color = new Color(0.25f / HealthPercent(), 1 * HealthPercent(), 1f * HealthPercent());
             spriteBatch.Draw(myTexture, position, null, color, 0, origin, 1, SpriteEffects.None, 1);
+            spriteBatch.Draw(myTexture, HealthBar(), null, Color.ForestGreen, 0, origin, SpriteEffects.None, 1);
         }
 
         public void FindPath(Point targetPoint, TileGrid grid)
@@ -103,7 +114,7 @@ namespace AlgoritmProjekt.Characters
             }
         }
 
-        protected bool FindTarget(Point point)
+        public bool FindTarget(Point point)
         {
             Vector2 range = new Vector2(point.X * size, point.Y * size);
             return Vector2.Distance(this.position, range) < aggroRange;

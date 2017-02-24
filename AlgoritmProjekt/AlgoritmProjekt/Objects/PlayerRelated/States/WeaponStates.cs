@@ -19,9 +19,12 @@ namespace AlgoritmProjekt.Objects.PlayerRelated
         }
         public WeaponType type;
 
+        int weaponLevel;
+
         public WeaponStates()
         {
             this.type = WeaponType.None;
+            weaponLevel = 0;
         }
 
         public WeaponStates(WeaponType weaponState)
@@ -32,6 +35,17 @@ namespace AlgoritmProjekt.Objects.PlayerRelated
         public void Update(float time, ref float shotInterval)
         {
             HandleWeaponStates(time, ref shotInterval);
+        }
+
+        public void UpgradeWeapon()
+        {
+            ++weaponLevel;
+            if (weaponLevel == 1)
+                type = WeaponType.Pistol;
+            else if (weaponLevel == 2)
+                type = WeaponType.ShotGun;
+            else if (weaponLevel == 3)
+                type = WeaponType.MachineGun;
         }
 
         private void HandleWeaponStates(float time, ref float shotInterval)

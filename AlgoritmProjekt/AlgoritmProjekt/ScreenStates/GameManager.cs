@@ -72,7 +72,7 @@ namespace AlgoritmProjekt.Managers
             TotalTime += globalTime;
             camera.Update(player.myPosition);
             player.Update(ref globalTime, levels.GetGrid());
-            levels.Update(globalTime, camera);
+            levels.Update(globalTime);
         }
 
         public void Draw(SpriteBatch spriteBatch)

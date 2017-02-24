@@ -25,6 +25,7 @@ namespace AlgoritmProjekt.Objects
         public bool iamAlive
         {
             get { return alive; }
+            set { alive = value; }
         }
 
         public MovingTile(Texture2D texture, Vector2 position, int size)

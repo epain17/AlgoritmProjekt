@@ -91,18 +91,5 @@ namespace AlgoritmProjekt
         {
             spritebatch.Draw(myTexture, position, null, new Color(0f, 0.1f, 0f), 0, origin, 1, SpriteEffects.None, 1);
         }
-
-        //public virtual void SolveCollision(Tile target)
-        //{
-        //    if (velocity.X > 0)
-        //        position.X = target.myHitBox.Left - (size / 2) - 1;
-        //    else if (velocity.X < 0)
-        //        position.X = target.myHitBox.Right + (size / 2) + 1;
-
-        //    else if (velocity.Y > 0)
-        //        position.Y = target.myHitBox.Top - (size / 2) - 1;
-        //    else if (velocity.Y < 0)
-        //        position.Y = target.myHitBox.Bottom + (size / 2) + 1;
-        //}
     }
 }

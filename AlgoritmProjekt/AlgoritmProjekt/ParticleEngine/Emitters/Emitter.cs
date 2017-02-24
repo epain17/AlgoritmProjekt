@@ -12,7 +12,7 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
     {
         protected List<Particle> particles = new List<Particle>();
         protected Vector2 position;
-        protected Vector2 velocity;
+        protected Vector2 direction;
         protected Random random;
         protected bool alive = true;
         protected int nrParticles = 10;
@@ -33,8 +33,8 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
 
         public Vector2 myVelocity
         {
-            get { return velocity; }
-            set { velocity = value; }
+            get { return direction; }
+            set { direction = value; }
         }
 
         public Emitter(Vector2 position)
@@ -55,7 +55,7 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
                 timer = 0;
                 EmitParticles();
             }
-            position += velocity;
+            position += direction;
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)

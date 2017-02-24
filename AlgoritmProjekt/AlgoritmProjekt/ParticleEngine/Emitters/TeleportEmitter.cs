@@ -49,8 +49,8 @@ namespace AlgoritmProjekt.ParticleEngine.Emitters
                 timer = 0;
                 EmitParticles();
             }
-            velocity = orbitTeleporter(teleportPos);
-            position += velocity * time;
+            direction = orbitTeleporter(teleportPos);
+            position += direction * time;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -63,29 +63,29 @@ namespace AlgoritmProjekt.ParticleEngine.Emitters
             switch (moveMe)
             {
                 case MoveEmitter.Right:
-                    velocity = new Vector2(speed, 0);
+                    direction = new Vector2(speed, 0);
                     if (myPosition.X >= pos.X + (orbitingCircum / 2) && myPosition.Y <= pos.Y - (orbitingCircum / 2))
                         moveMe = MoveEmitter.Down;
                     break;
                 case MoveEmitter.Down:
-                    velocity = new Vector2(0, speed);
+                    direction = new Vector2(0, speed);
 
                     if (myPosition.X >= pos.X + (orbitingCircum / 2) && myPosition.Y >= pos.Y + (orbitingCircum / 2))
                         moveMe = MoveEmitter.Left;
                     break;
                 case MoveEmitter.Left:
-                    velocity = new Vector2(-speed, 0);
+                    direction = new Vector2(-speed, 0);
                     if (myPosition.X <= pos.X - (orbitingCircum / 2) && myPosition.Y >= pos.Y + (orbitingCircum / 2))
                         moveMe = MoveEmitter.Up;
                     break;
                 case MoveEmitter.Up:
-                    velocity = new Vector2(0, -speed);
+                    direction = new Vector2(0, -speed);
                     if (myPosition.X <= pos.X - (orbitingCircum / 2) && myPosition.Y <= pos.Y - (orbitingCircum / 2))
                         moveMe = MoveEmitter.Right;
                     break;
             }
 
-            return velocity;
+            return direction;
         }
 
         protected override void EmitParticles()

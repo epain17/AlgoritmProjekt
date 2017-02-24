@@ -55,7 +55,7 @@ namespace AlgoritmProjekt
         {
             graphics.PreferredBackBufferWidth = screenWidth;
             graphics.PreferredBackBufferHeight = screenHeight;
-            //graphics.IsFullScreen = true;
+            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
             base.Initialize();
         }
@@ -70,11 +70,11 @@ namespace AlgoritmProjekt
             menu = new Menu(screenWidth, screenHeight, font, new Vector2(screenWidth / 2, screenHeight / 2), smoothTex);
             newUser = new EnterUser(font, createSolidRectangle((int)(screenWidth * 0.5f), (int)(screenHeight * 0.5f), GraphicsDevice), screenWidth, screenHeight);
 
-            ReadScoresToHashTable(Constants.scoreFilePath);
+            ReadScores(Constants.scoreFilePath);
             scoreScreen = new HighScore(createSolidRectangle((int)(screenWidth * 0.5f), (int)(screenHeight * 0.75f), GraphicsDevice), new Vector2(screenWidth * 0.25f, screenHeight * 0.1f), font);
         }
 
-        public static void ReadScoresToHashTable(string filePath)
+        public static void ReadScores(string filePath)
         {
             StreamReader sr = new StreamReader(filePath);
             string readLine = sr.ReadLine();

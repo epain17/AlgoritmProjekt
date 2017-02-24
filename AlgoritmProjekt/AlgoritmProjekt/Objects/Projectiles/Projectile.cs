@@ -12,7 +12,7 @@ namespace AlgoritmProjekt.Objects.Projectiles
     class Projectile : MovingTile
     {
 
-        int tileRange;
+        protected int tileRange;
 
         public Vector2 Position
         {
@@ -54,7 +54,7 @@ namespace AlgoritmProjekt.Objects.Projectiles
             spriteBatch.Draw(myTexture, position, Color.White);
         }
 
-        void LifeCycle(float time)
+        protected virtual void LifeCycle(float time)
         {
             if (Vector2.Distance(position, startPos) > size * tileRange)
             {
@@ -62,7 +62,7 @@ namespace AlgoritmProjekt.Objects.Projectiles
             }
         }
 
-        public void InstaKillMe()
+        public virtual void InstaKillMe()
         {
             alive = false;
         }

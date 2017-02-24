@@ -8,6 +8,7 @@ using AlgoritmProjekt.Objects.Environment;
 using AlgoritmProjekt.Objects.PlayerRelated;
 using AlgoritmProjekt.Objects.Weapons;
 using AlgoritmProjekt.ParticleEngine.Emitters;
+using AlgoritmProjekt.Utility.AI.DecisionTree;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -21,15 +22,8 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.Levels
 {
     class Level1 : Level
     {
-        private List<EnemySpawner> spawners = new List<EnemySpawner>();
-        private List<JsonObject> jsonTiles = new List<JsonObject>();
-        //private List<Emitter> emitters = new List<Emitter>();
-        private List<Enemy> enemies = new List<Enemy>();
-        private List<Wall> walls = new List<Wall>();
-        private List<Item> items = new List<Item>();
-        //Teleporter teleport;
-        TileGrid grid;
         PatrolEnemy testEnemy;
+        DTEnemy dtEnemy;
 
         public Level1(string filePath, Player player, Texture2D solidSquare, Texture2D hollowSquare,
             Texture2D smallHollowSquare, Texture2D smoothTexture, int tileSize)
@@ -50,91 +44,44 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.Levels
                 grid.SetOccupiedGrid(wall);
             }
             testEnemy = new PatrolEnemy(solidSquare, spawners[0].myPosition, tileSize, 2, 3, 5);
+            dtEnemy = new DTEnemy(solidSquare, spawners[0].myPosition, tileSize, smoothTexture);
+
+            spawners.RemoveAt(0);
         }
 
-        public override void Update(float time, Camera camera)
-        {
-            base.Update(time, camera);
-        }
-
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            if (testEnemy != null)
-                testEnemy.Draw(spriteBatch);
-            base.Draw(spriteBatch);
-        }
-
-        public override void ActivateTeleport()
-        {
-            if (testEnemy != null && testEnemy.myHP <= 0)
-                teleport.IsActive = true;
-        }
-
-        public override bool WinCondition()
-        {
-            if (Vector2.Distance(player.myPosition, teleport.myPosition) <= 1 && teleport.IsActive && KeyMouseReader.KeyPressed(Keys.Enter))
-            {
-                return true;
-            }
-            return false;
-        }
-
-        public override bool LoseCondition()
-        {
-            if (player.myHP <= 0)
-            {
-                if (playerEmit)
-                {
-                    emitters.Add(new PlayerDeathEmitter(solidSquare, player.myPosition));
-                    playerEmit = false;
-                }
-                return true;
-            }
-            return false;
-        }
-
-        protected override void DrawObjects(SpriteBatch spriteBatch)
-        {
-            grid.Draw(spriteBatch);
-            foreach (Wall wall in walls)
-            {
-                wall.Draw(spriteBatch);
-            }
-
-            foreach (Emitter emitter in emitters)
-            {
-                emitter.Draw(spriteBatch);
-            }
-
-            foreach (Enemy enemy in enemies)
-            {
-                enemy.Draw(spriteBatch);
-            }
-
-            teleport.Draw(spriteBatch);
-        }
-
-        protected override void UpdateObjects(float time)
+        public override void Update(float time)
         {
             if (!LoseCondition())
             {
                 if (testEnemy != null)
                 {
                     testEnemy.Update(ref time, player, grid);
-                    companion.AttackState(time, player, testEnemy);
-                    companion.EvadeState(testEnemy);
-                    companion.ApproachState(testEnemy, player);
+                    //companion.AttackState(time, player, testEnemy.myPosition);
+                    companion.EvadeState(testEnemy.myPosition);
+                    companion.ApproachState(testEnemy.myPosition, player.myPosition);
                 }
+                if (dtEnemy != null)
+                    dtEnemy.Update(time, player, grid);
             }
 
-            foreach (Emitter emitter in emitters)
-            {
-                emitter.Update(ref time);
-            }
-            teleport.Update(ref time);
+            base.Update(time);
         }
 
-        protected override void Collisions(Camera camera)
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+            if (testEnemy != null)
+                testEnemy.Draw(spriteBatch);
+            dtEnemy.Draw(spriteBatch);
+        }
+
+        public override void ActivateTeleport()
+        {
+            if (testEnemy == null)
+                teleport.IsActive = true;
+        }
+
+        protected override void Collisions()
         {
             if (testEnemy != null && testEnemy.CheckMyCollision(player) && player.playerStates.status != PlayerStates.Status.Invulnerable)
             {
@@ -146,24 +93,18 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.Levels
             {
                 if (testEnemy != null && player.Projectiles[i].CheckMyCollision(testEnemy))
                     --testEnemy.myHP;
-
-                for (int k = 0; k < walls.Count; k++)
-                {
-                    player.Projectiles[i].CheckMyCollision(walls[k]);
-                }
             }
+            base.Collisions();
         }
 
         protected override void RemoveDeadObjects()
         {
             if (testEnemy != null && !testEnemy.iamAlive)
-                testEnemy = null;
-
-            for (int i = emitters.Count - 1; i >= 0; i--)
             {
-                if (!emitters[i].IsAlive)
-                    emitters.RemoveAt(i);
+                items.Add(new Item(hollowSquare, testEnemy.myPosition, tileSize));
+                testEnemy = null;
             }
+            base.RemoveDeadObjects();
         }
     }
 }

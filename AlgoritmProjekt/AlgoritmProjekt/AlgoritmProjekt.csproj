@@ -40,8 +40,18 @@
   <ItemGroup>
     <Compile Include="Objects\Companion\AICompanion.cs" />
     <Compile Include="Objects\Enemies\PatrolEnemy.cs" />
+    <Compile Include="ParticleEngine\Emitters\FireBulletEmitter.cs" />
+    <Compile Include="ParticleEngine\Particles\FireParticle.cs" />
     <Compile Include="ScreenStates\GameManager.cs" />
     <Compile Include="ScreenStates\HighScore.cs" />
+    <Compile Include="Utility\AI\DecisionTree\DTEnemy.cs" />
+    <Compile Include="Utility\AI\DecisionTree\DTree.cs" />
+    <Compile Include="Utility\AI\DecisionTree\Node.cs" />
+    <Compile Include="Utility\AI\DecisionTree\States\DTChase.cs" />
+    <Compile Include="Utility\AI\DecisionTree\States\DTEscape.cs" />
+    <Compile Include="Utility\AI\DecisionTree\States\DTAttack.cs" />
+    <Compile Include="Utility\AI\DecisionTree\States\DTRecover.cs" />
+    <Compile Include="Utility\AI\DecisionTree\States\DTState.cs" />
     <Compile Include="Utility\AI\FSM\State.cs" />
     <Compile Include="Utility\AI\FSM\StateMachine.cs" />
     <Compile Include="Utility\AI\Fusm\FuSMAIControl.cs" />
@@ -59,10 +69,6 @@
     <Compile Include="Objects\PlayerRelated\States\ProjectileStates.cs" />
     <Compile Include="Objects\PlayerRelated\States\WeaponStates.cs" />
     <Compile Include="Objects\Projectiles\FireBullet.cs" />
-    <Compile Include="Objects\Items\Weapons\LaserGun.cs" />
-    <Compile Include="Objects\Items\Weapons\MachineGun.cs" />
-    <Compile Include="Objects\Items\Weapons\Pistol.cs" />
-    <Compile Include="Objects\Items\Weapons\ShotGun.cs" />
     <Compile Include="Objects\ObjectTile.cs" />
     <Compile Include="Objects\Items\Item.cs" />
     <Compile Include="ParticleEngine\Emitters\Emitter.cs" />

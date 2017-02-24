@@ -2,6 +2,7 @@
 using AlgoritmProjekt.Objects.PlayerRelated;
 using AlgoritmProjekt.Objects.PlayerRelated.Actions;
 using AlgoritmProjekt.Objects.Projectiles;
+using AlgoritmProjekt.Objects.Weapons;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -18,6 +19,12 @@ namespace AlgoritmProjekt.Objects.Companion
         float shotInterval = 0;
         bool shoot;
         float burst, halter;
+
+        float evadeLevel, approachLevel, defaultLevel;
+
+        bool leaveDefault = false;
+
+
 
         public bool TimeToShoot
         {
@@ -43,6 +50,7 @@ namespace AlgoritmProjekt.Objects.Companion
 
             direction.Normalize();
             position += time * speed * direction;
+            ResetActivation();
         }
 
         public void AccumulateDirection(Vector2 offset)
@@ -50,69 +58,92 @@ namespace AlgoritmProjekt.Objects.Companion
             direction += offset;
         }
 
-        public void DefaultState(Tile target)
+        public void DefaultState(Vector2 target)
         {
             float minDistance = size * 1.5f;
-            float maxDistance = size * 3;
-            float activationLevel = 0;
-            float test = (Vector2.Distance(target.myPosition, position) - maxDistance) / maxDistance;
-            Vector2 deltaPos = new Vector2((target.myPosition.X - position.X) + rand.Next(-size, size), (target.myPosition.Y - position.Y) + rand.Next(-size, size)); ;
-            activationLevel = 1 - test;
+            float maxDistance = size * 100;
+            float distance = Vector2.Distance(position, target);
 
-            if (Vector2.Distance(position, target.myPosition) < minDistance)
+            Vector2 deltaPos = new Vector2((target.X - position.X) + rand.Next(-size, size), (target.Y - position.Y) + rand.Next(-size, size)); ;
+            defaultLevel = 1 - ((maxDistance - distance) / maxDistance);
+
+            if (distance < minDistance && !leaveDefault)
             {
-                activationLevel = 0.0001f;
+                defaultLevel = 0.0001f;
                 speed = halter;
             }
             else
                 speed = burst;
-            if (Vector2.Distance(position, target.myPosition) > maxDistance)
-            {
-                activationLevel = (Vector2.Distance(target.myPosition, position) - maxDistance) / maxDistance;
-            //Console.WriteLine("Default: " + activationLevel);
-            }
 
-            AccumulateDirection(deltaPos * activationLevel);
+            BindActivationLevel(ref defaultLevel);
+
+            //Console.WriteLine("Default: " + defaultLevel);
+            AccumulateDirection(deltaPos * defaultLevel);
         }
 
-        public void ApproachState(Tile target, Player player)
+        public void ApproachState(Vector2 target, Vector2 player)
         {
-            float activationLevel = 0;
-            float approachRange = size * 7;
-            Vector2 deltaPos = target.myPosition - position;
+            float approachRange = size * 4;
+            Vector2 deltaPos = target - position;
+            float distanceToTarget = Vector2.Distance(position, target);
+            float distanceFromTargetToPlayer = Vector2.Distance(player, target);
 
-            activationLevel = 1 - (Vector2.Distance(target.myPosition, position) - approachRange) / approachRange;
-            if (Vector2.Distance(player.myPosition, target.myPosition) > approachRange)
+            if (target == null || distanceFromTargetToPlayer > size * 8)
             {
-                activationLevel = 0;
+                approachLevel = 0;
             }
-            //Console.WriteLine("Approach: " + activationLevel);
+            else
+            {
+                approachLevel = 1 - ((approachRange - distanceToTarget) / approachRange);
+                leaveDefault = true;
+            }
 
-            AccumulateDirection(deltaPos * activationLevel);
+            BindActivationLevel(ref approachLevel);
+
+            Console.WriteLine("Approach: " + approachLevel);
+            AccumulateDirection(deltaPos * approachLevel);
         }
 
-        public void EvadeState(Tile target)
+        public void EvadeState(Vector2 target)
         {
             float evadeRange = size * 2;
-            float activationLevel = 0;
-            Vector2 deltaPos = target.myPosition - position;
-            if (Vector2.Distance(position, target.myPosition) < evadeRange)
+            Vector2 deltaPos = target - position;
+            float distance = Vector2.Distance(position, target);
+
+            if (distance < evadeRange)
             {
-                activationLevel = 1 - (Vector2.Distance(position, target.myPosition) - (evadeRange * 40)) / (evadeRange * 40);
+                evadeLevel = 1 - ((evadeRange) - distance) / (evadeRange);
             }
+            else
+                evadeLevel = 0;
 
-            //Console.WriteLine("Evade: " + activationLevel);
-
-            AccumulateDirection(-deltaPos * activationLevel);
+            Console.WriteLine("Evade: " + evadeLevel);
+            AccumulateDirection(-deltaPos * evadeLevel);
         }
 
-        public void AttackState(float time, Player player, Tile target)
+        public void AttackState(float time, Player player, Vector2 target)
         {
-            if (shotInterval > 0.5f && Vector2.Distance(target.myPosition, position) < size * 4)
+            if (shotInterval > 0.5f && Vector2.Distance(target, position) < size * 4)
             {
                 shotInterval = 0;
-                player.Shoot(position, target.myPosition);
+                player.Shoot(position, target);
             }
+        }
+
+        void ResetActivation()
+        {
+            evadeLevel = 0;
+            defaultLevel = 0;
+            approachLevel = 0;
+            leaveDefault = false;
+        }
+
+        void BindActivationLevel(ref float activationLevel)
+        {
+            if (activationLevel < 0)
+                activationLevel = 0;
+            else if (activationLevel > 1)
+                activationLevel = 1;
         }
 
         public override void Draw(SpriteBatch spritebatch)
@@ -120,6 +151,63 @@ namespace AlgoritmProjekt.Objects.Companion
             spritebatch.Draw(myTexture, position, null, Color.Red, (float)Math.PI * 0.25f, origin, 0.5f, SpriteEffects.None, 1);
             spritebatch.Draw(myTexture, position, null, Color.Blue, (float)Math.PI * 0.45f, origin, 0.5f, SpriteEffects.None, 1);
             spritebatch.Draw(myTexture, position, null, Color.Green, (float)Math.PI * 0.6f, origin, 0.5f, SpriteEffects.None, 1);
+        }
+
+        public void Perception(float time, Player player, List<Item> items, List<Enemy> enemies, List<EnemySpawner> spawners)
+        {
+            Vector2 nearestEnemyToCompanion = new Vector2();
+            Vector2 nearestEnemyToPlayer = new Vector2();
+            Vector2 nearestItemToPlayer = new Vector2();
+
+            DefaultState(player.myPosition);
+
+            foreach (Item item in items)
+            {
+                if (nearestItemToPlayer != Vector2.Zero)
+                    nearestItemToPlayer = item.myPosition;
+                else if (Vector2.Distance(player.myPosition, item.myPosition) < Vector2.Distance(player.myPosition, nearestItemToPlayer))
+                    nearestItemToPlayer = item.myPosition;
+            }
+
+            foreach (Enemy enemy in enemies)
+            {
+                if (nearestEnemyToPlayer == Vector2.Zero)
+                    nearestEnemyToPlayer = enemy.myPosition;
+                else if (Vector2.Distance(player.myPosition, enemy.myPosition) < Vector2.Distance(player.myPosition, nearestEnemyToPlayer))
+                    nearestEnemyToPlayer = enemy.myPosition;
+                if (nearestEnemyToCompanion == Vector2.Zero)
+                    nearestEnemyToCompanion = enemy.myPosition;
+                else if (Vector2.Distance(myPosition, enemy.myPosition) < Vector2.Distance(myPosition, nearestEnemyToPlayer))
+                    nearestEnemyToCompanion = enemy.myPosition;
+            }
+
+            foreach (EnemySpawner spawner in spawners)
+            {
+                if (nearestEnemyToPlayer == Vector2.Zero)
+                    nearestEnemyToPlayer = spawner.myPosition;
+                else if (Vector2.Distance(player.myPosition, spawner.myPosition) < Vector2.Distance(player.myPosition, nearestEnemyToPlayer))
+                    nearestEnemyToPlayer = spawner.myPosition;
+                if (nearestEnemyToCompanion == Vector2.Zero)
+                    nearestEnemyToCompanion = spawner.myPosition;
+                else if (Vector2.Distance(myPosition, spawner.myPosition) < Vector2.Distance(myPosition, nearestEnemyToPlayer))
+                    nearestEnemyToCompanion = spawner.myPosition;
+            }
+
+            if (nearestEnemyToPlayer != Vector2.Zero)
+            {
+                AttackState(time, player, nearestEnemyToPlayer);
+                ApproachState(nearestEnemyToPlayer, player.myPosition);
+            }
+
+            if (nearestEnemyToCompanion != Vector2.Zero)
+            {
+                EvadeState(nearestEnemyToCompanion);
+            }
+
+            if(nearestItemToPlayer != Vector2.Zero)
+            {
+                ApproachState(nearestItemToPlayer, player.myPosition);
+            }
         }
     }
 }

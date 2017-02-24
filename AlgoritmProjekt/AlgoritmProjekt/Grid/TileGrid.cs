@@ -23,7 +23,7 @@ namespace AlgoritmProjekt.Grid
             this.size = size;
             width = columns;
             height = rows;
-            
+
             CreateTileGrid();
         }
 
@@ -41,12 +41,19 @@ namespace AlgoritmProjekt.Grid
 
         public bool WalkableFromVect(Vector2 pos)
         {
-            int tempX, tempY;
-            tempX = (int)pos.X / size;
-            tempY = (int)pos.Y / size;
-            if (tileGrid[tempX, tempY] != null && tileGrid[tempX, tempY].iamOccupied)
+            try
+            {
+                int tempX, tempY;
+                tempX = (int)pos.X / size;
+                tempY = (int)pos.Y / size;
+                if (tileGrid[tempX, tempY].iamOccupied)
+                    return false;
+                return true;
+            }
+            catch
+            {
                 return false;
-            return true;
+            }
         }
 
         public bool WalkableFromPoint(int x, int y)
@@ -65,7 +72,7 @@ namespace AlgoritmProjekt.Grid
                 return tileGrid[tempX, tempY].myPosition;
             return Vector2.Zero;
         }
-                
+
         public int CheckWalkable(int cellX, int cellY)
         {
             for (int i = cellX; i < width; i++)
@@ -104,7 +111,7 @@ namespace AlgoritmProjekt.Grid
                 {
                     for (int j = 0; j < height; j++)
                     {
-                        //tileGrid[i, j].Draw(spriteBatch);
+                        tileGrid[i, j].Draw(spriteBatch);
                     }
                 }
         }

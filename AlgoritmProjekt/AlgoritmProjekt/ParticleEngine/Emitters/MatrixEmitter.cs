@@ -18,7 +18,7 @@ namespace AlgoritmProjekt.Managers.ParticleEngine.Emitters
             this.font = font;
             this.timeLimit = 3;
             this.myLifeTime = 10;
-            this.velocity.Y = 4;
+            this.direction.Y = 4;
         }
 
         public override void Update(ref float time)

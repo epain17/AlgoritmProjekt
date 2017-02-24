@@ -12,6 +12,15 @@ namespace AlgoritmProjekt.Objects
 {
     internal class SpawnedEnemy : Enemy
     {
+        protected override Rectangle HealthBar()
+        {
+            return base.HealthBar();
+        }
+
+        protected override float HealthPercent()
+        {
+            return base.HealthPercent();
+        }
 
         internal SpawnedEnemy(Texture2D texture, Vector2 position, float speed, int aggroRange, int size, int hp)
             : base(texture, position, size)
@@ -23,6 +32,7 @@ namespace AlgoritmProjekt.Objects
             this.aggroRange = aggroRange;
             this.size = size;
             this.hp = hp;
+            this.startHp = hp;
         }
 
         public override void Update(ref float time)
@@ -32,15 +42,27 @@ namespace AlgoritmProjekt.Objects
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            base.Draw(spriteBatch);
+            Color color = new Color(0.25f / HealthPercent(), 1 * HealthPercent(), 1f * HealthPercent());
+            spriteBatch.Draw(myTexture, position, null, color, 0, origin, 1, SpriteEffects.None, 1);
+            spriteBatch.Draw(myTexture, HealthBar(), null, Color.ForestGreen, 0, origin, SpriteEffects.None, 1);
         }
     }
 
     class EnemySpawner : Enemy
     {
         float spawnTimer = 5;
-        float timeLimit = 1f;
+        float timeLimit = 1.5f;
         int waypointLimiter = 10;
+
+        protected override Rectangle HealthBar()
+        {
+            return base.HealthBar();
+        }
+
+        protected override float HealthPercent()
+        {
+            return base.HealthPercent();
+        }
 
         public EnemySpawner(Texture2D texture, Vector2 position, int size)
             : base(texture, position, size)
@@ -49,7 +71,7 @@ namespace AlgoritmProjekt.Objects
             this.position = position;
             this.startPos = position;
             this.size = size;
-            this.hp = 5;
+            this.hp = 15;
             this.startHp = hp;
             this.aggroRange = size * 10;
         }
@@ -81,15 +103,14 @@ namespace AlgoritmProjekt.Objects
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(myTexture, position, null, Color.Purple, 0, origin, 1, SpriteEffects.None, 1);
-            float healthPercent = hp / startHp;
-            Color color = new Color(1, 0, 0.5f * healthPercent);
+            Color color = new Color(1, 0, 0.9f * HealthPercent());
+            spriteBatch.Draw(myTexture, HealthBar(), null, Color.ForestGreen, 0, origin, SpriteEffects.None, 1);
             spriteBatch.Draw(myTexture, position, null, color, 0, origin, 1, SpriteEffects.None, 1);
         }
 
         protected void SpawnEnemies(ref List<Enemy> enemies)
         {
-            enemies.Add(new SpawnedEnemy(myTexture, position, 80, aggroRange, size, 2));
+            enemies.Add(new SpawnedEnemy(myTexture, position, 80, aggroRange, size, 8));
         }
     }
 }

@@ -21,7 +21,7 @@ namespace AlgoritmProjekt.ParticleEngine.Emitters
             this.position = position;
             nrParticles = 1;
             myLifeTime = 6;
-            velocity = Vector2.Zero;
+            direction = Vector2.Zero;
             particles.Add(GenerateParticle());
 
         }
@@ -38,7 +38,7 @@ namespace AlgoritmProjekt.ParticleEngine.Emitters
 
         protected override Particle GenerateParticle()
         {
-            return new PlayerParticle(texture, position, velocity, 100, 32);
+            return new PlayerParticle(texture, position, direction, 100, 32);
         }
     }
 }

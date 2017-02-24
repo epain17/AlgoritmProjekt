@@ -17,9 +17,9 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
         {
             this.texture = texture;
             this.position = position;
-            nrParticles = 6;
+            nrParticles = 4;
             myLifeTime = 3;
-            velocity = Vector2.Zero;
+            direction = Vector2.Zero;
         }
 
         public override void Update(ref float time)

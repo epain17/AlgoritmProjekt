@@ -43,6 +43,12 @@ namespace AlgoritmProjekt.Characters
             get { return projectiles; }
             set { projectiles = value; }
         }
+
+        public void PowerUp()
+        {
+            weaponStates.UpgradeWeapon();
+        }
+
         #endregion
 
         public Player(Texture2D texture, Texture2D hollowSquare, Texture2D smallHollowSquare, Vector2 position, int size)

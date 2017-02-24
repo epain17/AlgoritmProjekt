@@ -97,10 +97,10 @@ namespace AlgoritmProjekt.Utility
             }
         }
 
-        static void JsonPistol(ref List<Item> weapons, ref List<JsonObject> jsonTiles, ref Texture2D texture, string filePath, int size)
+        static void JsonPistol(ref List<Item> items, ref List<JsonObject> jsonTiles, ref Texture2D texture, string filePath, int size)
         {
-            if (weapons != null)
-                weapons.Clear();
+            if (items != null)
+                items.Clear();
             jsonTiles = JsonSerialization.ReadFromJsonFile<List<JsonObject>>(filePath);
 
             for (int i = 0; i < jsonTiles.Count; i++)
@@ -110,7 +110,7 @@ namespace AlgoritmProjekt.Utility
                     int x, y;
                     x = jsonTiles[i].PositionX;
                     y = jsonTiles[i].PositionY;
-                    weapons.Add(new Pistol(texture, new Vector2(x, y), size));
+                    items.Add(new Item(texture, new Vector2(x, y), size));
                 }
             }
         }
@@ -126,7 +126,7 @@ namespace AlgoritmProjekt.Utility
                 jsonTiles = null;
                 JsonGrid(ref grid, ref jsonTiles, ref hollowSquare, filePath, size);
                 JsonPlayer(ref player, ref jsonTiles, ref solidSquare, ref smallHollowSquare, filePath, size);
-                JsonEnemySpawner(ref spawners, ref jsonTiles, ref hollowSquare, filePath, size);
+                JsonEnemySpawner(ref spawners, ref jsonTiles, ref solidSquare, filePath, size);
                 JsonWalls(ref walls, ref jsonTiles, ref solidSquare, filePath, size);
                 JsonPistol(ref weapons, ref jsonTiles, ref solidSquare, filePath, size);
                 JsonTeleports(ref teleport, ref jsonTiles, ref solidSquare, ref smoothTexture, filePath, size);

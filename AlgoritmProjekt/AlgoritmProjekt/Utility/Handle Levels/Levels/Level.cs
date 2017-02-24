@@ -9,6 +9,7 @@ using AlgoritmProjekt.Objects.PlayerRelated;
 using AlgoritmProjekt.Objects.Projectiles;
 using AlgoritmProjekt.Objects.Weapons;
 using AlgoritmProjekt.ParticleEngine.Emitters;
+using AlgoritmProjekt.Utility.AI.DecisionTree;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -22,19 +23,22 @@ namespace AlgoritmProjekt.Utility.Handle_Levels
 {
     class Level
     {
-        private List<EnemySpawner> spawners = new List<EnemySpawner>();
-        private List<JsonObject> jsonTiles = new List<JsonObject>();
-        private List<Enemy> enemies = new List<Enemy>();
-        private List<Item> items = new List<Item>();
-        private List<Wall> walls = new List<Wall>();
-        TileGrid grid;
-        protected Texture2D hollowSquare, smallHollowSquare, solidSquare, smoothTexture;
+        protected List<EnemySpawner> spawners = new List<EnemySpawner>();
+        protected List<JsonObject> jsonTiles = new List<JsonObject>();
         protected List<Emitter> emitters = new List<Emitter>();
-        protected bool playerEmit = true;
+        protected List<Enemy> enemies = new List<Enemy>();
+        protected List<Wall> walls = new List<Wall>();
+        protected List<Item> items = new List<Item>();
+
+        protected Texture2D hollowSquare, smallHollowSquare, solidSquare, smoothTexture;
         protected AICompanion companion;
         protected Teleporter teleport;
+        protected TileGrid grid;
         protected Player player;
-        
+
+        protected int tileSize;
+        protected bool playerEmit = true;
+
 
         public TileGrid GetGrid()
         {
@@ -49,6 +53,7 @@ namespace AlgoritmProjekt.Utility.Handle_Levels
             this.hollowSquare = hollowSquare;
             this.solidSquare = solidSquare;
             this.player = player;
+            this.tileSize = tileSize;
             LoadLevel.LoadingLevel(filePath, ref jsonTiles, ref grid, ref walls,
                 ref spawners, ref player, ref items, ref solidSquare, ref teleport,
                 ref hollowSquare, ref smallHollowSquare, ref smoothTexture, tileSize);
@@ -57,22 +62,16 @@ namespace AlgoritmProjekt.Utility.Handle_Levels
             {
                 grid.SetOccupiedGrid(wall);
             }
+
         }
 
-        public virtual void Update(float time, Camera camera)
+        public virtual void Update(float time)
         {
-            //Console.WriteLine("Companion: " + companion.myPosition);
-            //Console.WriteLine("Player: " + player.myPosition);
-
-            companion.DefaultState(player);
-            foreach (Item item in items)
-                companion.ApproachState(item, player);
-
             ActivateTeleport();
             UpdateObjects(time);
-            Collisions(camera);
+            Collisions();
             RemoveDeadObjects();
-
+            companion.Perception(time, player, items, enemies, spawners);
             companion.Update(ref time);
         }
 
@@ -150,21 +149,8 @@ namespace AlgoritmProjekt.Utility.Handle_Levels
                 teleport.Update(ref time);
         }
 
-        protected virtual void Collisions(Camera camera)
+        protected virtual void Collisions()
         {
-            for (int i = 0; i < items.Count; i++)
-            {
-                items[i].Update();
-                if (items[i].CheckMyCollision(player) || items[i].CheckMyCollision(companion))
-                {
-                    if (items[i] is Pistol)
-                    {
-                        player.weaponStates.type = WeaponStates.WeaponType.Pistol;
-                        items.RemoveAt(i);
-                    }
-                }
-            }
-            // Collide walls
             for (int i = 0; i < player.Projectiles.Count; i++)
             {
                 for (int k = 0; k < walls.Count; k++)
@@ -180,6 +166,15 @@ namespace AlgoritmProjekt.Utility.Handle_Levels
             {
                 if (!emitters[i].IsAlive)
                     emitters.RemoveAt(i);
+            }
+
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (items[i].CheckMyCollision(player) || items[i].CheckMyCollision(companion))
+                {
+                    player.PowerUp();
+                    items.RemoveAt(i);
+                }
             }
         }
     }
