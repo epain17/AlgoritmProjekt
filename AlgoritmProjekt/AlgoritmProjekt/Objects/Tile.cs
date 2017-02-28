@@ -63,13 +63,18 @@ namespace AlgoritmProjekt
             get { return new Point((int)position.X / size, (int)position.Y / size); }
         }
 
-        public virtual bool CheckMyCollision(Tile target)
+        public virtual bool CheckMyIntersect(Tile target)
         {
             if (myHitBox.Intersects(target.myHitBox))
             {
                 return true;
             }
             return false;
+        }
+
+        public virtual bool CheckMyVectorCollision(Vector2 target)
+        {
+            return myHitBox.Contains(target);
         }
 
         public Tile(Texture2D texture, Vector2 position, int size)

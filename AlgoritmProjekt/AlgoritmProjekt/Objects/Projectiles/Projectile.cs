@@ -19,7 +19,7 @@ namespace AlgoritmProjekt.Objects.Projectiles
             get { return position; }
         }
 
-        public override bool CheckMyCollision(Tile target)
+        public override bool CheckMyIntersect(Tile target)
         {
             if (target.myHitBox.Contains(myPosition))
             {
@@ -29,7 +29,7 @@ namespace AlgoritmProjekt.Objects.Projectiles
             return false;
         }
 
-        public Projectile(Texture2D texture, Vector2 position, int size, Vector2 targetVect)
+        public Projectile(Texture2D texture, Vector2 position, int size, Vector2 targetVect, float speed, int range)
             : base(texture, position, size)
         {
             this.myTexture = texture;
@@ -37,8 +37,8 @@ namespace AlgoritmProjekt.Objects.Projectiles
             this.alive = true;
             this.size = size;
             this.startPos = position;
-            tileRange = 8;
-            speed = 200;
+            this.speed = speed;
+            tileRange = range;
             SetDirection(targetVect);
             velocity = direction * speed;
         }

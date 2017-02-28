@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace AlgoritmProjekt.Objects.Environment
 {
-    class Teleporter : ObjectTile
+    class Goal : ObjectTile
     {
-        TeleportEmitter topLeftEmitter, bottomRightEmitter;
+        GoalEmitter topLeftEmitter, bottomRightEmitter;
         bool active = false, used = false;
         float timer;
         bool flipTimer;
@@ -23,7 +23,7 @@ namespace AlgoritmProjekt.Objects.Environment
             set { active = value; }
         }
 
-        public Teleporter(Texture2D texture, Texture2D neon, Vector2 position, int size)
+        public Goal(Texture2D texture, Texture2D neon, Vector2 position, int size)
             : base(texture, position, size)
         {
             this.myTexture = texture;
@@ -32,8 +32,8 @@ namespace AlgoritmProjekt.Objects.Environment
             this.occupied = false;
             timer = 1;
             texColor = new Color(0.25f, 0.25f, 0.1f);
-            topLeftEmitter = new TeleportEmitter(neon, new Vector2(position.X - (size / 2), position.Y - (size / 2)), position, size, 0);
-            bottomRightEmitter = new TeleportEmitter(neon, new Vector2(position.X + (size / 2), position.Y + (size / 2)), position, size, 2);
+            topLeftEmitter = new GoalEmitter(neon, new Vector2(position.X - (size / 2), position.Y - (size / 2)), position, size, 0);
+            bottomRightEmitter = new GoalEmitter(neon, new Vector2(position.X + (size / 2), position.Y + (size / 2)), position, size, 2);
         }
 
         public override void Update(ref float time)

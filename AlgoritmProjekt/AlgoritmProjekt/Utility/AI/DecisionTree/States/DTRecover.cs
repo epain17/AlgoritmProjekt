@@ -22,7 +22,6 @@ namespace AlgoritmProjekt.Utility.AI.DecisionTree.States
 
         public override void UpdatePerception(Player player, TileGrid grid, float time)
         {
-            agent.direction = Vector2.Zero;
             hpUpTimer += time;
             if (hpUpTimer > 1)
             {

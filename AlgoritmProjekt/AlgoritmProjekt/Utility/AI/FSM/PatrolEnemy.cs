@@ -27,7 +27,7 @@ namespace AlgoritmProjekt.Objects.Enemies
 
         private Vector2 NorthSensor()
         {
-            return new Vector2(position.X, position.Y - (size * 0.75f));
+            return new Vector2(position.X, position.Y - size);
         }
 
         private Vector2 WestSensor()
@@ -53,7 +53,7 @@ namespace AlgoritmProjekt.Objects.Enemies
             this.patrolHeight = patrolHeight;
             this.hp = 5;
             startHp = hp;
-            speed = 80;
+            speed = 20;
             this.aggroRange = 200;
             checkPointIndex = startCheckPoint + 1;
             initializeCheckpoints(startCheckPoint);
@@ -64,7 +64,7 @@ namespace AlgoritmProjekt.Objects.Enemies
             switch (behavior)
             {
                 case myBehaviors.Patrol:
-                    Patrolling(player);
+                    Patrolling(player, grid);
                     break;
                 case myBehaviors.ChaseTarget:
                     Chasing(player, grid);
@@ -75,24 +75,30 @@ namespace AlgoritmProjekt.Objects.Enemies
             }
         }
 
-        public void Patrolling(Player player)
+        public void Patrolling(Player player, TileGrid grid)
         {
             if (!FindTarget(player.myPoint))
             {
+                FindPath(new Point((int)checkpoints[checkPointIndex].X / size, (int)checkpoints[checkPointIndex].Y / size), grid);
                 if (Vector2.Distance(position, checkpoints[checkPointIndex]) < 1 && checkPointIndex <= checkpoints.Length - 1)
                 {
+                    waypoints.Clear();
                     ++checkPointIndex;
                     if (checkPointIndex > checkpoints.Length - 1)
                         checkPointIndex = 0;
                 }
 
-                SetDirection(checkpoints[checkPointIndex]);
-
                 if (hp <= 2 && FindTarget(player.myPoint))
+                {
                     behavior = myBehaviors.Escape;
+                    waypoints.Clear();
+                }
             }
             else
+            {
                 behavior = myBehaviors.ChaseTarget;
+                waypoints.Clear();
+            }
         }
 
         public void Chasing(Player player, TileGrid grid)
@@ -101,12 +107,13 @@ namespace AlgoritmProjekt.Objects.Enemies
                 FindPath(player.myPoint, grid);
             else
             {
-                FindPath(new Point((int)checkpoints[checkPointIndex].X / size, (int)checkpoints[checkPointIndex].Y / size), grid);
+                waypoints.Clear();
                 behavior = myBehaviors.Patrol;
             }
 
             if (hp <= 2)
             {
+                waypoints.Clear();
                 behavior = myBehaviors.Escape;
             }
         }
@@ -129,10 +136,10 @@ namespace AlgoritmProjekt.Objects.Enemies
             {
                 timer += time;
                 StopMoving();
+                waypoints.Clear();
                 if (timer > timelimit)
                 {
                     timer = 0;
-                    SetDirection(checkpoints[checkPointIndex]);
                     behavior = myBehaviors.Patrol;
                 }
             }
@@ -154,11 +161,25 @@ namespace AlgoritmProjekt.Objects.Enemies
                 alive = false;
             UpdatePos(grid);
             HandleStates(player, grid, time);
+ 
             base.Update(ref time);
+        }
+
+        public bool ReachedDestination(Vector2 targetPos, Vector2 pos)
+        {
+            if (Vector2.Distance(pos, targetPos) <= 2)
+            {
+                return true;
+            }
+            return false;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            foreach (Vector2 way in waypoints)
+            {
+                spriteBatch.Draw(myTexture, way, null, Color.White, 0,origin, 0.5f, SpriteEffects.None,0);
+            }
             Color color = new Color(0.25f / HealthPercent(), 1 * HealthPercent(), 1f * HealthPercent());
             spriteBatch.Draw(myTexture, position, null, color, 0, origin, 1, SpriteEffects.None, 1);
             spriteBatch.Draw(myTexture, HealthBar(), null, Color.ForestGreen, 0, origin, SpriteEffects.None, 1);

@@ -10,114 +10,75 @@ using System.Threading.Tasks;
 
 namespace AlgoritmProjekt.Utility.AI.DecisionTree
 {
+    abstract class AbsDTNode
+    {
+        public abstract bool Evaluate(ref DTState input);
+    }
+
+    internal class DTNode : AbsDTNode
+    {
+        AbsDTNode Left;
+        AbsDTNode Right;
+
+        internal DTNode(AbsDTNode Left, AbsDTNode Right)
+        {
+            this.Left = Left;
+            this.Right = Right;
+        }
+
+        public override bool Evaluate(ref DTState input)
+        {
+            if (Left.Evaluate(ref input) || Right.Evaluate(ref input))
+                return true;
+            return false;
+        }
+    }
+
+    internal class DTLeaf : AbsDTNode
+    {
+        public bool NodeState { get; private set; }
+        public delegate bool LeafDelegate();
+        private LeafDelegate action;
+
+        DTState agentState;
+
+        internal DTLeaf(LeafDelegate action, DTState agentState)
+        {
+            this.action = action;
+            this.agentState = agentState;
+            NodeState = false;
+        }
+
+        public override bool Evaluate(ref DTState input)
+        {
+            NodeState = action();
+            if (NodeState)
+                input = agentState;
+            return NodeState;
+        }
+    }
+
     class DTree
     {
-        Node root;
-        DTState currentState,
-    attackState, chaseState, recoverState, escapeState;
+        DTNode Root, Left, Right;
+        DTLeaf Attack, Chase, Escape, Recover;
         DTEnemy agent;
 
-        bool Aggressive()
-        {
-            if (agent.myHP < 7)
-                return false;
-            return true;
-        }
-
-        bool AttackPlayer(Player player)
-        {
-            if (Vector2.Distance(player.myPosition, agent.myPosition) < (agent.AggroRange() * 0.5f))
-                return true;
-            return false;
-        }
-
-        bool EscapePlayer(Player player)
-        {
-            if (Vector2.Distance(player.myPosition, agent.myPosition) < agent.SafetyRange())
-                return true;
-            return false;
-        }
-
-        public Node Root
-        {
-            get { return root; }
-            set { root = value; }
-        }
-
-        public DTree(bool question, DTEnemy agent)
+        public DTree(DTEnemy agent)
         {
             this.agent = agent;
-            this.root = new Node(question, null);
+            Recover = new DTLeaf(agent.RecoverHP, new DTRecover(agent));
+            Escape = new DTLeaf(agent.EscapePlayer, new DTEscape(agent));
+            Chase = new DTLeaf(agent.ChasePlayer, new DTChase(agent));
+            Attack = new DTLeaf(agent.AttackPlayer, new DTAttack(agent));
+            Left = new DTNode(Recover, Escape);
+            Right = new DTNode(Chase, Attack);
+            Root = new DTNode(Left, Right);
         }
 
-        public void Insert(bool question, DTState state)
+        public void Execute()
         {
-            Node current = new Node(question, state);
-
-            if (root == null)
-                root = current;
-            else
-            {
-                AddRecursively(current, root);
-            }
-        }
-
-        void AddRecursively(Node nodeToAdd, Node parent)
-        {
-            if (parent.Question)
-            {
-                if (parent.Right == null)
-                    parent.Right = nodeToAdd;
-                else
-                    AddRecursively(nodeToAdd, parent.Right);
-            }
-            else if (!parent.Question)
-            {
-                if (parent.Left == null)
-                    parent.Left = nodeToAdd;
-                else
-                    AddRecursively(nodeToAdd, parent.Left);
-            }
-        }
-
-        void SetState(Player player)
-        {
-            if (Aggressive())
-            {
-                if (AttackPlayer(player))
-                    currentState = attackState;
-                else
-                    currentState = chaseState;
-            }
-            else
-            {
-                if (EscapePlayer(player))
-                    currentState = escapeState;
-                else
-                    currentState = recoverState;
-            }
-        }
-
-        public DTState FindState(Node parent)
-        {
-            Node current = parent;
-            DTState result = null;
-
-            if (current.State != null)
-                return current.State;
-            else
-            {
-                if (current.Question)
-                {
-                    result = FindState(current.Right);
-                }
-                else
-                {
-                    result = FindState(current.Left);
-                }
-            }
-
-            return result;
+            Root.Evaluate(ref agent.CurrentState);
         }
     }
 }

@@ -44,11 +44,6 @@ namespace AlgoritmProjekt.Characters
             set { projectiles = value; }
         }
 
-        public void PowerUp()
-        {
-            weaponStates.UpgradeWeapon();
-        }
-
         #endregion
 
         public Player(Texture2D texture, Texture2D hollowSquare, Texture2D smallHollowSquare, Vector2 position, int size)
@@ -69,6 +64,7 @@ namespace AlgoritmProjekt.Characters
             weaponStates = new WeaponStates(WeaponStates.WeaponType.None);
             abilities = new InputAbilities(Keys.Space, Keys.LeftControl, Keys.LeftShift);
             xhair = new CrossHair(hollowSquare, smallHollowSquare, position, size);
+            PowerUp();
         }
 
         public void Update(ref float time, TileGrid grid)
@@ -138,16 +134,26 @@ namespace AlgoritmProjekt.Characters
             switch (weaponStates.type)
             {
                 case WeaponStates.WeaponType.Pistol:
-                    projectiles.Add(new Projectile(smallHollowSquare, bulletStartPos, size, new Vector2(target.X + rand.Next(-3, 3), target.Y + rand.Next(-3, 3))));
+                    projectiles.Add(new FireBullet(smallHollowSquare, bulletStartPos, size, new Vector2(target.X + rand.Next(-10, 10), target.Y + rand.Next(-10, 10)), 170, 6));
                     break;
                 case WeaponStates.WeaponType.ShotGun:
                     for (int i = 0; i < 4; i++)
-                        projectiles.Add(new Projectile(smallHollowSquare, bulletStartPos, size, new Vector2(target.X + rand.Next(-20, 20), target.Y + rand.Next(-20, 20))));
+                        projectiles.Add(new FireBullet(smallHollowSquare, bulletStartPos, size, new Vector2(target.X + rand.Next(-20, 20), target.Y + rand.Next(-20, 20)), 150, 5));
                     break;
                 case WeaponStates.WeaponType.MachineGun:
-                    projectiles.Add(new Projectile(smallHollowSquare, bulletStartPos, size, new Vector2(target.X + rand.Next(-10, 10), target.Y + rand.Next(-10, 10))));
+                    projectiles.Add(new FireBullet(smallHollowSquare, bulletStartPos, size, new Vector2(target.X + rand.Next(-3, 3), target.Y + rand.Next(-3, 3)), 180, 7));
                     break;
             }
+        }
+
+        public void PowerUp()
+        {
+            weaponStates.UpgradeWeapon();
+        }
+
+        public void HPUp(int increase)
+        {
+            myHP += increase;
         }
     }
 }

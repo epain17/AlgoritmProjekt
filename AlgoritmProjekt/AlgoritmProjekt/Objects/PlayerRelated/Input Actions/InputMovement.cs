@@ -45,7 +45,6 @@ namespace AlgoritmProjekt.Objects.PlayerRelated.Actions
 
         public void Update(TileGrid grid, ref CrossHair xhair, ref Vector2 targetPos, ref Vector2 playerPos, bool aiming)
         {
-            ReachedDestination(targetPos, playerPos);
             ChangeDirection(grid, ref targetPos, playerPos, ref xhair, aiming);
             MoveXhair(playerPos, xhair);
         }
@@ -125,24 +124,24 @@ namespace AlgoritmProjekt.Objects.PlayerRelated.Actions
                     moving = Moving.right;
                 }
             }
-            if (moving != Moving.still && aiming)
-            {
-                switch(moving)
-                {
-                    case Moving.up:
-                        MovePlayerNorth(grid, ref targetPos, playerPos);
-                        break;
-                    case Moving.left:
-                        MovePlayerWest(grid, ref targetPos, playerPos);
-                        break;
-                    case Moving.down:
-                        MovePlayerSouth(grid, ref targetPos, playerPos);
-                        break;
-                    case Moving.right:
-                        MovePlayerEast(grid, ref targetPos, playerPos);
-                        break;
-                }
-            }
+            //if (moving != Moving.still && aiming)
+            //{
+            //    switch(moving)
+            //    {
+            //        case Moving.up:
+            //            MovePlayerNorth(grid, ref targetPos, playerPos);
+            //            break;
+            //        case Moving.left:
+            //            MovePlayerWest(grid, ref targetPos, playerPos);
+            //            break;
+            //        case Moving.down:
+            //            MovePlayerSouth(grid, ref targetPos, playerPos);
+            //            break;
+            //        case Moving.right:
+            //            MovePlayerEast(grid, ref targetPos, playerPos);
+            //            break;
+            //    }
+            //}
         }
 
         void MovePlayerNorth(TileGrid grid, ref Vector2 targetPos, Vector2 position)

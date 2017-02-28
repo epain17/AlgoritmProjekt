@@ -37,5 +37,10 @@ namespace AlgoritmProjekt.Input
             oldMouseState = mouseState;
             mouseState = Mouse.GetState();
         }
+
+        internal static bool KeyPressed(object key)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

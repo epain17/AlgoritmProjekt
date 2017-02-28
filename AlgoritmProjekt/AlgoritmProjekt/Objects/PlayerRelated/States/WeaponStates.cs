@@ -43,9 +43,9 @@ namespace AlgoritmProjekt.Objects.PlayerRelated
             if (weaponLevel == 1)
                 type = WeaponType.Pistol;
             else if (weaponLevel == 2)
-                type = WeaponType.ShotGun;
-            else if (weaponLevel == 3)
                 type = WeaponType.MachineGun;
+            else if (weaponLevel == 3)
+                type = WeaponType.ShotGun;
         }
 
         private void HandleWeaponStates(float time, ref float shotInterval)

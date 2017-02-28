@@ -12,6 +12,7 @@ namespace AlgoritmProjekt.Utility.AI.DecisionTree.States
     class DTAttack : DTState
     {
         float shootTimer;
+
         public DTAttack(DTEnemy agent) 
             : base(agent)
         {

@@ -12,16 +12,12 @@ namespace AlgoritmProjekt.Characters
 {
     class Enemy : MovingTile
     {
-        protected int startHp;
-
-        Pathfinder pathfinder;
-        public Point startPoint, endPoint, previous;
-
         public Queue<Vector2> waypoints = new Queue<Vector2>();
-
-        public Point pr;
+        public Point startPoint, endPoint, previous;
         protected int aggroRange;
-
+        protected int startHp;
+        Pathfinder pathfinder;
+        public Point pr;
 
         protected virtual float HealthPercent()
         {
@@ -35,7 +31,7 @@ namespace AlgoritmProjekt.Characters
 
         public float DistanceToWaypoint(TileGrid grid)
         {
-            return Vector2.Distance(position, grid.ReturnTilePosition(waypoints.Peek())); 
+            return Vector2.Distance(position, grid.ReturnTilePosition(waypoints.Peek()));
         }
 
         public Enemy(Texture2D texture, Vector2 position, int size)
@@ -81,35 +77,29 @@ namespace AlgoritmProjekt.Characters
 
         public void FindPath(Point targetPoint, TileGrid grid)
         {
-            if (waypoints != null)
+            if (waypoints.Count() == 0 && targetPoint != myPoint)
             {
-                if (waypoints.Count() == 0 && targetPoint != myPoint)
-                {
-                    pathfinder = new Pathfinder(grid);
-                    waypoints.Clear();
-                    startPoint = myPoint;
-                    endPoint = targetPoint;
-                    waypoints = pathfinder.FindPointPath(startPoint, endPoint, previous);
-                }
+                pathfinder = new Pathfinder(grid);
+                waypoints.Clear();
+                startPoint = myPoint;
+                endPoint = targetPoint;
+                waypoints = pathfinder.FindPointPath(startPoint, endPoint, previous);
             }
         }
 
         protected virtual void UpdatePos(TileGrid grid)
         {
-            if (waypoints != null)
+            if (waypoints.Count > 0)
             {
-                if (waypoints.Count > 0)
+                if (DistanceToWaypoint(grid) < 1.5f)
                 {
-                    if (DistanceToWaypoint(grid) < 1.5f)
-                    {
-                        position = grid.ReturnTilePosition(waypoints.Peek());
-                        previous = new Point((int)waypoints.Peek().X / mySize, (int)waypoints.Peek().Y / mySize);
-                        waypoints.Dequeue();
-                    }
-                    else
-                    {
-                        SetDirection(grid.ReturnTilePosition(waypoints.Peek()));
-                    }
+                    previous = new Point((int)waypoints.Peek().X / mySize, (int)waypoints.Peek().Y / mySize);
+                    position = grid.ReturnTilePosition(waypoints.Dequeue());
+                    waypoints.Clear();
+                }
+                else
+                {
+                    SetDirection(grid.ReturnTilePosition(waypoints.Peek()));
                 }
             }
         }

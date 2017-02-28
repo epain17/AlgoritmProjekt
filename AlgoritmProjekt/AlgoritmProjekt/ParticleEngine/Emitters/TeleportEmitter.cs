@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AlgoritmProjekt.ParticleEngine.Emitters
 {
-    class TeleportEmitter : Emitter
+    class GoalEmitter : Emitter
     {
         enum MoveEmitter
         {
@@ -27,7 +27,7 @@ namespace AlgoritmProjekt.ParticleEngine.Emitters
         Texture2D texture;
         float speed;
 
-        public TeleportEmitter(Texture2D texture, Vector2 position, Vector2 pos, int size, int initializeMe)
+        public GoalEmitter(Texture2D texture, Vector2 position, Vector2 pos, int size, int initializeMe)
             : base(position)
         {
             this.texture = texture;

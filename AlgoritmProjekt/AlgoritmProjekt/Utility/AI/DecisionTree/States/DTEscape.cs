@@ -10,6 +10,8 @@ namespace AlgoritmProjekt.Utility.AI.DecisionTree.States
 {
     class DTEscape:DTState
     {
+
+
         public DTEscape(DTEnemy agent)
             : base(agent)
         {
@@ -18,6 +20,19 @@ namespace AlgoritmProjekt.Utility.AI.DecisionTree.States
 
         public override void UpdatePerception(Player player, TileGrid grid, float time)
         {
+            agent.FindPath(agent.myStartPoint, grid);
+
+            if (agent.waypoints.Count > 0)
+            {
+                if (agent.DistanceToWaypoint(grid) < 1.5f)
+                {
+                    agent.myPosition = grid.ReturnTilePosition(agent.waypoints.Dequeue());
+                }
+                else
+                {
+                    agent.SetDirection(grid.ReturnTilePosition(agent.waypoints.Peek()));
+                }
+            }
             base.UpdatePerception(player, grid, time);
         }
     }

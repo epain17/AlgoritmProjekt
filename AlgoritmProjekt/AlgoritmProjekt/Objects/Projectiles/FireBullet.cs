@@ -13,16 +13,16 @@ namespace AlgoritmProjekt.Objects.Projectiles
     {
         FireBulletEmitter emitter;
 
-        public FireBullet(Texture2D texture, Vector2 position, int size, Vector2 targetVect)
-            : base(texture, position, size, targetVect)
+        public FireBullet(Texture2D texture, Vector2 position, int size, Vector2 targetVect, float speed, int range)
+            : base(texture, position, size, targetVect, speed, range)
         {
             this.myTexture = texture;
             this.position = position;
             this.alive = true;
             this.size = size;
             this.startPos = position;
-            tileRange = 8;
-            speed = 125;
+            this.speed = speed;
+            this.tileRange = range;
             SetDirection(targetVect);
             velocity = direction * speed;
             emitter = new FireBulletEmitter(texture, position, size, speed, targetVect);

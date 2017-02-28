@@ -87,10 +87,10 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.Levels
         {
             foreach (Enemy enemy in enemies)
             {
-                if (enemy.CheckMyCollision(player) && player.playerStates.status != PlayerStates.Status.Invulnerable)
+                if (enemy.CheckMyIntersect(player) && player.playerStates.status != PlayerStates.Status.Invulnerable)
                 {
                     player.playerStates.status = PlayerStates.Status.Invulnerable;
-                    --player.myHP;
+                    //--player.myHP;
                 }
             }
 
@@ -98,13 +98,13 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.Levels
             {
                 for (int j = 0; j < enemies.Count; j++)
                 {
-                    if (player.Projectiles[i].CheckMyCollision(enemies[j]))
+                    if (player.Projectiles[i].CheckMyIntersect(enemies[j]))
                         --enemies[j].myHP;
                 }
 
                 for (int l = 0; l < spawners.Count; l++)
                 {
-                    if (player.Projectiles[i].CheckMyCollision(spawners[l]))
+                    if (player.Projectiles[i].CheckMyIntersect(spawners[l]))
                         --spawners[l].myHP;
                 }
             }

@@ -32,7 +32,7 @@ namespace AlgoritmProjekt.Utility.Handle_Levels
 
         protected Texture2D hollowSquare, smallHollowSquare, solidSquare, smoothTexture;
         protected AICompanion companion;
-        protected Teleporter teleport;
+        protected Goal teleport;
         protected TileGrid grid;
         protected Player player;
 
@@ -90,9 +90,8 @@ namespace AlgoritmProjekt.Utility.Handle_Levels
         public virtual bool WinCondition()
         {
             if (Vector2.Distance(player.myPosition, teleport.myPosition) <= 1 && teleport.IsActive && KeyMouseReader.KeyPressed(Keys.Enter))
-            {
                 return true;
-            }
+
             return false;
         }
 
@@ -155,7 +154,7 @@ namespace AlgoritmProjekt.Utility.Handle_Levels
             {
                 for (int k = 0; k < walls.Count; k++)
                 {
-                    player.Projectiles[i].CheckMyCollision(walls[k]);
+                    player.Projectiles[i].CheckMyIntersect(walls[k]);
                 }
             }
         }
@@ -170,7 +169,7 @@ namespace AlgoritmProjekt.Utility.Handle_Levels
 
             for (int i = 0; i < items.Count; i++)
             {
-                if (items[i].CheckMyCollision(player) || items[i].CheckMyCollision(companion))
+                if (items[i].CheckMyIntersect(player) || items[i].CheckMyVectorCollision(companion.myPosition))
                 {
                     player.PowerUp();
                     items.RemoveAt(i);

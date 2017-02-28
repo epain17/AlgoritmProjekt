@@ -38,15 +38,20 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Objects\Companion\AICompanion.cs" />
-    <Compile Include="Objects\Enemies\PatrolEnemy.cs" />
+    <Compile Include="Utility\AI\FuSM\AICompanion.cs" />
+    <Compile Include="Utility\AI\FuSM\FuSMStates\FuSMApproach.cs" />
+    <Compile Include="Utility\AI\FuSM\FuSMStates\FuSMAttack.cs" />
+    <Compile Include="Utility\AI\FuSM\FuSMStates\FuSMDefault.cs" />
+    <Compile Include="Utility\AI\FuSM\FuSMStates\FuSMEvade.cs" />
+    <Compile Include="Utility\AI\FuSM\FuSMStates\FuSMState.cs" />
+    <Compile Include="Utility\AI\FSM\PatrolEnemy.cs" />
     <Compile Include="ParticleEngine\Emitters\FireBulletEmitter.cs" />
     <Compile Include="ParticleEngine\Particles\FireParticle.cs" />
     <Compile Include="ScreenStates\GameManager.cs" />
     <Compile Include="ScreenStates\HighScore.cs" />
     <Compile Include="Utility\AI\DecisionTree\DTEnemy.cs" />
     <Compile Include="Utility\AI\DecisionTree\DTree.cs" />
-    <Compile Include="Utility\AI\DecisionTree\Node.cs" />
+    <Compile Include="Utility\AI\DecisionTree\TreeNode.cs" />
     <Compile Include="Utility\AI\DecisionTree\States\DTChase.cs" />
     <Compile Include="Utility\AI\DecisionTree\States\DTEscape.cs" />
     <Compile Include="Utility\AI\DecisionTree\States\DTAttack.cs" />
@@ -54,19 +59,15 @@
     <Compile Include="Utility\AI\DecisionTree\States\DTState.cs" />
     <Compile Include="Utility\AI\FSM\State.cs" />
     <Compile Include="Utility\AI\FSM\StateMachine.cs" />
-    <Compile Include="Utility\AI\Fusm\FuSMAIControl.cs" />
-    <Compile Include="Utility\AI\Fusm\FuSMMachine.cs" />
-    <Compile Include="Utility\AI\Fusm\FuSMState.cs" />
     <Compile Include="Utility\Handle Levels\LevelHandler.cs" />
     <Compile Include="ScreenStates\Menu.cs" />
     <Compile Include="ScreenStates\EnterUser.cs" />
-    <Compile Include="Objects\Environment\Teleporter.cs" />
+    <Compile Include="Objects\Environment\Goal.cs" />
     <Compile Include="Objects\Environment\Trap.cs" />
     <Compile Include="Objects\MovingTile.cs" />
     <Compile Include="Objects\PlayerRelated\Input Actions\InputMovement.cs" />
     <Compile Include="Objects\PlayerRelated\Input Actions\InputAbilities.cs" />
     <Compile Include="Objects\PlayerRelated\States\PlayerStates.cs" />
-    <Compile Include="Objects\PlayerRelated\States\ProjectileStates.cs" />
     <Compile Include="Objects\PlayerRelated\States\WeaponStates.cs" />
     <Compile Include="Objects\Projectiles\FireBullet.cs" />
     <Compile Include="Objects\ObjectTile.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Utility\Handle Levels\json\JsonSerialization.cs" />
     <Compile Include="Utility\Handle Levels\Levels\Level1.cs" />
     <Compile Include="Utility\Handle Levels\Levels\Level2.cs" />
+    <Compile Include="Utility\Handle Levels\Levels\Level3.cs" />
     <Compile Include="Utility\KeyMouseReader.cs" />
     <Compile Include="Objects\Projectiles\Projectile.cs" />
     <Compile Include="Objects\Environment\Wall.cs" />
@@ -125,7 +127,9 @@
     <None Include="ClassDiagram3.cd" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Utility\Interfaces\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

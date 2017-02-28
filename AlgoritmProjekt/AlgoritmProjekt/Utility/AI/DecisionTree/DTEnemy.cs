@@ -14,78 +14,48 @@ namespace AlgoritmProjekt.Utility.AI.DecisionTree
 {
     class DTEnemy : Enemy
     {
-        DTree tree;
-        DTState currentState, 
-            attackState, chaseState, recoverState, escapeState;
-        float safetyRange;
-        Random rand;
         List<Projectile> projectiles = new List<Projectile>();
+        float safetyRange, attackRange;
         Texture2D texBullet;
+        Player player;
+        Random rand;
+        DTree tree;
+
+        public Point myStartPoint
+        {
+            get { return startPoint; }
+        }
+
+        public DTState CurrentState;
 
         public bool timeToShoot;
 
-        public List<Projectile> Projectiles
-        {
-            get { return projectiles; }
-            set { projectiles = value; }
-        }
-
-        public float AggroRange()
-        {
-            return size * 8;
-        }
-
-        public float SafetyRange()
-        {
-            return size * 10;
-        }
-
-        bool Aggressive()
-        {
-            if (hp < 7)
-                return false;
-            return true;
-        }
-
-        bool AttackPlayer(Player player)
-        {
-            if (Vector2.Distance(player.myPosition, position) < (aggroRange * 0.5f))
-                return true;
-            return false;
-        }
-
-        bool EscapePlayer(Player player)
-        {
-            if (Vector2.Distance(player.myPosition, position) < safetyRange)
-                return true;
-            return false;
-        }
-
-        public DTEnemy(Texture2D texture, Vector2 position, int size, Texture2D texBullet)
+        public DTEnemy(Texture2D texture, Vector2 position, int size, Texture2D texBullet, Player player)
             : base(texture, position, size)
         {
             this.myTexture = texture;
             this.position = position;
             this.size = size;
             this.texBullet = texBullet;
-            rand = new Random();
-
+            this.player = player;
+            this.startPoint = new Point((int)position.X / size, (int)position.Y / size);
             hp = 15;
+            rand = new Random();
             startHp = hp;
             speed = 80;
             aggroRange = size * 8;
+            attackRange = aggroRange * 0.5f;
             safetyRange = size * 10;
-            currentState = new DTState(this);
-            attackState = new DTAttack(this);
-            chaseState = new DTChase(this);
-            recoverState = new DTRecover(this);
             timeToShoot = false;
+
+            CurrentState = new DTState(this);
+            tree = new DTree(this);
         }
 
         public void Update(float time, Player player, TileGrid grid)
         {
-            SetState(player);
-            currentState.UpdatePerception(player, grid, time);
+            tree.Execute();
+            CurrentState.UpdatePerception(player, grid, time);
             Shoot(position, player.myPosition);
             UpdateProjectiles(time);
             base.Update(ref time);
@@ -96,6 +66,10 @@ namespace AlgoritmProjekt.Utility.AI.DecisionTree
             foreach (Projectile proj in projectiles)
             {
                 proj.Draw(spriteBatch);
+            }
+            foreach (Vector2 way in waypoints)
+            {
+                spriteBatch.Draw(myTexture, way, null, Color.White, 0, origin, 0.5f, SpriteEffects.None, 0);
             }
             Color color = new Color(0.25f / HealthPercent(), 1 * HealthPercent(), 1f * HealthPercent());
             spriteBatch.Draw(myTexture, position, null, color, 0, origin, 1, SpriteEffects.None, 1);
@@ -122,29 +96,52 @@ namespace AlgoritmProjekt.Utility.AI.DecisionTree
         {
             if (timeToShoot)
             {
-                projectiles.Add(new FireBullet(texBullet, bulletStartPos, size, new Vector2(target.X + rand.Next(-3, 3), target.Y + rand.Next(-3, 3))));
+                projectiles.Add(new FireBullet(texBullet, bulletStartPos, size, new Vector2(target.X + rand.Next(-3, 3), target.Y + rand.Next(-3, 3)), 125, 6));
                 timeToShoot = false;
             }
         }
 
-        void SetState(Player player)
+        public bool RecoverHP()
         {
-            if (Aggressive())
+            if (hp < 7 && Vector2.Distance(player.myPosition, position) > safetyRange && myPoint == startPoint)
             {
-                if (AttackPlayer(player))
-                    currentState = attackState;
-                else
-                    currentState = chaseState;
+                //Console.WriteLine("Recovering");
+                return true;
             }
-            else
-            {
-                if (EscapePlayer(player))
-                    currentState = new DTEscape(this);
-                else
-                    currentState = recoverState;
-            }
+            return false;
         }
 
+        public bool ChasePlayer()
+        {
+            if (Vector2.Distance(player.myPosition, position) > (attackRange) && hp > 6)
+            {
+                //Console.WriteLine("Chasing");
+                speed = 80;
+                return true;
+            }
+            return false;
+        }
+
+        public bool AttackPlayer()
+        {
+            if (Vector2.Distance(player.myPosition, position) < (attackRange) && !RecoverHP() && !EscapePlayer())
+            {
+                //Console.WriteLine("Attacking");
+                return true;
+            }
+            return false;
+        }
+
+        public bool EscapePlayer()
+        {
+            if (hp < 10 && Vector2.Distance(player.myPosition, position) < safetyRange && myPoint != startPoint)
+            {
+                //Console.WriteLine("Escaping");
+                speed = 120;
+                return true;
+            }
+            return false;
+        }
     }
 }
 

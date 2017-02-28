@@ -47,7 +47,7 @@ namespace AlgoritmProjekt.Utility
             }
         }
 
-        static void JsonTeleports(ref Teleporter teleport, ref List<JsonObject> jsonTiles, ref Texture2D texture, ref Texture2D smoothTexture, string filePath, int size)
+        static void JsonTeleports(ref Goal teleport, ref List<JsonObject> jsonTiles, ref Texture2D texture, ref Texture2D smoothTexture, string filePath, int size)
         {
             jsonTiles = JsonSerialization.ReadFromJsonFile<List<JsonObject>>(filePath);
 
@@ -58,7 +58,7 @@ namespace AlgoritmProjekt.Utility
                     Vector2 pos;
                     pos.X = jsonTiles[i].PositionX;
                     pos.Y = jsonTiles[i].PositionY;
-                    teleport = new Teleporter(texture, smoothTexture, pos, size);
+                    teleport = new Goal(texture, smoothTexture, pos, size);
                 }
             }
         }
@@ -118,7 +118,7 @@ namespace AlgoritmProjekt.Utility
 
         public static void LoadingLevel(string filePath, ref List<JsonObject> jsonTiles, ref TileGrid grid, ref List<Wall> walls,
             ref List<EnemySpawner> spawners, ref Player player, ref List<Item> weapons, ref Texture2D solidSquare,
-            ref Teleporter teleport, ref Texture2D hollowSquare, ref Texture2D smallHollowSquare, ref Texture2D smoothTexture, int size)
+            ref Goal teleport, ref Texture2D hollowSquare, ref Texture2D smallHollowSquare, ref Texture2D smoothTexture, int size)
         {
             if (filePath != null)
             {
