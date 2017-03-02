@@ -19,6 +19,11 @@ namespace AlgoritmProjekt.Characters
         Pathfinder pathfinder;
         public Point pr;
 
+        public Vector2 FutureWaypoint()
+        {
+            return waypoints.Count > 0 ? waypoints.Peek() : Vector2.Zero;
+        }
+
         protected virtual float HealthPercent()
         {
             return (float)((float)hp / (float)startHp);
@@ -51,16 +56,7 @@ namespace AlgoritmProjekt.Characters
 
         public void Update(float time, Point targetPoint, TileGrid grid)
         {
-            if (FindTarget(targetPoint))
-            {
-                FindPath(targetPoint, grid);
-
-            }
-            else if (FindTarget(targetPoint))
-            {
-                FindPath(pr, grid);
-            }
-
+            FindPath(targetPoint, grid);
             UpdatePos(grid);
 
             if (myHP <= 0)
@@ -101,6 +97,11 @@ namespace AlgoritmProjekt.Characters
                 {
                     SetDirection(grid.ReturnTilePosition(waypoints.Peek()));
                 }
+            }
+            else
+            {
+                position = grid.ReturnTilePosition(position);
+                StopMoving();
             }
         }
 

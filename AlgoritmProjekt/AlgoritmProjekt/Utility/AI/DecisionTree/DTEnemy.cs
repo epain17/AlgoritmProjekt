@@ -103,7 +103,7 @@ namespace AlgoritmProjekt.Utility.AI.DecisionTree
 
         public bool RecoverHP()
         {
-            if (hp < 7 && Vector2.Distance(player.myPosition, position) > safetyRange && myPoint == startPoint)
+            if (hp < 7 && Vector2.Distance(player.myPosition, position) > safetyRange)
             {
                 //Console.WriteLine("Recovering");
                 return true;
@@ -134,7 +134,7 @@ namespace AlgoritmProjekt.Utility.AI.DecisionTree
 
         public bool EscapePlayer()
         {
-            if (hp < 10 && Vector2.Distance(player.myPosition, position) < safetyRange && myPoint != startPoint)
+            if (hp < 10 && Vector2.Distance(player.myPosition, position) < safetyRange)
             {
                 //Console.WriteLine("Escaping");
                 speed = 120;

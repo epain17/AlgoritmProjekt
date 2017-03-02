@@ -16,6 +16,9 @@ namespace AlgoritmProjekt.Objects.Companion
 {
     class AICompanion : MovingTile
     {
+        Vector2 circulatingPos;
+        float angle;
+
         float shotInterval = 0;
         float startSpeed;
 
@@ -45,6 +48,8 @@ namespace AlgoritmProjekt.Objects.Companion
             return false;
         }
 
+        
+
         public AICompanion(Texture2D texture, Vector2 position, int size)
             : base(texture, position, size)
         {
@@ -71,6 +76,9 @@ namespace AlgoritmProjekt.Objects.Companion
             spritebatch.Draw(myTexture, position, null, Color.Red, (float)Math.PI * 0.25f, origin, 0.5f, SpriteEffects.None, 1);
             spritebatch.Draw(myTexture, position, null, Color.Blue, (float)Math.PI * 0.45f, origin, 0.5f, SpriteEffects.None, 1);
             spritebatch.Draw(myTexture, position, null, Color.Green, (float)Math.PI * 0.6f, origin, 0.5f, SpriteEffects.None, 1);
+
+            //spritebatch.Draw(myTexture, circulatingPos, null, Color.White, 0, origin, 0.25f, SpriteEffects.None, 1);
+
         }
 
         public void AccumulateDirection(Vector2 offset)
@@ -96,13 +104,13 @@ namespace AlgoritmProjekt.Objects.Companion
             foreach (Enemy enemy in enemies)
             {
                 if (nearestEnemyToPlayer == Vector2.Zero)
-                    nearestEnemyToPlayer = enemy.myPosition;
+                    nearestEnemyToPlayer = enemy.FutureWaypoint();
                 else if (Vector2.Distance(player.myPosition, enemy.myPosition) < Vector2.Distance(player.myPosition, nearestEnemyToPlayer))
-                    nearestEnemyToPlayer = enemy.myPosition;
+                    nearestEnemyToPlayer = enemy.FutureWaypoint();
                 if (nearestEnemyToCompanion == Vector2.Zero)
-                    nearestEnemyToCompanion = enemy.myPosition;
+                    nearestEnemyToCompanion = enemy.FutureWaypoint();
                 else if (Vector2.Distance(myPosition, enemy.myPosition) < Vector2.Distance(myPosition, nearestEnemyToPlayer))
-                    nearestEnemyToCompanion = enemy.myPosition;
+                    nearestEnemyToCompanion = enemy.FutureWaypoint();
             }
 
             foreach (EnemySpawner spawner in spawners)
@@ -118,7 +126,10 @@ namespace AlgoritmProjekt.Objects.Companion
             }
 
             //Give States New Perceptional Values
-            defaultState.Execute(player.myPosition, player);
+            angle += time * 2;
+            circulatingPos = player.myPosition;
+            circulatingPos += new Vector2((size * 2) * (float)Math.Cos(angle), (size * 2) * (float)Math.Sin(angle));
+            defaultState.Execute(circulatingPos, player);
 
             if (nearestEnemyToPlayer != Vector2.Zero)
             {
