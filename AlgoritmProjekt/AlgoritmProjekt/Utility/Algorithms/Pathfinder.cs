@@ -54,7 +54,7 @@ namespace AlgoritmProjekt
 
                     if (node.Walkable)
                     {
-                        node.Neighbors = new SearchNode[8];
+                        node.Neighbors = new SearchNode[4];
                         searchNodes[x, y] = node;
                     }
                 }

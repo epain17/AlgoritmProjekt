@@ -21,9 +21,11 @@ namespace AlgoritmProjekt.Utility.AI.DecisionTree
         Random rand;
         DTree tree;
 
+        Point initialPoint;
+
         public Point myStartPoint
         {
-            get { return startPoint; }
+            get { return initialPoint; }
         }
 
         public DTState CurrentState;
@@ -39,6 +41,7 @@ namespace AlgoritmProjekt.Utility.AI.DecisionTree
             this.texBullet = texBullet;
             this.player = player;
             this.startPoint = new Point((int)position.X / size, (int)position.Y / size);
+            initialPoint = startPoint;
             hp = 15;
             rand = new Random();
             startHp = hp;
@@ -80,14 +83,12 @@ namespace AlgoritmProjekt.Utility.AI.DecisionTree
         {
             if (projectiles.Count > 0)
             {
+                foreach (Projectile proj in projectiles)
+                    proj.Update(ref time);
                 for (int i = projectiles.Count - 1; i >= 0; --i)
                 {
                     if (!projectiles[i].iamAlive)
                         projectiles.RemoveAt(i);
-                }
-                foreach (Projectile proj in projectiles)
-                {
-                    proj.Update(ref time);
                 }
             }
         }
@@ -101,46 +102,32 @@ namespace AlgoritmProjekt.Utility.AI.DecisionTree
             }
         }
 
-        public bool RecoverHP()
+        public bool ChooseOffensiveStance()
         {
-            if (hp < 7 && Vector2.Distance(player.myPosition, position) > safetyRange)
-            {
-                //Console.WriteLine("Recovering");
-                return true;
-            }
-            return false;
-        }
-
-        public bool ChasePlayer()
-        {
-            if (Vector2.Distance(player.myPosition, position) > (attackRange) && hp > 6)
-            {
-                //Console.WriteLine("Chasing");
-                speed = 80;
-                return true;
-            }
-            return false;
-        }
-
-        public bool AttackPlayer()
-        {
-            if (Vector2.Distance(player.myPosition, position) < (attackRange) && !RecoverHP() && !EscapePlayer())
+            if (Vector2.Distance(player.myPosition, position) < (attackRange))
             {
                 //Console.WriteLine("Attacking");
                 return true;
             }
+            //Console.WriteLine("Chasing");
             return false;
         }
 
-        public bool EscapePlayer()
+        public bool ChooseDefensiveStance()
         {
-            if (hp < 10 && Vector2.Distance(player.myPosition, position) < safetyRange)
+            if (hp < 10 && Vector2.Distance(player.myPosition, position) < safetyRange && myPoint != initialPoint)
             {
                 //Console.WriteLine("Escaping");
                 speed = 120;
                 return true;
             }
+            //Console.WriteLine("Recovering");
             return false;
+        }
+
+        public bool ChooseCombatStance()
+        {
+            return hp > (startHp / 2) ? true : false;
         }
     }
 }

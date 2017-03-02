@@ -12,68 +12,63 @@ namespace AlgoritmProjekt.Utility.AI.DecisionTree
 {
     abstract class AbsDTNode
     {
-        public abstract bool Evaluate(ref DTState input);
+        public abstract void Evaluate(ref DTState currentState);
     }
 
     internal class DTNode : AbsDTNode
     {
+        public delegate bool LeafDelegate();
+        protected LeafDelegate action;
         AbsDTNode Left;
         AbsDTNode Right;
 
-        internal DTNode(AbsDTNode Left, AbsDTNode Right)
+        internal DTNode(LeafDelegate action, AbsDTNode Left, AbsDTNode Right)
         {
+            this.action = action;
             this.Left = Left;
             this.Right = Right;
         }
 
-        public override bool Evaluate(ref DTState input)
+        public override void Evaluate(ref DTState currentState)
         {
-            if (Left.Evaluate(ref input) || Right.Evaluate(ref input))
-                return true;
-            return false;
+            if (action())
+                Right.Evaluate(ref currentState);
+            else
+                Left.Evaluate(ref currentState);
         }
     }
 
     internal class DTLeaf : AbsDTNode
     {
-        public bool NodeState { get; private set; }
-        public delegate bool LeafDelegate();
-        private LeafDelegate action;
-
         DTState agentState;
 
-        internal DTLeaf(LeafDelegate action, DTState agentState)
+        internal DTLeaf(DTState agentState)
         {
-            this.action = action;
             this.agentState = agentState;
-            NodeState = false;
         }
 
-        public override bool Evaluate(ref DTState input)
+        public override void Evaluate(ref DTState currentState)
         {
-            NodeState = action();
-            if (NodeState)
-                input = agentState;
-            return NodeState;
+            currentState = agentState;
         }
     }
 
     class DTree
     {
-        DTNode Root, Left, Right;
-        DTLeaf Attack, Chase, Escape, Recover;
         DTEnemy agent;
+        DTNode Root, Left, Right;
+        DTLeaf AttackLeaf, ChaseLeaf, EscapeLeaf, RecoverLeaf;
 
         public DTree(DTEnemy agent)
         {
             this.agent = agent;
-            Recover = new DTLeaf(agent.RecoverHP, new DTRecover(agent));
-            Escape = new DTLeaf(agent.EscapePlayer, new DTEscape(agent));
-            Chase = new DTLeaf(agent.ChasePlayer, new DTChase(agent));
-            Attack = new DTLeaf(agent.AttackPlayer, new DTAttack(agent));
-            Left = new DTNode(Recover, Escape);
-            Right = new DTNode(Chase, Attack);
-            Root = new DTNode(Left, Right);
+            RecoverLeaf = new DTLeaf(new DTRecover(agent));
+            EscapeLeaf = new DTLeaf(new DTEscape(agent));
+            ChaseLeaf = new DTLeaf(new DTChase(agent));
+            AttackLeaf = new DTLeaf(new DTAttack(agent));
+            Left = new DTNode(agent.ChooseDefensiveStance, RecoverLeaf, EscapeLeaf);
+            Right = new DTNode(agent.ChooseOffensiveStance, ChaseLeaf, AttackLeaf);
+            Root = new DTNode(agent.ChooseCombatStance, Left, Right);
         }
 
         public void Execute()

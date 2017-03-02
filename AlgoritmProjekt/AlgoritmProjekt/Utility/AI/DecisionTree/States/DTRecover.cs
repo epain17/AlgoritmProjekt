@@ -22,6 +22,7 @@ namespace AlgoritmProjekt.Utility.AI.DecisionTree.States
 
         public override void UpdatePerception(Player player, TileGrid grid, float time)
         {
+            agent.ResetEnemyPath();
             hpUpTimer += time;
             if (hpUpTimer > 1)
             {

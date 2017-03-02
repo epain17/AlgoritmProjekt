@@ -95,8 +95,9 @@ namespace AlgoritmProjekt.Characters
         /// Used when changing level to reset the target position to the player's new position in the new grid.
         /// </summary>
         /// <param name="grid">Reference to a tile grid.</param>
-        public void ResetMovement(TileGrid grid)
+        public void ResetMovement(TileGrid grid, Vector2 newPos)
         {
+            position = newPos;
             targetPos = grid.ReturnTilePosition(position);
         }
 

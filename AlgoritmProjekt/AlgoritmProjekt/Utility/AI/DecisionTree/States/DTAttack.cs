@@ -27,6 +27,7 @@ namespace AlgoritmProjekt.Utility.AI.DecisionTree.States
 
             if(shootTimer > 1)
             {
+                agent.ResetEnemyPath();
                 shootTimer = 0;
                 agent.timeToShoot = true;
             }

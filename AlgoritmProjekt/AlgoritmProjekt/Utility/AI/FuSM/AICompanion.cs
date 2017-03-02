@@ -48,8 +48,6 @@ namespace AlgoritmProjekt.Objects.Companion
             return false;
         }
 
-        
-
         public AICompanion(Texture2D texture, Vector2 position, int size)
             : base(texture, position, size)
         {
@@ -126,9 +124,10 @@ namespace AlgoritmProjekt.Objects.Companion
             }
 
             //Give States New Perceptional Values
-            angle += time * 2;
+            angle += time * 1.5f;
             circulatingPos = player.myPosition;
-            circulatingPos += new Vector2((size * 2) * (float)Math.Cos(angle), (size * 2) * (float)Math.Sin(angle));
+            circulatingPos.X += (size * 2) * (float)Math.Cos(angle);
+            circulatingPos.Y += (size * 2) * (float)Math.Sin(angle);
             defaultState.Execute(circulatingPos, player);
 
             if (nearestEnemyToPlayer != Vector2.Zero)

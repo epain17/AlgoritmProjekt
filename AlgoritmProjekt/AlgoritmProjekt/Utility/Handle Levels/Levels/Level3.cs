@@ -17,7 +17,6 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.Levels
     class Level3 : Level
     {
         List<Enemy> dtEnemies;
-        DTEnemy test;
 
         public Level3(string filePath, Player player, Texture2D solidSquare, Texture2D hollowSquare,
             Texture2D smallHollowSquare, Texture2D smoothTexture, int tileSize)
@@ -41,11 +40,12 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.Levels
                 grid.SetOccupiedGrid(wall);
             }
 
-            for (int i = 0; i < spawners.Count; i++)
-            {
-                dtEnemies.Add(new DTEnemy(solidSquare, spawners[i].myPosition, tileSize, smoothTexture, player));
-            }
-            test = new DTEnemy(solidSquare, spawners[0].myPosition, tileSize, smoothTexture, player);
+            //for (int i = 0; i < spawners.Count; i++)
+            //{
+            //    dtEnemies.Add(new DTEnemy(solidSquare, spawners[i].myPosition, tileSize, smoothTexture, player));
+            //}
+            dtEnemies.Add(new DTEnemy(solidSquare, spawners[0].myPosition, tileSize, smoothTexture, player));
+
             for (int i = spawners.Count - 1; i >= 0; --i)
             {
                 spawners.RemoveAt(i);
@@ -60,7 +60,6 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.Levels
                 {
                     enemy.Update(time, player, grid);
                 }
-                //test.Update(time, player, grid);
                 //companion.Perception(time, player, items, dtEnemies, spawners);
             }
 
@@ -74,7 +73,6 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.Levels
             {
                 enemy.Draw(spriteBatch);
             }
-            //test.Draw(spriteBatch);
         }
 
         public override void ActivateTeleport()
@@ -92,8 +90,6 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.Levels
                     if (player.Projectiles[i].CheckMyIntersect(enemy))
                         --enemy.myHP;
                 }
-                if (player.Projectiles[i].CheckMyIntersect(test))
-                    test.myHP--;
             }
 
             base.Collisions();

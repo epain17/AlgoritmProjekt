@@ -17,7 +17,6 @@ namespace AlgoritmProjekt.Characters
         protected int aggroRange;
         protected int startHp;
         Pathfinder pathfinder;
-        public Point pr;
 
         public Vector2 FutureWaypoint()
         {
@@ -34,9 +33,9 @@ namespace AlgoritmProjekt.Characters
             return new Rectangle((int)position.X, (int)position.Y - (int)(size * 0.75f), (int)(size * HealthPercent()), (int)(size * 0.25f));
         }
 
-        public float DistanceToWaypoint(TileGrid grid)
+        public bool ReachedTileDestination(TileGrid grid)
         {
-            return Vector2.Distance(position, grid.ReturnTilePosition(waypoints.Peek()));
+            return Vector2.Distance(position, grid.ReturnTilePosition(waypoints.Peek())) < 2;
         }
 
         public Enemy(Texture2D texture, Vector2 position, int size)
@@ -44,14 +43,12 @@ namespace AlgoritmProjekt.Characters
         {
             this.myTexture = texture;
             this.position = position;
-            this.startPos = position;
             this.size = size;
-            this.hp = 2;
-            this.aggroRange = size * 10;
-
-            startHp = hp;
+            startPos = position;
+            hp = 2;
             speed = 80;
-            pr = new Point((int)startPos.X / mySize, (int)startPos.Y / mySize);
+            startHp = hp;
+            aggroRange = size * 10;
         }
 
         public void Update(float time, Point targetPoint, TileGrid grid)
@@ -87,16 +84,14 @@ namespace AlgoritmProjekt.Characters
         {
             if (waypoints.Count > 0)
             {
-                if (DistanceToWaypoint(grid) < 1.5f)
+                if (ReachedTileDestination(grid))
                 {
                     previous = new Point((int)waypoints.Peek().X / mySize, (int)waypoints.Peek().Y / mySize);
                     position = grid.ReturnTilePosition(waypoints.Dequeue());
                     waypoints.Clear();
                 }
                 else
-                {
                     SetDirection(grid.ReturnTilePosition(waypoints.Peek()));
-                }
             }
             else
             {
@@ -105,10 +100,15 @@ namespace AlgoritmProjekt.Characters
             }
         }
 
-        public bool FindTarget(Point point)
+        public void ResetEnemyPath()
         {
-            Vector2 range = new Vector2(point.X * size, point.Y * size);
-            return Vector2.Distance(this.position, range) < aggroRange;
+            StopMoving();
+            waypoints.Clear();
+        }
+
+        public bool FindTarget(Vector2 target, float searchRange)
+        {
+            return Vector2.Distance(position, target) < searchRange;
         }
     }
 }

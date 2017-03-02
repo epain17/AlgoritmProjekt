@@ -24,7 +24,7 @@ namespace AlgoritmProjekt.Utility.AI.DecisionTree.States
 
             if (agent.waypoints.Count > 0)
             {
-                if (agent.DistanceToWaypoint(grid) < 1.5f)
+                if (agent.ReachedTileDestination(grid))
                 {
                     agent.myPosition = grid.ReturnTilePosition(agent.waypoints.Dequeue());
                 }

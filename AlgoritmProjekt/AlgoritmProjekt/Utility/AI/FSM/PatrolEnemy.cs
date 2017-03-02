@@ -77,33 +77,33 @@ namespace AlgoritmProjekt.Objects.Enemies
 
         public void Patrolling(Player player, TileGrid grid)
         {
-            if (!FindTarget(player.myPoint))
+            if (!FindTarget(player.myPosition, size * 6))
             {
                 FindPath(new Point((int)checkpoints[checkPointIndex].X / size, (int)checkpoints[checkPointIndex].Y / size), grid);
-                if (Vector2.Distance(position, checkpoints[checkPointIndex]) < 1 && checkPointIndex <= checkpoints.Length - 1)
+                if (Vector2.Distance(position, checkpoints[checkPointIndex]) < 1 && checkPointIndex < checkpoints.Length)
                 {
                     waypoints.Clear();
                     ++checkPointIndex;
                     if (checkPointIndex > checkpoints.Length - 1)
                         checkPointIndex = 0;
                 }
-
-
             }
-
-            if (hp <= 2 && FindTarget(player.myPoint))
+            else
             {
-                behavior = myBehaviors.Escape;
-            }
-            else if (FindTarget(player.myPoint))
-            {
-                behavior = myBehaviors.ChaseTarget;
+                if (hp <= 2)
+                {
+                    behavior = myBehaviors.Escape;
+                }
+                else
+                {
+                    behavior = myBehaviors.ChaseTarget;
+                }
             }
         }
 
         public void Chasing(Player player, TileGrid grid)
         {
-            if (FindTarget(player.myPoint))
+            if (FindTarget(player.myPosition, size * 8))
                 FindPath(player.myPoint, grid);
             else
             {
@@ -118,7 +118,7 @@ namespace AlgoritmProjekt.Objects.Enemies
 
         public void Escaping(Player player, TileGrid grid, float time)
         {
-            if (FindTarget(player.myPoint))
+            if (FindTarget(player.myPosition, size * 10))
             {
                 if (player.myPosition.X > position.X && grid.WalkableFromVect(WestSensor()))
                     FindPath(new Point((int)(WestSensor().X / size), myPoint.Y), grid);
@@ -160,11 +160,6 @@ namespace AlgoritmProjekt.Objects.Enemies
             HandleStates(player, grid, time);
 
             base.Update(ref time);
-        }
-
-        public bool ReachedDestination(Vector2 targetPos, Vector2 pos)
-        {
-            return Vector2.Distance(pos, targetPos) <= 2;
         }
 
         public override void Draw(SpriteBatch spriteBatch)

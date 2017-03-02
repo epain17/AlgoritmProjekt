@@ -4,6 +4,7 @@ using AlgoritmProjekt.Input;
 using AlgoritmProjekt.Objects.Companion;
 using AlgoritmProjekt.Utility.Handle_Levels;
 using AlgoritmProjekt.Utility.Handle_Levels.Levels;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -17,14 +18,13 @@ namespace AlgoritmProjekt.Managers
     class LevelHandler
     {
         Level level, level1, level2, level3;
+        Vector2 level1Pos, level2Pos, level3Pos;
         int levelIndex;
         int maxLevels;
         int tileSize;
 
         Texture2D hollowSquare, smallHollowSquare, solidSquare, smoothTexture;
         Player player;
-
-        int levelManually;
 
         public TileGrid GetGrid()
         {
@@ -49,8 +49,11 @@ namespace AlgoritmProjekt.Managers
         {
             level = new Level("Level0.json", player, solidSquare, hollowSquare, smallHollowSquare, smoothTexture, tileSize);
             level1 = new Level1("Level1.json", player, solidSquare, hollowSquare, smallHollowSquare, smoothTexture, tileSize);
+            level1Pos = player.myPosition;
             level2 = new Level2("Level1.json", player, solidSquare, hollowSquare, smallHollowSquare, smoothTexture, tileSize);
+            level2Pos = player.myPosition;
             level3 = new Level3("Level3.json", player, solidSquare, hollowSquare, smallHollowSquare, smoothTexture, tileSize);
+            level3Pos = player.myPosition;
         }
 
         public void Update(float time)
@@ -103,19 +106,22 @@ namespace AlgoritmProjekt.Managers
             switch (levelIndex)
             {
                 case 0:
-                    level = new Level("Level0.json", player, solidSquare, hollowSquare, smallHollowSquare, smoothTexture, tileSize); 
+                    level = new Level("Level0.json", player, solidSquare, hollowSquare, smallHollowSquare, smoothTexture, tileSize);
                     ++levelIndex;
                     break;
                 case 1:
                     level = level1;
+                    player.ResetMovement(level.GetGrid(), level1Pos);
                     ++levelIndex;
                     break;
                 case 2:
                     level = level2;
+                    player.ResetMovement(level.GetGrid(), level2Pos);
                     ++levelIndex;
                     break;
                 case 3:
                     level = level3;
+                    player.ResetMovement(level.GetGrid(), level3Pos);
                     ++levelIndex;
                     break;
             }
@@ -126,7 +132,6 @@ namespace AlgoritmProjekt.Managers
             if (level.WinCondition())
             {
                 CreateALevel();
-                player.ResetMovement(level.GetGrid());
             }
         }
     }
