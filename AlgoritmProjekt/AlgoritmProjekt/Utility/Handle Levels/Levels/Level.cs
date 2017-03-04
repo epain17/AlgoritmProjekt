@@ -32,7 +32,7 @@ namespace AlgoritmProjekt.Utility.Handle_Levels
 
         protected Texture2D hollowSquare, smallHollowSquare, solidSquare, smoothTexture;
         protected AICompanion companion;
-        protected Goal teleport;
+        protected Goal goalCheckPoint;
         protected TileGrid grid;
         protected Player player;
 
@@ -55,7 +55,7 @@ namespace AlgoritmProjekt.Utility.Handle_Levels
             this.player = player;
             this.tileSize = tileSize;
             LoadLevel.LoadingLevel(filePath, ref jsonTiles, ref grid, ref walls,
-                ref spawners, ref player, ref items, ref solidSquare, ref teleport,
+                ref spawners, ref player, ref items, ref solidSquare, ref goalCheckPoint,
                 ref hollowSquare, ref smallHollowSquare, ref smoothTexture, tileSize);
             companion = new AICompanion(hollowSquare, player.myPosition, tileSize);
             foreach (Wall wall in walls)
@@ -67,7 +67,7 @@ namespace AlgoritmProjekt.Utility.Handle_Levels
 
         public virtual void Update(float time)
         {
-            ActivateTeleport();
+            ActivateGoal();
             UpdateObjects(time);
             Collisions();
             RemoveDeadObjects();
@@ -81,15 +81,15 @@ namespace AlgoritmProjekt.Utility.Handle_Levels
             companion.Draw(spriteBatch);
         }
 
-        public virtual void ActivateTeleport()
+        public virtual void ActivateGoal()
         {
             if (player.weaponStates.type == WeaponStates.WeaponType.Pistol)
-                teleport.IsActive = true;
+                goalCheckPoint.IsActive = true;
         }
 
         public virtual bool WinCondition()
         {
-            if (Vector2.Distance(player.myPosition, teleport.myPosition) <= 1 && teleport.IsActive && KeyMouseReader.KeyPressed(Keys.Enter))
+            if (Vector2.Distance(player.myPosition, goalCheckPoint.myPosition) <= 1 && goalCheckPoint.IsActive && KeyMouseReader.KeyPressed(Keys.Enter))
                 return true;
 
             return false;
@@ -128,8 +128,8 @@ namespace AlgoritmProjekt.Utility.Handle_Levels
                 item.Draw(spriteBatch);
             }
 
-            if (teleport != null)
-                teleport.Draw(spriteBatch);
+            if (goalCheckPoint != null)
+                goalCheckPoint.Draw(spriteBatch);
         }
 
         protected virtual void UpdateObjects(float time)
@@ -144,8 +144,8 @@ namespace AlgoritmProjekt.Utility.Handle_Levels
                 emitter.Update(ref time);
             }
 
-            if (teleport != null)
-                teleport.Update(ref time);
+            if (goalCheckPoint != null)
+                goalCheckPoint.Update(ref time);
         }
 
         protected virtual void Collisions()

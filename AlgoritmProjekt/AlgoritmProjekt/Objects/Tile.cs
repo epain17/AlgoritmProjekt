@@ -24,6 +24,12 @@ namespace AlgoritmProjekt
         protected bool occupied = false;
         protected Vector2 origin;
 
+        public bool LetMeShoot
+        {
+            get;
+            set;
+        }
+
         public Vector2 myStartPos
         {
             get { return startPos; }

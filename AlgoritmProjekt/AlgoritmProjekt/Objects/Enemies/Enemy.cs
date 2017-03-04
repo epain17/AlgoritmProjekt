@@ -13,7 +13,7 @@ namespace AlgoritmProjekt.Characters
     class Enemy : MovingTile
     {
         public Queue<Vector2> waypoints = new Queue<Vector2>();
-        public Point startPoint, endPoint, previous;
+        public Point initialPathPoint, endPoint, previous;
         protected int aggroRange;
         protected int startHp;
         Pathfinder pathfinder;
@@ -74,9 +74,9 @@ namespace AlgoritmProjekt.Characters
             {
                 pathfinder = new Pathfinder(grid);
                 waypoints.Clear();
-                startPoint = myPoint;
+                initialPathPoint = myPoint;
                 endPoint = targetPoint;
-                waypoints = pathfinder.FindPointPath(startPoint, endPoint, previous);
+                waypoints = pathfinder.FindPointPath(initialPathPoint, endPoint, previous);
             }
         }
 

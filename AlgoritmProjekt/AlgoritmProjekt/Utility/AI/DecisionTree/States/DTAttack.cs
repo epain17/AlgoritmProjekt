@@ -29,7 +29,7 @@ namespace AlgoritmProjekt.Utility.AI.DecisionTree.States
             {
                 agent.ResetEnemyPath();
                 shootTimer = 0;
-                agent.timeToShoot = true;
+                agent.LetMeShoot = true;
             }
 
             base.UpdatePerception(player, grid, time);

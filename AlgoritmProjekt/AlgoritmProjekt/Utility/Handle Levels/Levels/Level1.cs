@@ -35,7 +35,7 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.Levels
             this.solidSquare = solidSquare;
             this.player = player;
             LoadLevel.LoadingLevel(filePath, ref jsonTiles, ref grid, ref walls,
-                ref spawners, ref player, ref items, ref solidSquare, ref teleport,
+                ref spawners, ref player, ref items, ref solidSquare, ref goalCheckPoint,
                 ref hollowSquare, ref smallHollowSquare, ref smoothTexture, tileSize);
 
             foreach (Wall wall in walls)
@@ -66,10 +66,10 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.Levels
                 testEnemy.Draw(spriteBatch);
         }
 
-        public override void ActivateTeleport()
+        public override void ActivateGoal()
         {
             if (testEnemy == null)
-                teleport.IsActive = true;
+                goalCheckPoint.IsActive = true;
         }
 
         protected override void Collisions()

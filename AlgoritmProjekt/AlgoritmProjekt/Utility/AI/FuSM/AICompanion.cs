@@ -24,8 +24,8 @@ namespace AlgoritmProjekt.Objects.Companion
 
         FuSMDefault defaultState;
         FuSMApproach approachState;
-        FuSMEvade evadeState;
         FuSMAttack attackState;
+        FuSMEvade evadeState;
 
         public float StartSpeed
         {
@@ -74,9 +74,7 @@ namespace AlgoritmProjekt.Objects.Companion
             spritebatch.Draw(myTexture, position, null, Color.Red, (float)Math.PI * 0.25f, origin, 0.5f, SpriteEffects.None, 1);
             spritebatch.Draw(myTexture, position, null, Color.Blue, (float)Math.PI * 0.45f, origin, 0.5f, SpriteEffects.None, 1);
             spritebatch.Draw(myTexture, position, null, Color.Green, (float)Math.PI * 0.6f, origin, 0.5f, SpriteEffects.None, 1);
-
             //spritebatch.Draw(myTexture, circulatingPos, null, Color.White, 0, origin, 0.25f, SpriteEffects.None, 1);
-
         }
 
         public void AccumulateDirection(Vector2 offset)
@@ -106,9 +104,9 @@ namespace AlgoritmProjekt.Objects.Companion
                 else if (Vector2.Distance(player.myPosition, enemy.myPosition) < Vector2.Distance(player.myPosition, nearestEnemyToPlayer))
                     nearestEnemyToPlayer = enemy.FutureWaypoint();
                 if (nearestEnemyToCompanion == Vector2.Zero)
-                    nearestEnemyToCompanion = enemy.FutureWaypoint();
+                    nearestEnemyToCompanion = enemy.myPosition;
                 else if (Vector2.Distance(myPosition, enemy.myPosition) < Vector2.Distance(myPosition, nearestEnemyToPlayer))
-                    nearestEnemyToCompanion = enemy.FutureWaypoint();
+                    nearestEnemyToCompanion = enemy.myPosition;
             }
 
             foreach (EnemySpawner spawner in spawners)

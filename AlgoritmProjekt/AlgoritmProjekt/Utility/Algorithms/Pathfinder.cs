@@ -1,4 +1,5 @@
 ﻿using AlgoritmProjekt.Grid;
+using AlgoritmProjekt.Utility;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -255,7 +256,8 @@ namespace AlgoritmProjekt
             Queue<Vector2> finalPath = new Queue<Vector2>();
             for (int i = closedList.Count - 1; i >= 0; i--)
             {
-                finalPath.Enqueue(new Vector2((closedList[i].Position.X * 32), (closedList[i].Position.Y * 32)));
+                Vector2 newVect = new Vector2((closedList[i].Position.X * Constants.tileSize), (closedList[i].Position.Y * Constants.tileSize));
+                finalPath.Enqueue(new Vector2(newVect.X + (Constants.tileSize / 2), newVect.Y + (Constants.tileSize / 2)));
             }
             return finalPath;
         }
