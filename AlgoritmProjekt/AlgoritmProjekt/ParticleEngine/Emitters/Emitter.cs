@@ -16,8 +16,8 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
         protected Random random;
         protected bool alive = true;
         protected int nrParticles = 10;
-        protected float myLifeTime;
         protected int count;
+        protected float myLifeTime;
         protected float timer, timeLimit = 0;
 
         public bool IsAlive

@@ -43,7 +43,6 @@ namespace AlgoritmProjekt
 
         private void InitializeSearchNodes(TileGrid grid)
         {
-            //Nodes får aldrig bli null;
             searchNodes = new SearchNode[levelWidth, levelHeight];
             for (int x = 0; x < levelWidth; x++)
             {
@@ -51,7 +50,7 @@ namespace AlgoritmProjekt
                 {
                     SearchNode node = new SearchNode();
                     node.Position = new Point(x, y);
-                    node.Walkable = grid.CheckWalkable(x, y) == 0;
+                    node.Walkable = grid.WalkableFromPoint(x, y);
 
                     if (node.Walkable)
                     {
@@ -74,10 +73,10 @@ namespace AlgoritmProjekt
 
                     Point[] neighbors = new Point[]
                     {
-                        new Point(x, y -1),
-                        new Point(x, y + 1),
                         new Point(x -1, y),
+                        new Point(x, y -1),
                         new Point(x +1, y),
+                        new Point(x, y + 1),
                         //new Point(x +1, y -1),
                         //new Point(x +1, y +1),
                         //new Point(x -1, y -1),
@@ -240,8 +239,7 @@ namespace AlgoritmProjekt
         {
             closedList.Add(endNode);
             SearchNode parentTile = endNode.Parent;
-
-            //Senaste
+            
             if(parentTile == null )
             {
                 return null;

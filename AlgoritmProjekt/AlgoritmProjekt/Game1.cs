@@ -32,7 +32,7 @@ namespace AlgoritmProjekt
         //Screens
         GameManager gameManager;
         Menu menu;
-        HighScore scoreScreen;
+        HighScoreScreen scoreScreen;
         EnterUser newUser;
 
         SpriteFont font;
@@ -40,8 +40,7 @@ namespace AlgoritmProjekt
         int screenWidth = Constants.screenWidth, screenHeight = Constants.screenHeight;
         int tileSize = Constants.tileSize;
 
-        static List<string> keys = new List<string>();
-        static List<string> values = new List<string>();
+        static UserScore userHighScore;
 
         float switchScreenTimer;
 
@@ -55,7 +54,7 @@ namespace AlgoritmProjekt
         {
             graphics.PreferredBackBufferWidth = screenWidth;
             graphics.PreferredBackBufferHeight = screenHeight;
-            //graphics.IsFullScreen = true;
+            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
             base.Initialize();
         }
@@ -70,8 +69,9 @@ namespace AlgoritmProjekt
             menu = new Menu(screenWidth, screenHeight, font, new Vector2(screenWidth / 2, screenHeight / 2), smoothTex);
             newUser = new EnterUser(font, createSolidRectangle((int)(screenWidth * 0.5f), (int)(screenHeight * 0.5f), GraphicsDevice), screenWidth, screenHeight);
 
+            userHighScore = new UserScore();
             ReadScores(Constants.scoreFilePath);
-            scoreScreen = new HighScore(createSolidRectangle((int)(screenWidth * 0.5f), (int)(screenHeight * 0.75f), GraphicsDevice), new Vector2(screenWidth * 0.25f, screenHeight * 0.1f), font);
+            scoreScreen = new HighScoreScreen(createSolidRectangle((int)(screenWidth * 0.5f), (int)(screenHeight * 0.75f), GraphicsDevice), new Vector2(screenWidth * 0.25f, screenHeight * 0.1f), font);
         }
 
         public static void ReadScores(string filePath)
@@ -79,8 +79,7 @@ namespace AlgoritmProjekt
             StreamReader sr = new StreamReader(filePath);
             string readLine = sr.ReadLine();
             string[] strings = readLine.Split(',');
-            keys.Add(strings[0]);
-            values.Add(strings[1]);
+            userHighScore.AddUserScore(Int32.Parse(strings[1]), strings[0]);
 
             while (!sr.EndOfStream)
             {
@@ -88,10 +87,10 @@ namespace AlgoritmProjekt
                 if (readLine != "")
                 {
                     strings = readLine.Split(',');
-                    keys.Add(strings[0]);
-                    values.Add(strings[1]);
+                    userHighScore.AddUserScore(Int32.Parse(strings[1]), strings[0]);
                 }
             }
+            userHighScore.SortScores();
             sr.Close();
         }
 
@@ -151,7 +150,7 @@ namespace AlgoritmProjekt
                 case GameState.highscore:
                     spriteBatch.Begin();
                     menu.Draw(spriteBatch);
-                    scoreScreen.Draw(spriteBatch, keys, values);
+                    scoreScreen.Draw(spriteBatch, userHighScore);
                     spriteBatch.End();
                     break;
                 case GameState.enterUser:

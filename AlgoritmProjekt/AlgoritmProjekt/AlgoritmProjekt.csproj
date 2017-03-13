@@ -48,7 +48,7 @@
     <Compile Include="ParticleEngine\Emitters\FireBulletEmitter.cs" />
     <Compile Include="ParticleEngine\Particles\FireParticle.cs" />
     <Compile Include="ScreenStates\GameManager.cs" />
-    <Compile Include="ScreenStates\HighScore.cs" />
+    <Compile Include="ScreenStates\HighScoreScreen.cs" />
     <Compile Include="Utility\AI\DecisionTree\DTEnemy.cs" />
     <Compile Include="Utility\AI\DecisionTree\DTree.cs" />
     <Compile Include="Utility\AI\DecisionTree\TreeNode.cs" />
@@ -105,6 +105,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Objects\Tile.cs" />
+    <Compile Include="Utility\UserScore.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

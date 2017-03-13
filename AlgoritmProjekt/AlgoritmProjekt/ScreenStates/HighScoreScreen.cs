@@ -1,4 +1,5 @@
 ﻿using AlgoritmProjekt.Input;
+using AlgoritmProjekt.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -10,14 +11,14 @@ using System.Threading.Tasks;
 
 namespace AlgoritmProjekt.Managers
 {
-    class HighScore
+    class HighScoreScreen
     {
         Texture2D solidTile;
         Vector2 position;
         SpriteFont font;
         Color fontColor, texColor;
 
-        public HighScore(Texture2D solidTile, Vector2 position, SpriteFont font)
+        public HighScoreScreen(Texture2D solidTile, Vector2 position, SpriteFont font)
         {
             this.solidTile = solidTile;
             this.position = position;
@@ -34,14 +35,14 @@ namespace AlgoritmProjekt.Managers
                 Game1.gameState = Game1.GameState.menu;
         }
 
-        public void Draw(SpriteBatch spriteBatch, List<string> key, List<string> value)
+        public void Draw(SpriteBatch spriteBatch, UserScore highscore)
         {
             spriteBatch.Draw(solidTile, position, texColor);
-            
-            for (int i = 0; i < key.Count; i++)
+
+            for (int i = 0; i < highscore.HighScore.Count; i++)
             {
 
-                string text = i + 1 + ".                " + key[i] + "                    " + value[i];
+                string text = i + 1 + ".                " + highscore.HighScore[i].name + "                    " + highscore.HighScore[i].score;
                 if (i < 10)
                     spriteBatch.DrawString(font, text, new Vector2(position.X + font.MeasureString("1").X, position.Y + i * font.MeasureString(text).Y), fontColor);
                 else
