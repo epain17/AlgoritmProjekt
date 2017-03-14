@@ -51,7 +51,6 @@
     <Compile Include="ScreenStates\HighScoreScreen.cs" />
     <Compile Include="Utility\AI\DecisionTree\DTEnemy.cs" />
     <Compile Include="Utility\AI\DecisionTree\DTree.cs" />
-    <Compile Include="Utility\AI\DecisionTree\TreeNode.cs" />
     <Compile Include="Utility\AI\DecisionTree\States\DTChase.cs" />
     <Compile Include="Utility\AI\DecisionTree\States\DTEscape.cs" />
     <Compile Include="Utility\AI\DecisionTree\States\DTAttack.cs" />
