@@ -10,7 +10,6 @@ namespace AlgoritmProjekt.Objects.PlayerRelated
     {
         public enum WeaponType
         {
-            None,
             Pistol,
             ShotGun,
             MachineGun,
@@ -20,21 +19,16 @@ namespace AlgoritmProjekt.Objects.PlayerRelated
         public WeaponType type;
 
         int weaponLevel;
-
+        
         public WeaponStates()
         {
-            this.type = WeaponType.None;
+            type = WeaponType.Pistol;
             weaponLevel = 0;
-        }
-
-        public WeaponStates(WeaponType weaponState)
-        {
-            this.type = weaponState;
         }
 
         public void Update(float time, ref float shotInterval)
         {
-            HandleWeaponStates(time, ref shotInterval);
+            HandleWeaponStates(time, shotInterval);
         }
 
         public void UpgradeWeapon()
@@ -48,7 +42,7 @@ namespace AlgoritmProjekt.Objects.PlayerRelated
                 type = WeaponType.ShotGun;
         }
 
-        private void HandleWeaponStates(float time, ref float shotInterval)
+        private void HandleWeaponStates(float time, float shotInterval)
         {
             switch (type)
             {

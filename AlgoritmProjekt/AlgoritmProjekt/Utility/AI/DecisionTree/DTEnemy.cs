@@ -48,7 +48,7 @@ namespace AlgoritmProjekt.Utility.AI.DecisionTree
 
             CurrentState = new DTState(this);
             tree = new DTree(this);
-            myShoot = new IShoot(this, texBullet);
+            myShoot = new IShoot(this, texture);
         }
 
         public void Update(float time, Player player, TileGrid grid)

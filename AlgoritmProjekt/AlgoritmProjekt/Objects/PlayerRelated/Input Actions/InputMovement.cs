@@ -43,10 +43,9 @@ namespace AlgoritmProjekt.Objects.PlayerRelated.Actions
             this.tileSize = tileSize;
         }
 
-        public void Update(TileGrid grid, ref CrossHair xhair, ref Vector2 targetPos, ref Vector2 playerPos, bool aiming)
+        public void Update(TileGrid grid, ref Vector2 targetPos, ref Vector2 playerPos)
         {
-            ChangeDirection(grid, ref targetPos, playerPos, ref xhair, aiming);
-            MoveXhair(playerPos, xhair);
+            ChangeDirection(grid, ref targetPos, playerPos);
         }
 
         public bool ReachedDestination(Vector2 targetPos, Vector2 playerPos)
@@ -59,89 +58,31 @@ namespace AlgoritmProjekt.Objects.PlayerRelated.Actions
             return false;
         }
 
-        void CheckMoveState(Vector2 playerPos, CrossHair xhair)
+        private void ChangeDirection(TileGrid grid, ref Vector2 targetPos, Vector2 playerPos)
         {
-            switch (moving)
-            {
-                case Moving.up:
-                    xhair.myPosition = new Vector2(playerPos.X, playerPos.Y - (tileSize * 3));
-                    break;
-                case Moving.left:
-                    xhair.myPosition = new Vector2(playerPos.X - (tileSize * 3), playerPos.Y);
-                    break;
-                case Moving.down:
-                    xhair.myPosition = new Vector2(playerPos.X, playerPos.Y + (tileSize * 3));
-                    break;
-                case Moving.right:
-                    xhair.myPosition = new Vector2(playerPos.X + (tileSize * 3), playerPos.Y);
-                    break;
-            }
-        }
-
-        void MoveXhair(Vector2 playerPos, CrossHair xhair)
-        {
-            CheckMoveState(playerPos, xhair);
-            if (isKeyDown(upKey))
-            {
-                xhair.myPosition = new Vector2(playerPos.X, playerPos.Y - (tileSize * 3));
-            }
-            if (isKeyDown(leftKey))
-            {
-                xhair.myPosition = new Vector2(playerPos.X - (tileSize * 3), playerPos.Y);
-            }
-            if (isKeyDown(downKey))
-            {
-                xhair.myPosition = new Vector2(playerPos.X, playerPos.Y + (tileSize * 3));
-            }
-            if (isKeyDown(rightKey))
-            {
-                xhair.myPosition = new Vector2(playerPos.X + (tileSize * 3), playerPos.Y);
-            }
-        }
-
-        private void ChangeDirection(TileGrid grid, ref Vector2 targetPos, Vector2 playerPos, ref CrossHair xhair, bool aiming)
-        {
-            if (moving == Moving.still && !aiming)
+            if (moving == Moving.still)
             {
                 if (isKeyDown(upKey))
                 {
                     MovePlayerNorth(grid, ref targetPos, playerPos);
                     moving = Moving.up;
                 }
-                if (isKeyDown(leftKey))
+                else if (isKeyDown(leftKey))
                 {
                     MovePlayerWest(grid, ref targetPos, playerPos);
                     moving = Moving.left;
                 }
-                if (isKeyDown(downKey))
+                else if (isKeyDown(downKey))
                 {
                     MovePlayerSouth(grid, ref targetPos, playerPos);
                     moving = Moving.down;
                 }
-                if (isKeyDown(rightKey))
+                else if (isKeyDown(rightKey))
                 {
                     MovePlayerEast(grid, ref targetPos, playerPos);
                     moving = Moving.right;
                 }
             }
-            //if (moving != Moving.still && aiming)
-            //{
-            //    switch(moving)
-            //    {
-            //        case Moving.up:
-            //            MovePlayerNorth(grid, ref targetPos, playerPos);
-            //            break;
-            //        case Moving.left:
-            //            MovePlayerWest(grid, ref targetPos, playerPos);
-            //            break;
-            //        case Moving.down:
-            //            MovePlayerSouth(grid, ref targetPos, playerPos);
-            //            break;
-            //        case Moving.right:
-            //            MovePlayerEast(grid, ref targetPos, playerPos);
-            //            break;
-            //    }
-            //}
         }
 
         void MovePlayerNorth(TileGrid grid, ref Vector2 targetPos, Vector2 position)

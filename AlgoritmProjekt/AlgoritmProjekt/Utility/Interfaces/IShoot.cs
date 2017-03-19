@@ -1,4 +1,5 @@
-﻿using AlgoritmProjekt.Objects.Projectiles;
+﻿using AlgoritmProjekt.Objects.PlayerRelated;
+using AlgoritmProjekt.Objects.Projectiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -11,9 +12,11 @@ namespace AlgoritmProjekt.Utility.Interfaces
 {
     class IShoot
     {
-        List<Projectile> projectiles = new List<Projectile>();
+        public List<Projectile> projectiles = new List<Projectile>();
+        WeaponStates weaponStates;
         Texture2D texBullet;
         Random rand;
+        float shotInterval = 0;
         Tile agent;
         int size;
 
@@ -23,10 +26,13 @@ namespace AlgoritmProjekt.Utility.Interfaces
             this.texBullet = texBullet;
             rand = new Random();
             size = Constants.tileSize;
+            weaponStates = new WeaponStates();
         }
 
         public void Update(float time, Vector2 target)
         {
+            weaponStates.Update(time, ref shotInterval);
+
             foreach (Projectile proj in projectiles)
                 proj.Update(ref time);
             for (int i = projectiles.Count - 1; i >= 0; --i)
@@ -49,7 +55,19 @@ namespace AlgoritmProjekt.Utility.Interfaces
         {
             if (agent.LetMeShoot)
             {
-                projectiles.Add(new FireBullet(texBullet, agent.myPosition, size, new Vector2(target.X + rand.Next(-3, 3), target.Y + rand.Next(-3, 3)), 125, 6));
+                switch (weaponStates.type)
+                {
+                    case WeaponStates.WeaponType.Pistol:
+                        projectiles.Add(new FireBullet(texBullet, agent.myPosition, size, new Vector2(target.X + rand.Next(-10, 10), target.Y + rand.Next(-10, 10)), 170, 6));
+                        break;
+                    case WeaponStates.WeaponType.MachineGun:
+                        projectiles.Add(new FireBullet(texBullet, agent.myPosition, size, new Vector2(target.X + rand.Next(-3, 3), target.Y + rand.Next(-3, 3)), 180, 7));
+                        break;
+                    case WeaponStates.WeaponType.ShotGun:
+                        for (int i = 0; i < 4; i++)
+                            projectiles.Add(new FireBullet(texBullet, agent.myPosition, size, new Vector2(target.X + rand.Next(-20, 20), target.Y + rand.Next(-20, 20)), 150, 5));
+                        break;
+                }
                 agent.LetMeShoot = false;
             }
         }

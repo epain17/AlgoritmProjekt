@@ -62,7 +62,7 @@ namespace AlgoritmProjekt.Managers
             this.hollowSquare = hollowSquare;
             this.smallHollowSquare = smallHollowSquare;
             this.smoothTexture = neon;
-            player = new Player(solidSquare, hollowSquare, smallHollowSquare, Vector2.Zero, tileSize);
+            player = new Player(solidSquare, Vector2.Zero, tileSize);
             levels = new LevelHandler(player, tileSize, hollowSquare, smallHollowSquare, solidSquare, smoothTexture);
         }
 

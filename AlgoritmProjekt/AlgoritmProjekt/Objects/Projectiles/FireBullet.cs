@@ -19,7 +19,6 @@ namespace AlgoritmProjekt.Objects.Projectiles
             this.myTexture = texture;
             this.position = position;
             this.alive = true;
-            this.size = size;
             this.startPos = position;
             this.speed = speed;
             this.tileRange = range;

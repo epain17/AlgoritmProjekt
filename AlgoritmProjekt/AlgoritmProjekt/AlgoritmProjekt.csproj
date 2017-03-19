@@ -66,8 +66,8 @@
     <Compile Include="Objects\MovingTile.cs" />
     <Compile Include="Objects\PlayerRelated\Input Actions\InputMovement.cs" />
     <Compile Include="Objects\PlayerRelated\Input Actions\InputAbilities.cs" />
-    <Compile Include="Objects\PlayerRelated\States\PlayerStates.cs" />
-    <Compile Include="Objects\PlayerRelated\States\WeaponStates.cs" />
+    <Compile Include="Objects\PlayerRelated\PlayerStates.cs" />
+    <Compile Include="Utility\Interfaces\WeaponStates.cs" />
     <Compile Include="Objects\Projectiles\FireBullet.cs" />
     <Compile Include="Objects\ObjectTile.cs" />
     <Compile Include="Objects\Items\Item.cs" />

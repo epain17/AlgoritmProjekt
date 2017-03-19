@@ -23,12 +23,12 @@ namespace AlgoritmProjekt.Utility.Handle_Levels
 {
     class Level
     {
-        protected List<EnemySpawner> spawners = new List<EnemySpawner>();
-        protected List<JsonObject> jsonTiles = new List<JsonObject>();
-        protected List<Emitter> emitters = new List<Emitter>();
-        protected List<Enemy> enemies = new List<Enemy>();
-        protected List<Wall> walls = new List<Wall>();
-        protected List<Item> items = new List<Item>();
+        public List<EnemySpawner> spawners = new List<EnemySpawner>();
+        public List<JsonObject> jsonTiles = new List<JsonObject>();
+        public List<Emitter> emitters = new List<Emitter>();
+        public List<Enemy> enemies = new List<Enemy>();
+        public List<Wall> walls = new List<Wall>();
+        public List<Item> items = new List<Item>();
 
         protected Texture2D hollowSquare, smallHollowSquare, solidSquare, smoothTexture;
         protected AICompanion companion;
@@ -45,7 +45,7 @@ namespace AlgoritmProjekt.Utility.Handle_Levels
             return this.grid;
         }
 
-        public Level(string filePath, Player player, Texture2D solidSquare,
+        public Level(string filePath, Player player, AICompanion companion, Texture2D solidSquare,
             Texture2D hollowSquare, Texture2D smallHollowSquare, Texture2D smoothTexture, int tileSize)
         {
             this.smallHollowSquare = smallHollowSquare;
@@ -53,11 +53,11 @@ namespace AlgoritmProjekt.Utility.Handle_Levels
             this.hollowSquare = hollowSquare;
             this.solidSquare = solidSquare;
             this.player = player;
+            this.companion = companion;
             this.tileSize = tileSize;
             LoadLevel.LoadingLevel(filePath, ref jsonTiles, ref grid, ref walls,
                 ref spawners, ref player, ref items, ref solidSquare, ref goalCheckPoint,
                 ref hollowSquare, ref smallHollowSquare, ref smoothTexture, tileSize);
-            companion = new AICompanion(hollowSquare, player.myPosition, tileSize);
             foreach (Wall wall in walls)
             {
                 grid.SetOccupiedGrid(wall);
@@ -71,19 +71,16 @@ namespace AlgoritmProjekt.Utility.Handle_Levels
             UpdateObjects(time);
             Collisions();
             RemoveDeadObjects();
-            companion.Perception(time, player, items, enemies, spawners);
-            companion.Update(ref time);
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
             DrawObjects(spriteBatch);
-            companion.Draw(spriteBatch);
         }
 
         public virtual void ActivateGoal()
         {
-            if (player.weaponStates.type == WeaponStates.WeaponType.Pistol)
+            if (items.Count <= 0)
                 goalCheckPoint.IsActive = true;
         }
 
@@ -150,11 +147,11 @@ namespace AlgoritmProjekt.Utility.Handle_Levels
 
         protected virtual void Collisions()
         {
-            for (int i = 0; i < player.Projectiles.Count; i++)
+            for (int i = 0; i < companion.Projectiles.Count; i++)
             {
                 for (int k = 0; k < walls.Count; k++)
                 {
-                    player.Projectiles[i].CheckMyIntersect(walls[k]);
+                    companion.Projectiles[i].CheckMyIntersect(walls[k]);
                 }
             }
         }
@@ -171,7 +168,7 @@ namespace AlgoritmProjekt.Utility.Handle_Levels
             {
                 if (items[i].CheckMyIntersect(player) || items[i].CheckMyVectorCollision(companion.myPosition))
                 {
-                    player.PowerUp();
+                    companion.PowerUp();
                     items.RemoveAt(i);
                 }
             }

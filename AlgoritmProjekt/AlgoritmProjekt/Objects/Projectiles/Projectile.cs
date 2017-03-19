@@ -19,6 +19,11 @@ namespace AlgoritmProjekt.Objects.Projectiles
             get { return position; }
         }
 
+        Rectangle HitBox()
+        {
+            return new Rectangle((int)position.X, (int)position.Y, size, size);
+        }
+
         public override bool CheckMyIntersect(Tile target)
         {
             if (target.myHitBox.Contains(myPosition))
@@ -51,7 +56,7 @@ namespace AlgoritmProjekt.Objects.Projectiles
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(myTexture, position, Color.White);
+            spriteBatch.Draw(myTexture, HitBox(), Color.White);
         }
 
         protected virtual void LifeCycle(float time)

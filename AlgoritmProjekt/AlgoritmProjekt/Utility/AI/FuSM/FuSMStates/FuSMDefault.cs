@@ -25,7 +25,7 @@ namespace AlgoritmProjekt.Objects.Companion.FuSMStates
             activationWeight = Constants.tileSize * 100;
         }
 
-        public override void Execute(Vector2 target, Player player)
+        public override void Execute(Vector2 target)
         {
             distance = Vector2.Distance(agent.myPosition, target);
             deltaPos = new Vector2((target.X - agent.myPosition.X) + rand.Next(-Constants.tileSize, Constants.tileSize), (target.Y - agent.myPosition.Y) + rand.Next(-Constants.tileSize, Constants.tileSize));
@@ -33,8 +33,7 @@ namespace AlgoritmProjekt.Objects.Companion.FuSMStates
             activationLevel = 1 - ((activationWeight - distance) / activationWeight);
             agent.Speed = agent.StartSpeed * (activationLevel * 30);
 
-            //Console.WriteLine("Default: " + activationLevel);
-            base.Execute(target, player);
+            base.Execute(target);
         }
 
     }

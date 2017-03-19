@@ -19,7 +19,7 @@ namespace AlgoritmProjekt.ParticleEngine.Particles
             this.position = position;
             this.velocity = velocity;
             this.lifeTime = lifeTime;
-            this.size = size;
+            this.size = size / 1500;
 
             origin = new Vector2(texture.Width / 2, texture.Height / 2);
         }
@@ -29,7 +29,7 @@ namespace AlgoritmProjekt.ParticleEngine.Particles
             if (lifeTime >= startLife * 0.98f)
                 color = Color.MediumVioletRed;
             else
-                color *= (float)((float)lifeTime / (float)startLife);
+                color *= (float)(lifeTime / startLife);
 
             base.Update(time);
         }

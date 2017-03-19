@@ -14,7 +14,12 @@ namespace AlgoritmProjekt.Objects.Companion.FuSMStates
         float weight;
         float approachRange;
         float distanceToTarget;
-        float distanceFromTargetToPlayer;
+
+        public float DistanceFromTargetToPlayer
+        {
+            get;
+            set;
+        }
 
         public FuSMApproach(AICompanion agent) 
             : base(agent)
@@ -24,13 +29,12 @@ namespace AlgoritmProjekt.Objects.Companion.FuSMStates
             approachRange = Constants.tileSize * 8;
         }
 
-        public override void Execute(Vector2 target, Player player)
+        public override void Execute(Vector2 target)
         {
             deltaPos = target - agent.myPosition;
             distanceToTarget = Vector2.Distance(agent.myPosition, target);
-            distanceFromTargetToPlayer = Vector2.Distance(player.myPosition, target);
 
-            if (target == null || distanceFromTargetToPlayer > approachRange)
+            if (target == null || DistanceFromTargetToPlayer > approachRange)
                 activationLevel = 0;
             else if (distanceToTarget < Constants.tileSize * 1.3f)
                 activationLevel = 1;
@@ -40,8 +44,7 @@ namespace AlgoritmProjekt.Objects.Companion.FuSMStates
                 agent.Speed = agent.StartSpeed * activationLevel;
             }
             
-            //Console.WriteLine("Approach: " + activationLevel);
-            base.Execute(target, player);
+            base.Execute(target);
         }
     }
 }

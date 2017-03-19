@@ -164,10 +164,10 @@ namespace AlgoritmProjekt.Objects.Enemies
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            foreach (Vector2 way in waypoints)
-            {
-                spriteBatch.Draw(myTexture, way, null, Color.White, 0, origin, 0.5f, SpriteEffects.None, 0);
-            }
+            //foreach (Vector2 way in waypoints)
+            //{
+            //    spriteBatch.Draw(myTexture, way, null, Color.White, 0, origin, 0.5f, SpriteEffects.None, 0);
+            //}
             Color color = new Color(0.25f / HealthPercent(), 1 * HealthPercent(), 1f * HealthPercent());
             spriteBatch.Draw(myTexture, position, null, color, 0, origin, 1, SpriteEffects.None, 1);
             spriteBatch.Draw(myTexture, HealthBar(), null, Color.ForestGreen, 0, origin, SpriteEffects.None, 1);

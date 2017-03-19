@@ -1,6 +1,7 @@
 ﻿using AlgoritmProjekt.Characters;
 using AlgoritmProjekt.Managers.ParticleEngine;
 using AlgoritmProjekt.Objects;
+using AlgoritmProjekt.Objects.Companion;
 using AlgoritmProjekt.Objects.PlayerRelated;
 using AlgoritmProjekt.Objects.Weapons;
 using AlgoritmProjekt.Utility.AI.DecisionTree;
@@ -16,11 +17,11 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.Levels
 {
     class Level3 : Level
     {
-        List<Enemy> dtEnemies;
+        public List<Enemy> dtEnemies;
 
-        public Level3(string filePath, Player player, Texture2D solidSquare, Texture2D hollowSquare,
+        public Level3(string filePath, Player player, AICompanion companion, Texture2D solidSquare, Texture2D hollowSquare,
             Texture2D smallHollowSquare, Texture2D smoothTexture, int tileSize)
-            : base(filePath, player, solidSquare, hollowSquare,
+            : base(filePath, player, companion, solidSquare, hollowSquare,
                   smallHollowSquare, smoothTexture, tileSize)
         {
             this.smallHollowSquare = smallHollowSquare;
@@ -40,11 +41,11 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.Levels
                 grid.SetOccupiedGrid(wall);
             }
 
-            //for (int i = 0; i < spawners.Count; i++)
-            //{
-            //    dtEnemies.Add(new DTEnemy(solidSquare, spawners[i].myPosition, tileSize, smoothTexture, player));
-            //}
-            dtEnemies.Add(new DTEnemy(solidSquare, spawners[0].myPosition, tileSize, smoothTexture, player));
+            for (int i = 0; i < spawners.Count; i++)
+            {
+                dtEnemies.Add(new DTEnemy(solidSquare, spawners[i].myPosition, tileSize, smoothTexture, player));
+            }
+            //dtEnemies.Add(new DTEnemy(solidSquare, spawners[0].myPosition, tileSize, smoothTexture, player));
 
             for (int i = spawners.Count - 1; i >= 0; --i)
             {
@@ -60,7 +61,8 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.Levels
                 {
                     enemy.Update(time, player, grid);
                 }
-                //companion.Perception(time, player, items, dtEnemies, spawners);
+
+                companion.Perception(time, player, dtEnemies);
             }
 
             base.Update(time);
@@ -83,11 +85,11 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.Levels
 
         protected override void Collisions()
         {
-            for (int i = 0; i < player.Projectiles.Count; i++)
+            for (int i = 0; i < companion.Projectiles.Count; i++)
             {
                 foreach (DTEnemy enemy in dtEnemies)
                 {
-                    if (player.Projectiles[i].CheckMyIntersect(enemy))
+                    if (companion.Projectiles[i].CheckMyIntersect(enemy))
                         --enemy.myHP;
                 }
             }

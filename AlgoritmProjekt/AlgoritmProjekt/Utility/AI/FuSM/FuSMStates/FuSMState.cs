@@ -28,7 +28,7 @@ namespace AlgoritmProjekt.Objects.Companion.FuSMStates
                 activationLevel = 1;
         }
 
-        public virtual void Execute(Vector2 target, Player player)
+        public virtual void Execute(Vector2 target)
         {
             BindActivationLevel(ref activationLevel);
             agent.AccumulateDirection(deltaPos * activationLevel);

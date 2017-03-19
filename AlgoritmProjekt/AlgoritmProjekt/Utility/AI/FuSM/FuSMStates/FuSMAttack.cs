@@ -21,14 +21,14 @@ namespace AlgoritmProjekt.Objects.Companion.FuSMStates
             shotRange = Constants.tileSize * 5;
         }
 
-        public override void Execute(Vector2 target, Player player)
+        public override void Execute(Vector2 target)
         {
             distance = Vector2.Distance(agent.myPosition, target);
 
             if(agent.TimeToShoot() && shotRange > distance)
-                player.Shoot(agent.myPosition, target);
+                agent.Shoot(target);
 
-            base.Execute(target, player);
+            base.Execute(target);
         }
 
     }

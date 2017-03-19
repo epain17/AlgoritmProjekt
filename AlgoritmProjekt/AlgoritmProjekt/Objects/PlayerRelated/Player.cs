@@ -21,16 +21,9 @@ namespace AlgoritmProjekt.Characters
     {
         #region Fields
         public PlayerStates playerStates;
-        public WeaponStates weaponStates;
-        private InputAbilities abilities;
+        public InputAbilities abilities;
         private InputMovement movement;
-        List<Projectile> projectiles = new List<Projectile>();
-        Texture2D smallHollowSquare, hollowSquare;
-        CrossHair xhair;
-
         float colorAlpha = 1;
-        float shotInterval = 0;
-
         float energyMeter = 50;
 
         public float EnergyMeter
@@ -38,33 +31,22 @@ namespace AlgoritmProjekt.Characters
             get { return energyMeter; }
         }
 
-        public List<Projectile> Projectiles
-        {
-            get { return projectiles; }
-            set { projectiles = value; }
-        }
-
         #endregion
 
-        public Player(Texture2D texture, Texture2D hollowSquare, Texture2D smallHollowSquare, Vector2 position, int size)
+        public Player(Texture2D texture, Vector2 position, int size)
             : base(texture, position, size)
         {
             this.myTexture = texture;
-            this.hollowSquare = hollowSquare;
             this.position = position;
             this.size = size;
-            this.smallHollowSquare = smallHollowSquare;
-            this.myHP = 3;
-            this.speed = 160;
+            myHP = 3;
+            speed = 160;
 
             int maxEnergy = 50;
             int invulnerableTimeLimit = 3;
             movement = new InputMovement(Keys.W, Keys.A, Keys.S, Keys.D, size);
             playerStates = new PlayerStates(PlayerStates.Status.Normal, maxEnergy, invulnerableTimeLimit, speed);
-            weaponStates = new WeaponStates(WeaponStates.WeaponType.None);
-            abilities = new InputAbilities(Keys.Space, Keys.LeftControl, Keys.LeftShift);
-            xhair = new CrossHair(hollowSquare, smallHollowSquare, position, size);
-            PowerUp();
+            abilities = new InputAbilities(Keys.LeftControl);
         }
 
         public void Update(ref float time, TileGrid grid)
@@ -72,19 +54,10 @@ namespace AlgoritmProjekt.Characters
             if (myHP > 0)
             {
                 playerStates.Update(ref time, ref energyMeter, ref colorAlpha, ref speed);
-                abilities.Update(playerStates, ref shotInterval);
-                weaponStates.Update(time, ref shotInterval);
+                abilities.Update(playerStates);
 
-                if (abilities.ShotsFired)
-                {
-                    Shoot(position, xhair.myPosition);
-                    abilities.ShotsFired = false;
-                }
-
-                UpdateProjectiles(time);
-                movement.Update(grid, ref xhair, ref targetPos, ref position, abilities.Aim);
+                movement.Update(grid, ref targetPos, ref position);
                 SetDirection(targetPos);
-
                 if (movement.ReachedDestination(targetPos, position))
                     StopMoving();
                 base.Update(ref time);
@@ -103,53 +76,8 @@ namespace AlgoritmProjekt.Characters
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            foreach (Projectile proj in projectiles)
-            {
-                proj.Draw(spriteBatch);
-            }
-            if (abilities.Aim)
-                xhair.Draw(spriteBatch);
             if (myHP > 0)
                 spriteBatch.Draw(myTexture, position, null, Color.LimeGreen * colorAlpha, 0, origin, 1, SpriteEffects.None, 1);
-        }
-
-        private void UpdateProjectiles(float time)
-        {
-            if (projectiles.Count > 0)
-            {
-                for (int i = projectiles.Count - 1; i >= 0; --i)
-                {
-                    if (!projectiles[i].iamAlive)
-                        projectiles.RemoveAt(i);
-                }
-                foreach (Projectile proj in projectiles)
-                {
-                    proj.Update(ref time);
-                }
-            }
-        }
-
-        public void Shoot(Vector2 bulletStartPos, Vector2 target)
-        {
-            Random rand = new Random();
-            switch (weaponStates.type)
-            {
-                case WeaponStates.WeaponType.Pistol:
-                    projectiles.Add(new FireBullet(smallHollowSquare, bulletStartPos, size, new Vector2(target.X + rand.Next(-10, 10), target.Y + rand.Next(-10, 10)), 170, 6));
-                    break;
-                case WeaponStates.WeaponType.ShotGun:
-                    for (int i = 0; i < 4; i++)
-                        projectiles.Add(new FireBullet(smallHollowSquare, bulletStartPos, size, new Vector2(target.X + rand.Next(-20, 20), target.Y + rand.Next(-20, 20)), 150, 5));
-                    break;
-                case WeaponStates.WeaponType.MachineGun:
-                    projectiles.Add(new FireBullet(smallHollowSquare, bulletStartPos, size, new Vector2(target.X + rand.Next(-3, 3), target.Y + rand.Next(-3, 3)), 180, 7));
-                    break;
-            }
-        }
-
-        public void PowerUp()
-        {
-            weaponStates.UpgradeWeapon();
         }
 
         public void HPUp(int increase)

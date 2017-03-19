@@ -25,6 +25,7 @@ namespace AlgoritmProjekt.Managers
 
         Texture2D hollowSquare, smallHollowSquare, solidSquare, smoothTexture;
         Player player;
+        AICompanion companion;
 
         public TileGrid GetGrid()
         {
@@ -39,6 +40,7 @@ namespace AlgoritmProjekt.Managers
             this.smallHollowSquare = smallHollow;
             this.solidSquare = solid;
             this.smoothTexture = smooth;
+            this.companion = new AICompanion(solid, player.myPosition, tileSize);
             maxLevels = 10;
             levelIndex = 0;
             InitializeLevels();
@@ -47,25 +49,28 @@ namespace AlgoritmProjekt.Managers
 
         void InitializeLevels()
         {
-            level = new Level("Level0.json", player, solidSquare, hollowSquare, smallHollowSquare, smoothTexture, tileSize);
-            level1 = new Level1("Level1.json", player, solidSquare, hollowSquare, smallHollowSquare, smoothTexture, tileSize);
+            level = new Level("Level0.json", player, companion, solidSquare, hollowSquare, smallHollowSquare, smoothTexture, tileSize);
+            level1 = new Level1("Level1.json", player, companion, solidSquare, hollowSquare, smallHollowSquare, smoothTexture, tileSize);
             level1Pos = player.myPosition;
-            level2 = new Level2("Level1.json", player, solidSquare, hollowSquare, smallHollowSquare, smoothTexture, tileSize);
+            level2 = new Level2("Level1.json", player, companion, solidSquare, hollowSquare, smallHollowSquare, smoothTexture, tileSize);
             level2Pos = player.myPosition;
-            level3 = new Level3("Level3.json", player, solidSquare, hollowSquare, smallHollowSquare, smoothTexture, tileSize);
+            level3 = new Level3("Level3.json", player, companion, solidSquare, hollowSquare, smallHollowSquare, smoothTexture, tileSize);
             level3Pos = player.myPosition;
         }
 
         public void Update(float time)
         {
-            ChangeLevelManually();
             level.Update(time);
+            companion.Perception(time, player, level);
+            companion.Update(ref time);
+            ChangeLevelManually();
             ChangeLevel();
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             level.Draw(spriteBatch);
+            companion.Draw(spriteBatch);
         }
 
         public bool Winner()
@@ -88,16 +93,22 @@ namespace AlgoritmProjekt.Managers
             {
                 levelIndex = 1;
                 level = level1;
+                player.ResetMovement(level.GetGrid(), level1Pos);
+                companion.myPosition = player.myPosition;
             }
             else if (KeyMouseReader.KeyPressed(Keys.D2))
             {
                 levelIndex = 2;
                 level = level2;
+                player.ResetMovement(level.GetGrid(), level2Pos);
+                companion.myPosition = player.myPosition;
             }
             else if (KeyMouseReader.KeyPressed(Keys.D3))
             {
                 levelIndex = 3;
                 level = level3;
+                player.ResetMovement(level.GetGrid(), level3Pos);
+                companion.myPosition = player.myPosition;
             }
         }
 
@@ -106,22 +117,26 @@ namespace AlgoritmProjekt.Managers
             switch (levelIndex)
             {
                 case 0:
-                    level = new Level("Level0.json", player, solidSquare, hollowSquare, smallHollowSquare, smoothTexture, tileSize);
+                    level = new Level("Level0.json", player, companion, solidSquare, hollowSquare, smallHollowSquare, smoothTexture, tileSize);
+                    companion.myPosition = player.myPosition;
                     ++levelIndex;
                     break;
                 case 1:
                     level = level1;
                     player.ResetMovement(level.GetGrid(), level1Pos);
+                    companion.myPosition = player.myPosition;
                     ++levelIndex;
                     break;
                 case 2:
                     level = level2;
                     player.ResetMovement(level.GetGrid(), level2Pos);
+                    companion.myPosition = player.myPosition;
                     ++levelIndex;
                     break;
                 case 3:
                     level = level3;
                     player.ResetMovement(level.GetGrid(), level3Pos);
+                    companion.myPosition = player.myPosition;
                     ++levelIndex;
                     break;
             }

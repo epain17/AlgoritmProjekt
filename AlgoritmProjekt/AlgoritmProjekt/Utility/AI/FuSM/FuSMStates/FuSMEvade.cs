@@ -22,7 +22,7 @@ namespace AlgoritmProjekt.Objects.Companion.FuSMStates
             evadeRange = Constants.tileSize * 2;
         }
 
-        public override void Execute(Vector2 target, Player player)
+        public override void Execute(Vector2 target)
         {
             deltaPos = -(target - agent.myPosition);
             distance = Vector2.Distance(agent.myPosition, target);
@@ -35,7 +35,7 @@ namespace AlgoritmProjekt.Objects.Companion.FuSMStates
             else
                 activationLevel = 0;
 
-            base.Execute(target, player);
+            base.Execute(target);
         }
 
     }
