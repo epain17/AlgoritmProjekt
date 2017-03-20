@@ -88,7 +88,6 @@
     <Compile Include="Game1.cs" />
     <Compile Include="Grid\TileGrid.cs" />
     <Compile Include="Utility\Constants.cs" />
-    <Compile Include="Objects\PlayerRelated\CrossHair.cs" />
     <Compile Include="Utility\Handle Levels\Levels\Level.cs" />
     <Compile Include="Utility\Handle Levels\json\JsonSerialization.cs" />
     <Compile Include="Utility\Handle Levels\Levels\Level1.cs" />
