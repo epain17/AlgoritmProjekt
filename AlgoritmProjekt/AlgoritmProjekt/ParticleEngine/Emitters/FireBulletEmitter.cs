@@ -12,15 +12,13 @@ namespace AlgoritmProjekt.ParticleEngine.Emitters
 {
     class FireBulletEmitter : Emitter
     {
-        Texture2D texture;
         Random rand;
         float speed;
         int size;
 
-        public FireBulletEmitter(Texture2D texture, Vector2 position, int size, float speed, Vector2 target)
+        public FireBulletEmitter(Vector2 position, int size, float speed, Vector2 target)
             : base(position)
         {
-            this.texture = texture;
             this.position = position;
             this.speed = speed;
             this.size = size;
@@ -55,7 +53,7 @@ namespace AlgoritmProjekt.ParticleEngine.Emitters
         protected override Particle GenerateParticle()
         {
             float lifetime = 20 + rand.Next(-5, 10);
-            return new FireParticle(texture, position, Vector2.Zero, lifetime, size);
+            return new FireParticle(position, Vector2.Zero, lifetime, size);
         }
 
         protected override void EmitParticles()

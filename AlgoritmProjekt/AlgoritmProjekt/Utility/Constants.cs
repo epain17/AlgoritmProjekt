@@ -9,7 +9,14 @@ namespace AlgoritmProjekt.Utility
     public static class Constants
     {
         public static int totalScore;
-        public static int screenWidth = 800, screenHeight = 600, tileSize = 32;
+        public static int screenWidth = 800, 
+            screenHeight = 600, 
+            tileSize = 48;
+
+        // Game Manager
+        public static int PlayerStartHP = 3,
+                          PlayerStartSpeed = 140,
+                          MaxLevels = 10;
 
         public static string scoreFilePath = "highscore.txt";
     }

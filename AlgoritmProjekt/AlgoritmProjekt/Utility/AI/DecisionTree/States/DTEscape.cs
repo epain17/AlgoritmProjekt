@@ -20,21 +20,21 @@ namespace AlgoritmProjekt.Utility.AI.DecisionTree.States
 
         public override void UpdatePerception(Player player, TileGrid grid, float time)
         {
-            agent.FindPath(agent.myStartPoint, grid);
+            //agent.FindPath(agent.myStartPoint, grid);
 
-            if (agent.waypoints.Count > 0)
-            {
-                if (agent.ReachedTileDestination(grid))
-                {
-                    agent.myPosition = grid.ReturnTilePosition(agent.waypoints.Dequeue());
-                }
-                else
-                {
-                    agent.SetDirection(grid.ReturnTilePosition(agent.waypoints.Peek()));
-                }
-            }
-            else
-                agent.StopMoving();
+            //if (agent.waypoints.Count > 0)
+            //{
+            //    if (agent.ReachedTileDestination(grid))
+            //    {
+            //        agent.myPosition = grid.ReturnTilePosition(agent.waypoints.Dequeue());
+            //    }
+            //    else
+            //    {
+            //        agent.SetDirection(grid.ReturnTilePosition(agent.waypoints.Peek()));
+            //    }
+            //}
+            //else
+            //    agent.StopMoving();
             base.UpdatePerception(player, grid, time);
         }
     }

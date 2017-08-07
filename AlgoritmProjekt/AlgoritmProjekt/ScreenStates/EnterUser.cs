@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AlgoritmProjekt.Managers
 {
-    class EnterUser
+    class NewScore
     {
         public enum Navigate
         {
@@ -30,24 +30,21 @@ namespace AlgoritmProjekt.Managers
 
         Vector2 fontOrigin, texOrigin, screenCenter;
         int screenWidth, screenHeight;
-        Texture2D texture;
-        SpriteFont font;
+
         string title;
 
-        public EnterUser(SpriteFont font, Texture2D texture, int screenWidth, int screenHeight)
+        public NewScore(int screenWidth, int screenHeight)
         {
-            this.font = font;
-            this.texture = texture;
             this.screenWidth = screenWidth;
             this.screenHeight = screenHeight;
             title = "Save Your Score";
-            texOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
-            fontOrigin = new Vector2(font.MeasureString(title).X / 2, font.MeasureString(title).Y / 2);
+            texOrigin = new Vector2(TextureManager.solidRect.Width / 2, TextureManager.solidRect.Height / 2);
+            fontOrigin = new Vector2(TextureManager.defaultFont.MeasureString(title).X / 2, TextureManager.defaultFont.MeasureString(title).Y / 2);
             screenCenter = new Vector2(screenWidth / 2, screenHeight / 2);
 
             navigatedButtons.Add("Enter");
             navigatedButtons.Add("Exit");
-            buttonPos = new Vector2(screenCenter.X - texOrigin.X / 2, screenCenter.Y + texOrigin.Y - font.MeasureString(navigatedButtons[0]).Y);
+            buttonPos = new Vector2(screenCenter.X - texOrigin.X / 2, screenCenter.Y + texOrigin.Y - TextureManager.defaultFont.MeasureString(navigatedButtons[0]).Y);
             InitialState();
         }
 
@@ -58,21 +55,21 @@ namespace AlgoritmProjekt.Managers
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, screenCenter, null, Color.LimeGreen, 0, texOrigin, 1, SpriteEffects.None, 0);
-            spriteBatch.DrawString(font, title, new Vector2(screenCenter.X, screenCenter.Y - texture.Height / 2 + font.MeasureString(title).Y), Color.LightGray, 0, fontOrigin, 1.5f, SpriteEffects.None, 0);
-            spriteBatch.DrawString(font, Constants.totalScore.ToString(), new Vector2(screenCenter.X, screenCenter.Y - texture.Height / 2 + font.MeasureString(Constants.totalScore.ToString()).Y * 2), Color.LightGray, 0, new Vector2(font.MeasureString(Constants.totalScore.ToString()).X, 0), 2f, SpriteEffects.None, 0);
+            spriteBatch.Draw(TextureManager.solidRect, screenCenter, null, Color.LimeGreen, 0, texOrigin, 1, SpriteEffects.None, 0);
+            spriteBatch.DrawString(TextureManager.defaultFont, title, new Vector2(screenCenter.X, screenCenter.Y - TextureManager.solidRect.Height / 2 + TextureManager.defaultFont.MeasureString(title).Y), Color.LightGray, 0, fontOrigin, 1.5f, SpriteEffects.None, 0);
+            spriteBatch.DrawString(TextureManager.defaultFont, Constants.totalScore.ToString(), new Vector2(screenCenter.X, screenCenter.Y - TextureManager.solidRect.Height / 2 + TextureManager.defaultFont.MeasureString(Constants.totalScore.ToString()).Y * 2), Color.LightGray, 0, new Vector2(TextureManager.defaultFont.MeasureString(Constants.totalScore.ToString()).X, 0), 2f, SpriteEffects.None, 0);
 
             Color color;
             for (int i = 0; i < letterSlots.Length; i++)
             {
                 color = (i == letterSlotIndex) ? Color.White : Color.DarkSlateGray;
-                spriteBatch.DrawString(font, letterSlots[i].ToString(), new Vector2(buttonPos.X + texOrigin.X / 4 + (i * texOrigin.X / 2), buttonPos.Y - texture.Height / 2), color, 0, fontOrigin, 1, SpriteEffects.None, 0);
+                spriteBatch.DrawString(TextureManager.defaultFont, letterSlots[i].ToString(), new Vector2(buttonPos.X + texOrigin.X / 4 + (i * texOrigin.X / 2), buttonPos.Y - TextureManager.solidRect.Height / 2), color, 0, fontOrigin, 1, SpriteEffects.None, 0);
             }
 
             for (int i = 0; i < navigatedButtons.Count; i++)
             {
                 color = (i == selected) ? Color.White : Color.DarkSlateGray;
-                spriteBatch.DrawString(font, navigatedButtons[i], new Vector2(buttonPos.X + (i * texOrigin.X * 1.5f), buttonPos.Y), color, 0, fontOrigin, 1, SpriteEffects.None, 0);
+                spriteBatch.DrawString(TextureManager.defaultFont, navigatedButtons[i], new Vector2(buttonPos.X + (i * texOrigin.X * 1.5f), buttonPos.Y), color, 0, fontOrigin, 1, SpriteEffects.None, 0);
             }
         }
 

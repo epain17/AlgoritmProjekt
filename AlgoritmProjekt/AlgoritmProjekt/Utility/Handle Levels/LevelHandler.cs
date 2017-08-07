@@ -3,7 +3,7 @@ using AlgoritmProjekt.Grid;
 using AlgoritmProjekt.Input;
 using AlgoritmProjekt.Objects.Companion;
 using AlgoritmProjekt.Utility.Handle_Levels;
-using AlgoritmProjekt.Utility.Handle_Levels.Levels;
+using AlgoritmProjekt.Utility.Handle_Levels.PCG;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -17,136 +17,60 @@ namespace AlgoritmProjekt.Managers
 {
     class LevelHandler
     {
-        Level level, level1, level2, level3;
-        Vector2 level1Pos, level2Pos, level3Pos;
         int levelIndex;
         int maxLevels;
-        int tileSize;
 
-        Texture2D hollowSquare, smallHollowSquare, solidSquare, smoothTexture;
+        List<Level> levels = new List<Level>();
+        public Level CurrentLevel;
         Player player;
-        AICompanion companion;
 
-        public TileGrid GetGrid()
-        {
-            return level.GetGrid();
-        }
-
-        public LevelHandler(Player player, int tileSize, Texture2D hollow, Texture2D smallHollow, Texture2D solid, Texture2D smooth)
+        public LevelHandler(Player player, int maxLevels)
         {
             this.player = player;
-            this.tileSize = tileSize;
-            this.hollowSquare = hollow;
-            this.smallHollowSquare = smallHollow;
-            this.solidSquare = solid;
-            this.smoothTexture = smooth;
-            this.companion = new AICompanion(solid, player.myPosition, tileSize);
-            maxLevels = 10;
+            this.maxLevels = maxLevels;
             levelIndex = 0;
-            InitializeLevels();
-            CreateALevel();
-        }
-
-        void InitializeLevels()
-        {
-            level = new Level("Level0.json", player, companion, solidSquare, hollowSquare, smallHollowSquare, smoothTexture, tileSize);
-            level1 = new Level1("Level1.json", player, companion, solidSquare, hollowSquare, smallHollowSquare, smoothTexture, tileSize);
-            level1Pos = player.myPosition;
-            level2 = new Level2("Level1.json", player, companion, solidSquare, hollowSquare, smallHollowSquare, smoothTexture, tileSize);
-            level2Pos = player.myPosition;
-            level3 = new Level3("Level3.json", player, companion, solidSquare, hollowSquare, smallHollowSquare, smoothTexture, tileSize);
-            level3Pos = player.myPosition;
+            levels.Add(new Level(player));
+            IncrementLevel();
         }
 
         public void Update(float time)
         {
-            level.Update(time);
-            companion.Perception(time, player, level);
-            companion.Update(ref time);
-            ChangeLevelManually();
+            CurrentLevel.Update(time);
+
             ChangeLevel();
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            level.Draw(spriteBatch);
-            companion.Draw(spriteBatch);
+            CurrentLevel.Draw(spriteBatch);
         }
 
         public bool Winner()
         {
-            if (levelIndex == maxLevels)
+            if (levelIndex > maxLevels)
                 return true;
             return false;
         }
 
         public bool GameOver()
         {
-            if (level.LoseCondition())
+            if (CurrentLevel.LoseCondition())
                 return true;
             return false;
         }
 
-        void ChangeLevelManually()
+        void IncrementLevel()
         {
-            if (KeyMouseReader.KeyPressed(Keys.D1))
-            {
-                levelIndex = 1;
-                level = level1;
-                player.ResetMovement(level.GetGrid(), level1Pos);
-                companion.myPosition = player.myPosition;
-            }
-            else if (KeyMouseReader.KeyPressed(Keys.D2))
-            {
-                levelIndex = 2;
-                level = level2;
-                player.ResetMovement(level.GetGrid(), level2Pos);
-                companion.myPosition = player.myPosition;
-            }
-            else if (KeyMouseReader.KeyPressed(Keys.D3))
-            {
-                levelIndex = 3;
-                level = level3;
-                player.ResetMovement(level.GetGrid(), level3Pos);
-                companion.myPosition = player.myPosition;
-            }
-        }
-
-        void CreateALevel()
-        {
-            switch (levelIndex)
-            {
-                case 0:
-                    level = new Level("Level0.json", player, companion, solidSquare, hollowSquare, smallHollowSquare, smoothTexture, tileSize);
-                    companion.myPosition = player.myPosition;
-                    ++levelIndex;
-                    break;
-                case 1:
-                    level = level1;
-                    player.ResetMovement(level.GetGrid(), level1Pos);
-                    companion.myPosition = player.myPosition;
-                    ++levelIndex;
-                    break;
-                case 2:
-                    level = level2;
-                    player.ResetMovement(level.GetGrid(), level2Pos);
-                    companion.myPosition = player.myPosition;
-                    ++levelIndex;
-                    break;
-                case 3:
-                    level = level3;
-                    player.ResetMovement(level.GetGrid(), level3Pos);
-                    companion.myPosition = player.myPosition;
-                    ++levelIndex;
-                    break;
-            }
+            CurrentLevel = levels[levelIndex];
+            player.ResetMovement(CurrentLevel.GetNavigationMesh(), CurrentLevel.StartPosition);
+            ++levelIndex;
         }
 
         void ChangeLevel()
         {
-            if (level.WinCondition())
+            if (CurrentLevel.WinCondition())
             {
-                CreateALevel();
+                IncrementLevel();
             }
         }
     }

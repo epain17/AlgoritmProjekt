@@ -1,6 +1,7 @@
 ﻿using AlgoritmProjekt.Input;
 using AlgoritmProjekt.Managers.ParticleEngine;
 using AlgoritmProjekt.Managers.ParticleEngine.Emitters;
+using AlgoritmProjekt.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -21,23 +22,19 @@ namespace AlgoritmProjekt.Screens
         }
         public RunTime run = RunTime.FirstLoad;
         List<string> buttons = new List<string>();
-        SpriteFont font;
         Vector2 position;
         Color color;
         int selected = 1, screenWidth, screenHeight;
         List<Emitter> emitters = new List<Emitter>();
-        Texture2D texture;
         Random rand;
 
         float timer;
         Rectangle frame;
 
-        public Menu(int screenWidth, int screenHeight, SpriteFont font, Vector2 position, Texture2D texture)
+        public Menu(int screenWidth, int screenHeight, Vector2 position)
         {
             this.screenWidth = screenWidth;
             this.screenHeight = screenHeight;
-            this.texture = texture;
-            this.font = font;
             this.position = position;
             this.color = Color.White;
             buttons.Add("Continue");
@@ -67,8 +64,8 @@ namespace AlgoritmProjekt.Screens
 
             if (Game1.gameState == Game1.GameState.menu)
             {
-                spriteBatch.Draw(texture, frame, Color.Black);
-                spriteBatch.Draw(texture, frame, Color.Black);
+                spriteBatch.Draw(TextureManager.smoothTex, frame, Color.Black);
+                spriteBatch.Draw(TextureManager.smoothTex, frame, Color.Black);
 
                 switch (run)
                 {
@@ -76,19 +73,19 @@ namespace AlgoritmProjekt.Screens
                         for (int i = 1; i < buttons.Count; i++)
                         {
                             color = (i == selected) ? Color.White : Color.DarkSlateGray;
-                            spriteBatch.DrawString(font, buttons[i], new Vector2(position.X - (font.MeasureString(buttons[i]).X / 2), position.Y + (i * 20)), color);
+                            spriteBatch.DrawString(TextureManager.defaultFont, buttons[i], new Vector2(position.X - (TextureManager.defaultFont.MeasureString(buttons[i]).X / 2), position.Y + (i * 20)), color);
                         }
                         break;
                     case RunTime.Continued:
                         for (int i = 0; i < buttons.Count; i++)
                         {
                             color = (i == selected) ? Color.White : Color.DarkSlateGray;
-                            spriteBatch.DrawString(font, buttons[i], new Vector2(position.X - (font.MeasureString(buttons[i]).X / 2), position.Y + (i * 20)), color);
+                            spriteBatch.DrawString(TextureManager.defaultFont, buttons[i], new Vector2(position.X - (TextureManager.defaultFont.MeasureString(buttons[i]).X / 2), position.Y + (i * 20)), color);
                         }
                         break;
                 }
-                spriteBatch.Draw(texture, new Rectangle(screenWidth / 2 - (int)font.MeasureString("Enter The Cubes").X * 2, (int)(screenHeight * 0.15f) + (int)font.MeasureString("Enter The Cubes").Y / 4, (int)font.MeasureString("Enter The Cubes").X * 4, (int)font.MeasureString("Enter The Cubes").Y * 4), Color.Black);
-                spriteBatch.DrawString(font, "Enter The Cubes", new Vector2(screenWidth / 2, screenHeight * 0.15f), Color.LimeGreen, 0, new Vector2(font.MeasureString("Enter The Cubes").X / 2, 0), 2.5f, SpriteEffects.None, 0);
+                spriteBatch.Draw(TextureManager.smoothTex, new Rectangle(screenWidth / 2 - (int)TextureManager.defaultFont.MeasureString("Enter The Cubes").X * 2, (int)(screenHeight * 0.15f) + (int)TextureManager.defaultFont.MeasureString("Enter The Cubes").Y / 4, (int)TextureManager.defaultFont.MeasureString("Enter The Cubes").X * 4, (int)TextureManager.defaultFont.MeasureString("Enter The Cubes").Y * 4), Color.Black);
+                spriteBatch.DrawString(TextureManager.defaultFont, "Enter The Cubes", new Vector2(screenWidth / 2, screenHeight * 0.15f), Color.LimeGreen, 0, new Vector2(TextureManager.defaultFont.MeasureString("Enter The Cubes").X / 2, 0), 2.5f, SpriteEffects.None, 0);
             }
         }
 
@@ -159,7 +156,7 @@ namespace AlgoritmProjekt.Screens
             if (timer > 0.1f)
             {
                 timer = 0;
-                emitters.Add(new MatrixEmitter(font, new Vector2((float)rand.Next(0, screenWidth), 0)));
+                emitters.Add(new MatrixEmitter(new Vector2((float)rand.Next(0, screenWidth), 0)));
             }
 
             foreach (Emitter emitter in emitters)

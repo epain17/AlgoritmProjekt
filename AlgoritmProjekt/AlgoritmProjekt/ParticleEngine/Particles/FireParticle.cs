@@ -12,10 +12,9 @@ namespace AlgoritmProjekt.ParticleEngine.Particles
     class FireParticle : TextureParticle
     {
 
-        public FireParticle(Texture2D texture, Vector2 position, Vector2 velocity, float lifeTime, float size)
-            :base (texture, position, velocity, lifeTime, size)
+        public FireParticle(Vector2 position, Vector2 velocity, float lifeTime, float size)
+            :base (position, velocity, lifeTime, size)
         {
-            this.texture = texture;
             this.position = position;
             this.velocity = velocity;
             this.lifeTime = lifeTime;

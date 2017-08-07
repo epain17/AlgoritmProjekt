@@ -10,12 +10,10 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
 {
     class EnemyEmitter : Emitter
     {
-        Texture2D texture;
 
-        public EnemyEmitter(Texture2D texture, Vector2 position) 
+        public EnemyEmitter(Vector2 position) 
             : base(position)
         {
-            this.texture = texture;
             this.position = position;
             nrParticles = 4;
             myLifeTime = 3;
@@ -37,7 +35,7 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
             Vector2 velocity = new Vector2(random.Next(-5, 5), random.Next(-5, 5));
             int lifeTime = 50 + random.Next(50);
             float size = 16;
-            return new TextureParticle(texture, position, velocity, lifeTime, size);
+            return new TextureParticle(position, velocity, lifeTime, size);
         }
     }
 }

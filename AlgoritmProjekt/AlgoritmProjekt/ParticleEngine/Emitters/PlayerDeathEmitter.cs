@@ -12,12 +12,10 @@ namespace AlgoritmProjekt.ParticleEngine.Emitters
 {
     class PlayerDeathEmitter : Emitter
     {
-        Texture2D texture;
 
-        public PlayerDeathEmitter(Texture2D texture, Vector2 position)
+        public PlayerDeathEmitter(Vector2 position)
             : base(position)
         {
-            this.texture = texture;
             this.position = position;
             nrParticles = 1;
             myLifeTime = 6;
@@ -38,7 +36,7 @@ namespace AlgoritmProjekt.ParticleEngine.Emitters
 
         protected override Particle GenerateParticle()
         {
-            return new PlayerParticle(texture, position, direction, 100, 32);
+            return new PlayerParticle(position, direction, 100, 32);
         }
     }
 }

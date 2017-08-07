@@ -20,8 +20,8 @@ namespace AlgoritmProjekt.Utility.AI.DecisionTree
 
         public virtual void UpdatePerception(Player player, TileGrid grid, float time)
         {
-            if (agent.myHP <= 0)
-                agent.iamAlive = false;
+            //if (agent.myHP <= 0)
+            //    agent.iamAlive = false;
 
         }
     }

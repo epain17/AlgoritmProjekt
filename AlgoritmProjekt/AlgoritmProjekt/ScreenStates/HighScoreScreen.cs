@@ -11,18 +11,14 @@ using System.Threading.Tasks;
 
 namespace AlgoritmProjekt.Managers
 {
-    class HighScoreScreen
+    class HighScore
     {
-        Texture2D solidTile;
         Vector2 position;
-        SpriteFont font;
         Color fontColor, texColor;
 
-        public HighScoreScreen(Texture2D solidTile, Vector2 position, SpriteFont font)
+        public HighScore(Vector2 position)
         {
-            this.solidTile = solidTile;
             this.position = position;
-            this.font = font;
             fontColor = Color.White;
             texColor = Color.DarkGreen;
         }
@@ -37,18 +33,18 @@ namespace AlgoritmProjekt.Managers
 
         public void Draw(SpriteBatch spriteBatch, UserScore highscore)
         {
-            spriteBatch.Draw(solidTile, position, texColor);
+            spriteBatch.Draw(TextureManager.solidRect, position, texColor);
 
             for (int i = 0; i < highscore.HighScore.Count; i++)
             {
 
                 string text = i + 1 + ".                " + highscore.HighScore[i].name + "                    " + highscore.HighScore[i].score;
                 if (i < 10)
-                    spriteBatch.DrawString(font, text, new Vector2(position.X + font.MeasureString("1").X, position.Y + i * font.MeasureString(text).Y), fontColor);
+                    spriteBatch.DrawString(TextureManager.defaultFont, text, new Vector2(position.X + TextureManager.defaultFont.MeasureString("1").X, position.Y + i * TextureManager.defaultFont.MeasureString(text).Y), fontColor);
                 else
                     break;
             }
-            spriteBatch.DrawString(font, "High Score", new Vector2(position.X + (solidTile.Width / 2), position.Y - 50), Color.DarkSeaGreen, 0, new Vector2((font.MeasureString("HighScores").X / 2), 0), 1.5f, SpriteEffects.None, 0);
+            spriteBatch.DrawString(TextureManager.defaultFont, "High Score", new Vector2(position.X + (TextureManager.solidRect.Width / 2), position.Y - 50), Color.DarkSeaGreen, 0, new Vector2((TextureManager.defaultFont.MeasureString("HighScores").X / 2), 0), 1.5f, SpriteEffects.None, 0);
         }
     }
 }

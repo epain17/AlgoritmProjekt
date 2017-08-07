@@ -12,82 +12,119 @@ namespace AlgoritmProjekt.Grid
 {
     class TileGrid
     {
-        public int width, height;
-        Texture2D tileTex;
-        Tile[,] tileGrid;
-        int size;
+        public int gridWidth, gridHeight;
+        public Tile[,] Grid;
 
-        public TileGrid(Texture2D tileTex, int size, int columns, int rows)
+        int tileWidth, tileHeight;
+
+        public TileGrid(int width, int height, int columns, int rows)
         {
-            this.tileTex = tileTex;
-            this.size = size;
-            width = columns;
-            height = rows;
+            this.tileWidth = width;
+            this.tileHeight = height;
+            this.gridWidth = columns;
+            gridHeight = rows;
 
             CreateTileGrid();
         }
 
-        public void CreateTileGrid()
+        private void CreateTileGrid()
         {
-            tileGrid = new Tile[width, height];
-            for (int i = 0; i < width; i++)
+            Grid = new Tile[gridWidth, gridHeight];
+
+            for (int i = 0; i < gridWidth; i++)
             {
-                for (int j = 0; j < height; j++)
+                for (int j = 0; j < gridHeight; j++)
                 {
-                    tileGrid[i, j] = new Tile(tileTex, new Vector2((size / 2) + i * size, (size / 2) + j * size), size);
+                    Grid[i, j] = new Tile(new Vector2(i * tileWidth, j * tileWidth), tileWidth, tileHeight);
+                }
+            }
+
+            for (int i = 0; i < gridWidth; i++)
+            {
+                for (int j = 0; j < gridHeight; j++)
+                {
+                    if (j - 1 >= 0)
+                        Grid[i, j].SetNorthNeighbour(Grid[i, j - 1]);
+                    if (i + 1 < gridWidth)
+                        Grid[i, j].SetEastNeighbour(Grid[i + 1, j]);
+                    if (j + 1 < gridHeight)
+                        Grid[i, j].SetSouthNeighbour(Grid[i, j + 1]);
+                    if (i - 1 >= 0)
+                        Grid[i, j].SetWestNeighbour(Grid[i - 1, j]);
                 }
             }
         }
 
-        public bool WalkableFromVect(Vector2 pos)
+        /// <summary>
+        /// Use a world vector that gets normalized to a grid position
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        public bool isTileWalkable(Vector2 pos)
         {
             int tempX, tempY;
-            tempX = (int)pos.X / size;
-            tempY = (int)pos.Y / size;
-            if (tileGrid[tempX, tempY].iamOccupied)
+            tempX = (int)pos.X / tileWidth;
+            tempY = (int)pos.Y / tileWidth;
+            if (Grid[tempX, tempY].iamOccupied)
                 return false;
             return true;
         }
 
-        public bool WalkableFromPoint(int x, int y)
+        /// <summary>
+        /// Use an already normalized grid position
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public bool isTileWalkable(int x, int y)
         {
-            if (tileGrid[x, y].iamOccupied)
+            if (Grid[x, y].iamOccupied)
                 return false;
             return true;
         }
 
-        public Vector2 ReturnTilePosition(Vector2 pos)
+        public Vector2 ReturnTileCenter(Vector2 pos)
         {
             int tempX, tempY;
-            tempX = (int)pos.X / size;
-            tempY = (int)pos.Y / size;
-            if (tileGrid[tempX, tempY] != null)
-                return tileGrid[tempX, tempY].myPosition;
-            return Vector2.Zero;
+            tempX = (int)pos.X / tileWidth;
+            tempY = (int)pos.Y / tileWidth;
+            return Grid[tempX, tempY].MyCenter();
+        }
+
+        public Tile ReturnTile(Vector2 pos)
+        {
+            int tempX, tempY;
+            tempX = (int)pos.X / tileWidth;
+            tempY = (int)pos.Y / tileWidth;
+            return Grid[tempX, tempY];
         }
 
         public void SetOccupiedGrid(Tile target)
         {
-            for (int i = 0; i < width; i++)
+            for (int i = 0; i < gridWidth; i++)
             {
-                for (int j = 0; j < height; j++)
+                for (int j = 0; j < gridHeight; j++)
                 {
-                    if (tileGrid[i, j].amIOccupied(target))
-                        tileGrid[i, j].iamOccupied = true;
+                    if (Grid[i, j].amIOccupied(target))
+                    {
+                        Grid[i, j].iamOccupied = true;
+                    }
                 }
             }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (tileGrid != null)
-                for (int i = 0; i < width; i++)
+            if (Grid != null)
+            {
+                for (int i = 0; i < gridWidth; i++)
                 {
-                    for (int j = 0; j < height; j++)
+                    for (int j = 0; j < gridHeight; j++)
                     {
-                        tileGrid[i, j].Draw(spriteBatch);
+                        Grid[i, j].Draw(spriteBatch);
                     }
                 }
+            }
         }
     }
 }

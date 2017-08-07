@@ -10,12 +10,10 @@ namespace AlgoritmProjekt.Managers.ParticleEngine.Emitters
 {
     class MatrixEmitter : Emitter
     {
-        SpriteFont font;
 
-        public MatrixEmitter(SpriteFont font, Vector2 position)
+        public MatrixEmitter(Vector2 position)
             : base(position)
         {
-            this.font = font;
             this.timeLimit = 3;
             this.myLifeTime = 10;
             this.direction.Y = 4;
@@ -34,7 +32,7 @@ namespace AlgoritmProjekt.Managers.ParticleEngine.Emitters
         protected override Particle GenerateParticle()
         {
             int lifeTime = 250 + random.Next(50);
-            return new FontParticle(font, position, Vector2.Zero, lifeTime, 16);
+            return new FontParticle(position, Vector2.Zero, lifeTime, 16);
         }
 
         protected override void EmitParticles()

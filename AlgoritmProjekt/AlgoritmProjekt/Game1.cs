@@ -32,12 +32,13 @@ namespace AlgoritmProjekt
         //Screens
         GameManager gameManager;
         Menu menu;
-        HighScoreScreen scoreScreen;
-        EnterUser newUser;
+        HighScore highScore;
+        NewScore newScore;
 
-        SpriteFont font;
-        Texture2D smoothTex;
-        int screenWidth = Constants.screenWidth, screenHeight = Constants.screenHeight;
+        TextureManager textureManager;
+
+        int screenWidth = Constants.screenWidth, 
+            screenHeight = Constants.screenHeight;
         int tileSize = Constants.tileSize;
 
         static UserScore userHighScore;
@@ -62,16 +63,15 @@ namespace AlgoritmProjekt
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            font = Content.Load<SpriteFont>("font");
-            smoothTex = Content.Load<Texture2D>("circle");
-            gameManager = new GameManager(screenWidth, screenHeight, tileSize, font, createSolidRectangle(tileSize, tileSize, GraphicsDevice),
-                createHollowRectangle(tileSize, tileSize, GraphicsDevice), createHollowRectangle(3, 3, GraphicsDevice), smoothTex);
-            menu = new Menu(screenWidth, screenHeight, font, new Vector2(screenWidth / 2, screenHeight / 2), smoothTex);
-            newUser = new EnterUser(font, createSolidRectangle((int)(screenWidth * 0.5f), (int)(screenHeight * 0.5f), GraphicsDevice), screenWidth, screenHeight);
+            textureManager = new TextureManager(GraphicsDevice, Content);
+            
+            gameManager = new GameManager(screenWidth, screenHeight, tileSize);
+            menu = new Menu(screenWidth, screenHeight, new Vector2(screenWidth / 2, screenHeight / 2));
+            newScore = new NewScore(screenWidth, screenHeight);
 
             userHighScore = new UserScore();
             ReadScores(Constants.scoreFilePath);
-            scoreScreen = new HighScoreScreen(createSolidRectangle((int)(screenWidth * 0.5f), (int)(screenHeight * 0.75f), GraphicsDevice), new Vector2(screenWidth * 0.25f, screenHeight * 0.1f), font);
+            highScore = new HighScore(new Vector2(screenWidth * 0.25f, screenHeight * 0.1f));
         }
 
         public static void ReadScores(string filePath)
@@ -121,8 +121,7 @@ namespace AlgoritmProjekt
                 Exit();
             if (RELOADGAMEPLAY)
             {
-                gameManager = new GameManager(screenWidth, screenHeight, tileSize, font, createSolidRectangle(tileSize, tileSize, GraphicsDevice),
-                                createHollowRectangle(tileSize, tileSize, GraphicsDevice), createHollowRectangle(3, 3, GraphicsDevice), smoothTex);
+                gameManager = new GameManager(screenWidth, screenHeight, tileSize);
                 RELOADGAMEPLAY = false;
                 menu.run = Menu.RunTime.Continued;
                 gameState = GameState.gamePlay;
@@ -150,12 +149,12 @@ namespace AlgoritmProjekt
                 case GameState.highscore:
                     spriteBatch.Begin();
                     menu.Draw(spriteBatch);
-                    scoreScreen.Draw(spriteBatch, userHighScore);
+                    highScore.Draw(spriteBatch, userHighScore);
                     spriteBatch.End();
                     break;
                 case GameState.enterUser:
                     spriteBatch.Begin();
-                    newUser.Draw(spriteBatch);
+                    newScore.Draw(spriteBatch);
                     spriteBatch.End();
                     break;
             }
@@ -171,7 +170,7 @@ namespace AlgoritmProjekt
                     menu.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
                     break;
                 case GameState.gamePlay: //GAMEPLAY
-                    gameManager.Update(gameTime);
+                    gameManager.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
 
                     if (gameManager.GameOver() || gameManager.Winner())
                     {
@@ -193,76 +192,14 @@ namespace AlgoritmProjekt
                     break;
                 case GameState.highscore: //HIGHSCORES
                     menu.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-                    scoreScreen.Update();
+                    highScore.Update();
                     if (KeyMouseReader.KeyPressed(Keys.Escape))
                         gameState = GameState.menu;
                     break;
                 case GameState.enterUser: //ENTER USER
-                    newUser.Update();
+                    newScore.Update();
                     break;
             }
-        }
-
-        Texture2D createHollowRectangle(int width, int height, GraphicsDevice graphicsDevice)
-        {
-            Texture2D texture = new Texture2D(graphicsDevice, width, height);
-            Color[] data = new Color[width * height];
-
-            // Colour the entire texture transparent first.             
-            for (int i = 0; i < data.Length; i++)
-            {
-                data[i] = Color.Transparent;
-            }
-            for (int i = 0; i < width; i++)
-            {
-                data[i] = Color.White;
-            }
-            for (int i = 0; i < width * height - width; i += width)
-            {
-                data[i] = Color.White;
-            }
-            for (int i = width - 1; i < width * height; i += width)
-            {
-                data[i] = Color.White;
-            }
-            for (int i = width * height - width; i < width * height; i++)
-            {
-                data[i] = Color.White;
-            }
-
-            texture.SetData(data);
-            return texture;
-        }
-
-        Texture2D createSolidRectangle(int width, int height, GraphicsDevice graphicsDevice)
-        {
-            Texture2D texture = new Texture2D(graphicsDevice, width, height);
-            Color[] data = new Color[width * height];
-
-            // Colour the entire texture transparent first.             
-            for (int i = 0; i < data.Length; i++)
-            {
-                data[i] = new Color(0.2f, 0.2f, 0.2f, 0.25f);
-            }
-            for (int i = 0; i < width; i++)
-            {
-                data[i] = Color.White;
-            }
-            for (int i = 0; i < width * height - width; i += width)
-            {
-                data[i] = Color.White;
-            }
-            for (int i = width - 1; i < width * height; i += width)
-            {
-                data[i] = Color.White;
-            }
-            for (int i = width * height - width; i < width * height; i++)
-            {
-                data[i] = Color.White;
-            }
-
-            texture.SetData(data);
-            return texture;
         }
     }
 }

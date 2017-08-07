@@ -26,8 +26,8 @@ namespace AlgoritmProjekt
 
         public void Update(Vector2 pos)
         {
-            float translationX = -MathHelper.Clamp(pos.X - ScreenBounds.Width, 0, LevelBounds.Width - ScreenBounds.Width);
-            float translationY = -MathHelper.Clamp(pos.Y - ScreenBounds.Height, 0, LevelBounds.Height - ScreenBounds.Height);
+            float translationX = -MathHelper.Clamp(pos.X - ScreenBounds.Width, -ScreenBounds.Width, LevelBounds.Width - ScreenBounds.Width);
+            float translationY = -MathHelper.Clamp(pos.Y - ScreenBounds.Height, -ScreenBounds.Height, LevelBounds.Height - ScreenBounds.Height);
             translationMatrix = Matrix.CreateTranslation(translationX, translationY, 0);
             CameraPos.X = translationX;
             CameraPos.Y = translationY;

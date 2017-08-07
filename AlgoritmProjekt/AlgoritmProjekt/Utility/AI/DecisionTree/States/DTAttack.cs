@@ -23,13 +23,13 @@ namespace AlgoritmProjekt.Utility.AI.DecisionTree.States
         public override void UpdatePerception(Player player, TileGrid grid, float time)
         {
             shootTimer += time;
-            agent.direction = Vector2.Zero;
+            //agent.direction = Vector2.Zero;
 
             if(shootTimer > 1)
             {
-                agent.ResetEnemyPath();
+                //agent.ResetEnemyPath();
                 shootTimer = 0;
-                agent.LetMeShoot = true;
+                //agent.LetMeAttack = true;
             }
 
             base.UpdatePerception(player, grid, time);

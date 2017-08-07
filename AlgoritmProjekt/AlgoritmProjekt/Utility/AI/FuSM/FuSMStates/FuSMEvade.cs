@@ -22,21 +22,21 @@ namespace AlgoritmProjekt.Objects.Companion.FuSMStates
             evadeRange = Constants.tileSize * 2;
         }
 
-        public override void Execute(Vector2 target)
-        {
-            deltaPos = -(target - agent.myPosition);
-            distance = Vector2.Distance(agent.myPosition, target);
+        //public override void Execute(Vector2 target)
+        //{
+        //    deltaPos = -(target - agent.myPosition);
+        //    distance = Vector2.Distance(agent.myPosition, target);
 
-            if (distance < evadeRange)
-            {
-                activationLevel = 1 - ((evadeRange) - distance) / (evadeRange);
-                agent.Speed = agent.StartSpeed * activationLevel;
-            }
-            else
-                activationLevel = 0;
+        //    if (distance < evadeRange)
+        //    {
+        //        activationLevel = 1 - ((evadeRange) - distance) / (evadeRange);
+        //        agent.Speed = agent.StartSpeed * activationLevel;
+        //    }
+        //    else
+        //        activationLevel = 0;
 
-            base.Execute(target);
-        }
+        //    base.Execute(target);
+        //}
 
     }
 }

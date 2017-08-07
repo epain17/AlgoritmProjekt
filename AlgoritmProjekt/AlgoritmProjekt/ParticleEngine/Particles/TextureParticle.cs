@@ -1,4 +1,4 @@
-﻿using AlgoritmProjekt.Objects.Projectiles;
+﻿using AlgoritmProjekt.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -12,12 +12,13 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
     class TextureParticle : Particle
     {
         protected Texture2D texture;
+
         protected float rotate;
 
-        public TextureParticle(Texture2D texture, Vector2 position, Vector2 velocity, float lifeTime, float size)
+        public TextureParticle(Vector2 position, Vector2 velocity, float lifeTime, float size)
             : base(position, velocity, lifeTime, size)
         {
-            this.texture = texture;
+            texture = TextureManager.smoothTex;
             this.position = position;
             this.velocity = velocity;
             this.lifeTime = lifeTime;

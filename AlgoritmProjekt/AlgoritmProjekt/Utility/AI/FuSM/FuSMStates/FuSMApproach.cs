@@ -29,22 +29,22 @@ namespace AlgoritmProjekt.Objects.Companion.FuSMStates
             approachRange = Constants.tileSize * 8;
         }
 
-        public override void Execute(Vector2 target)
-        {
-            deltaPos = target - agent.myPosition;
-            distanceToTarget = Vector2.Distance(agent.myPosition, target);
+        //public override void Execute(Vector2 target)
+        //{
+        //    deltaPos = target - agent.myPosition;
+        //    distanceToTarget = Vector2.Distance(agent.myPosition, target);
 
-            if (target == null || DistanceFromTargetToPlayer > approachRange)
-                activationLevel = 0;
-            else if (distanceToTarget < Constants.tileSize * 1.3f)
-                activationLevel = 1;
-            else
-            {
-                activationLevel = 1 - ((weight - distanceToTarget) / weight);
-                agent.Speed = agent.StartSpeed * activationLevel;
-            }
+        //    if (target == null || DistanceFromTargetToPlayer > approachRange)
+        //        activationLevel = 0;
+        //    else if (distanceToTarget < Constants.tileSize * 2f)
+        //        activationLevel = 1;
+        //    else
+        //    {
+        //        activationLevel = 1 - ((weight - distanceToTarget) / weight);
+        //        agent.Speed = agent.StartSpeed * activationLevel;
+        //    }
             
-            base.Execute(target);
-        }
+        //    base.Execute(target);
+        ////}
     }
 }

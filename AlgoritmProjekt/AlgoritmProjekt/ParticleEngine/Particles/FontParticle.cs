@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using AlgoritmProjekt.Utility;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -14,10 +15,10 @@ namespace AlgoritmProjekt.Managers.ParticleEngine
         Random rand = new Random();
         int stringNR;
 
-        public FontParticle(SpriteFont font, Vector2 position, Vector2 velocity, float lifeTime, float size) 
+        public FontParticle(Vector2 position, Vector2 velocity, float lifeTime, float size) 
             :base(position, velocity, lifeTime, size)
         {
-            this.font = font;
+            font = TextureManager.defaultFont;
             this.position = position;
             this.velocity = velocity;
             this.lifeTime = lifeTime;

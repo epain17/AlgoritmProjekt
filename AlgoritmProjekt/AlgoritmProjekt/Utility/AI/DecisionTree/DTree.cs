@@ -66,9 +66,9 @@ namespace AlgoritmProjekt.Utility.AI.DecisionTree
             EscapeLeaf = new DTLeaf(new DTEscape(agent));
             ChaseLeaf = new DTLeaf(new DTChase(agent));
             AttackLeaf = new DTLeaf(new DTAttack(agent));
-            Left = new DTNode(agent.ChooseDefensiveStance, RecoverLeaf, EscapeLeaf);
-            Right = new DTNode(agent.ChooseOffensiveStance, ChaseLeaf, AttackLeaf);
-            Root = new DTNode(agent.ChooseCombatStance, Left, Right);
+            //Left = new DTNode(agent.ChooseDefensiveStance, RecoverLeaf, EscapeLeaf);
+            //Right = new DTNode(agent.ChooseOffensiveStance, ChaseLeaf, AttackLeaf);
+            //Root = new DTNode(agent.ChooseCombatStance, Left, Right);
         }
 
         public void Execute()

@@ -31,7 +31,7 @@ namespace AlgoritmProjekt.Objects.Companion.FuSMStates
         public virtual void Execute(Vector2 target)
         {
             BindActivationLevel(ref activationLevel);
-            agent.AccumulateDirection(deltaPos * activationLevel);
+            //agent.AccumulateDirection(deltaPos * activationLevel);
         }
     }
 }

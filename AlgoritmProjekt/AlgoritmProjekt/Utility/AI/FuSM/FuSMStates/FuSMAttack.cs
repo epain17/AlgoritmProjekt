@@ -12,7 +12,6 @@ namespace AlgoritmProjekt.Objects.Companion.FuSMStates
     class FuSMAttack : FuSMState
     {
         float shotRange;
-        float distance;
 
         public FuSMAttack(AICompanion agent)
             : base(agent)
@@ -23,10 +22,8 @@ namespace AlgoritmProjekt.Objects.Companion.FuSMStates
 
         public override void Execute(Vector2 target)
         {
-            distance = Vector2.Distance(agent.myPosition, target);
-
-            if(agent.TimeToShoot() && shotRange > distance)
-                agent.Shoot(target);
+            //agent.LetMeAttack = true;
+            agent.m_vTarget = target;
 
             base.Execute(target);
         }
