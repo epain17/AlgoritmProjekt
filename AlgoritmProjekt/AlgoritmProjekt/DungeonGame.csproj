@@ -40,9 +40,11 @@
   <ItemGroup>
     <Compile Include="Objects\GameObjects\GameObject.cs" />
     <Compile Include="Objects\GameObjects\LivingObjects\LivingObject.cs" />
-    <Compile Include="Objects\GameObjects\StaticObjects\Items\Currency.cs" />
-    <Compile Include="Objects\GameObjects\StaticObjects\Items\Health.cs" />
-    <Compile Include="Objects\GameObjects\StaticObjects\Items\Key.cs" />
+    <Compile Include="Objects\GameObjects\StaticObjects\Environment\Floor.cs" />
+    <Compile Include="Objects\GameObjects\StaticObjects\Environment\Wall.cs" />
+    <Compile Include="Objects\GameObjects\StaticObjects\PickUps\Currency.cs" />
+    <Compile Include="Objects\GameObjects\StaticObjects\PickUps\Health.cs" />
+    <Compile Include="Objects\GameObjects\StaticObjects\PickUps\Key.cs" />
     <Compile Include="Utility\AI\FuSM\AICompanion.cs" />
     <Compile Include="Utility\AI\FuSM\FuSMStates\FuSMApproach.cs" />
     <Compile Include="Utility\AI\FuSM\FuSMStates\FuSMAttack.cs" />
@@ -65,11 +67,10 @@
     <Compile Include="Utility\Handle Levels\LevelHandler.cs" />
     <Compile Include="ScreenStates\Menu.cs" />
     <Compile Include="ScreenStates\EnterUser.cs" />
-    <Compile Include="Objects\Environment\Door.cs" />
+    <Compile Include="Objects\GameObjects\StaticObjects\Environment\Door.cs" />
     <Compile Include="Objects\GameObjects\LivingObjects\PlayerRelated\Input Actions\InputMovement.cs" />
     <Compile Include="Objects\GameObjects\LivingObjects\PlayerRelated\Input Actions\InputAbilities.cs" />
     <Compile Include="Objects\GameObjects\LivingObjects\PlayerRelated\PlayerStates.cs" />
-    <Compile Include="Objects\GameObjects\StaticObjects\Items\Item.cs" />
     <Compile Include="ParticleEngine\Emitters\Emitter.cs" />
     <Compile Include="ParticleEngine\Emitters\EnemyEmitter.cs" />
     <Compile Include="ParticleEngine\Emitters\MatrixEmitter.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Grid\TileGrid.cs" />
     <Compile Include="Utility\Constants.cs" />
     <Compile Include="Utility\Handle Levels\FromFile\json\JsonSerialization.cs" />
+    <Compile Include="Utility\Handle Levels\PCG\BSPTree.cs" />
     <Compile Include="Utility\Handle Levels\PCG\PCGEngine.cs" />
     <Compile Include="Utility\Handle Levels\Level.cs" />
     <Compile Include="Utility\KeyMouseReader.cs" />

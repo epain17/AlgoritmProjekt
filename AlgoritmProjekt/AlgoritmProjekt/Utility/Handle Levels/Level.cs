@@ -3,7 +3,6 @@ using AlgoritmProjekt.Grid;
 using AlgoritmProjekt.Input;
 using AlgoritmProjekt.Managers.ParticleEngine;
 using AlgoritmProjekt.Objects.Environment;
-using AlgoritmProjekt.Objects.Weapons;
 using AlgoritmProjekt.ParticleEngine.Emitters;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -20,34 +19,25 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.PCG
     {
         public List<Enemy>
             enemies = new List<Enemy>();
-        public List<Item>
-            items = new List<Item>();
-        public List<Door>
-            doors = new List<Door>();
+        //public List<Item>
+        //    items = new List<Item>();
+        public readonly TileGrid 
+            WorldMesh, 
+            NavigationMesh;
+        public Vector2 
+            StartPosition;
 
         Player player;
-
-        bool playerDied = false;
-
-        public Vector2 StartPosition;
-
-        public TileGrid worldMesh, navigationMesh;
-
-        public TileGrid GetNavigationMesh()
-        {
-            return navigationMesh;
-        }
-
-        public Level(Player player)
+        
+        public Level(Player player, TileGrid worldMesh)
         {
             this.player = player;
-            worldMesh = new TileGrid(Constants.tileSize, Constants.tileSize, 50, 50);
-            navigationMesh = new TileGrid(Constants.tileSize / 3, Constants.tileSize / 3, 150, 150);
+            this.WorldMesh = worldMesh;
+            NavigationMesh = new TileGrid(worldMesh.tileWidth / 3, worldMesh.tileHeight / 3, worldMesh.gridWidth * 3, worldMesh.gridHeight * 3);
         }
 
         public virtual void Update(float time)
         {
-            UnlockDoor();
             UpdateObjects(time);
             Collisions();
             RemoveDeadObjects();
@@ -55,16 +45,8 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.PCG
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            worldMesh.Draw(spriteBatch);
-
-            //navigationMesh.Draw(spriteBatch);
+            WorldMesh.Draw(spriteBatch);
             DrawObjects(spriteBatch);
-        }
-
-        public virtual void UnlockDoor()
-        {
-            //if (items.Count <= 0)
-            //    door.IsActive = true;
         }
 
         public virtual bool WinCondition()
@@ -77,14 +59,8 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.PCG
 
         public virtual bool LoseCondition()
         {
-            //if (player.myHP <= 0)
-            //{
-            //    if (!playerDied)
-            //    {
-            //        playerDied = true;
-            //    }
-            //    return true;
-            //}
+            if (!player.Alive())
+                return true;
             return false;
         }
 
@@ -95,10 +71,7 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.PCG
 
         protected virtual void UpdateObjects(float time)
         {            
-            foreach (Door door in doors)
-            {
-                door.Update(ref time);
-            }            
+
         }
 
         protected virtual void Collisions()

@@ -23,60 +23,55 @@ namespace AlgoritmProjekt.Characters
         #region Fields
         public PlayerStates playerStates;
         public InputAbilities attack;
-        private InputMovement movement;
-        public float energy = 50;
+        public float Energy = 50;
         public int maxEnergy = 50;
         public float invulnerableTimeLimit = 3;
-        public float attackInterval = 0.3f;
-        public float myStartSpeed;
+        public float attackInterval;
 
-        Vector2 targetPos;
-        public Tile myCurrentTile, myPreviousTile;
+        private InputMovement movement;
+        private Vector2 targetPos;
+        private float
+            speedMultiplier,
+            energyLoss,
+            weaponWeight;
         #endregion
 
-        public Player(Vector2 position, int size, int hp, float speed)
-            : base(position, size, hp, speed)
+        public Player(Vector2 position, int width, int height, int hp, float speed)
+            : base(position, width, height, hp, speed)
         {
-            myPosition = position;
-            mySize = size;
-            myHP = hp;
-            mySpeed = speed;
-            myStartSpeed = speed;
             playerStates = new PlayerStates(this);
             movement = new InputMovement(Keys.W, Keys.A, Keys.S, Keys.D, this);
-            attack = new InputAbilities(Keys.Space, OnAttack);
+            attack = new InputAbilities(OnAttack, AttackRequirement);
+            speedMultiplier = 1.5f;
+
+            // value can be used for heavier/lighter weapons to determine attack interval and energyloss
+            weaponWeight = 0.1f;
+
+            attackInterval = weaponWeight;
+            energyLoss = maxEnergy * weaponWeight;
         }
 
-        public void Update(float time, Level level)
+        public override void Update(float time, TileGrid navigationGrid)
         {
             if (myHP > 0)
             {
-                if (myPreviousTile != null)
+                base.Update(time, navigationGrid);
+                movement.ChangeDirection(navigationGrid, ref targetPos);
+
+                if (attack.Execute(playerStates))
+                    movement.MoveInFacedDirection(navigationGrid, ref targetPos);
+                SetDirection(targetPos);
+
+                if (movement.ReachedDestination(targetPos, this))
                 {
-                    myPreviousTile.texColor = Color.Red;
-                    myPreviousTile.iamOccupied = false;
+                    myDirection = Vector2.Zero;
+                    myPosition = targetPos;
                 }
 
-                myCurrentTile = level.GetNavigationMesh().ReturnTile(myPosition);
-                myCurrentTile.texColor = Color.Blue;
-                myCurrentTile.iamOccupied = true;
-                myPreviousTile = myCurrentTile;
-
-                attack.Execute(playerStates);
                 playerStates.HandlePlayerStates(time);
-
-                movement.ChangeDirection(level.GetNavigationMesh(), ref targetPos, myPosition);
-                SetDirection(targetPos);
-                if (movement.ReachedDestination(targetPos, this))
-                    StopMoving();
-                base.Update(time);
             }
         }
 
-        /// <summary>
-        /// Used when changing level to reset the target position to the player's new position in the new grid.
-        /// </summary>
-        /// <param name="grid">Reference to a tile grid.</param>
         public void ResetMovement(TileGrid grid, Vector2 newPos)
         {
             myPosition = newPos;
@@ -96,9 +91,36 @@ namespace AlgoritmProjekt.Characters
 
         public void OnAttack()
         {
-            // The decimal value can be used for heavier/lighter weapons
-            energy -= maxEnergy * 0.1f;
+            // Use attackinterval to determine attack rate
+
+            Energy -= energyLoss;
             playerStates.CurrentStatus = PlayerStates.Status.Attack;
+        }
+
+        public bool AttackRequirement()
+        {
+            if (KeyMouseReader.keyState.IsKeyDown(Keys.Space) &&
+                KeyMouseReader.oldKeyState.IsKeyUp(Keys.Space) &&
+                playerStates.CurrentStatus == PlayerStates.Status.Normal &&
+                Energy > energyLoss)
+                return true;
+            return false;
+        }
+
+        public void OnIdle()
+        {
+            if (mySpeed != myStartSpeed)
+                mySpeed = myStartSpeed;
+
+            // Decimal can be used to determine the rate of energy gain
+            if (Energy < maxEnergy)
+                Energy += 0.3f;
+        }
+
+        public void WhenDamaged(int damageAmount)
+        {
+            HPChange(damageAmount);
+            mySpeed *= speedMultiplier;
         }
     }
 }

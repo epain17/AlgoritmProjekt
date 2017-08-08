@@ -1,5 +1,5 @@
 ﻿using AlgoritmProjekt.Characters;
-
+using AlgoritmProjekt.Objects.GameObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -15,7 +15,7 @@ namespace AlgoritmProjekt.Grid
         public int gridWidth, gridHeight;
         public Tile[,] Grid;
 
-        int tileWidth, tileHeight;
+        public int tileWidth, tileHeight;
 
         public TileGrid(int width, int height, int columns, int rows)
         {
@@ -99,7 +99,7 @@ namespace AlgoritmProjekt.Grid
             return Grid[tempX, tempY];
         }
 
-        public void SetOccupiedGrid(Tile target)
+        public void SetOccupiedGrid(GameObject target)
         {
             for (int i = 0; i < gridWidth; i++)
             {

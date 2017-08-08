@@ -1,4 +1,5 @@
-﻿using AlgoritmProjekt.Objects.Weapons;
+﻿using AlgoritmProjekt.Grid;
+using AlgoritmProjekt.Objects.GameObjects;
 using AlgoritmProjekt.ParticleEngine.Emitters;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AlgoritmProjekt.Objects.Environment
 {
-    class Door : Tile
+    class Door : GameObject
     {
         bool active = false, used = false;
         float timer;
@@ -25,16 +26,12 @@ namespace AlgoritmProjekt.Objects.Environment
         public Door(Vector2 position, int width, int height)
             : base(position, width, height)
         {
-            this.myPosition = position;
-            this.myWidth = width;
-            this.myHeight = height;
-            this.iamOccupied = false;
             timer = 1;
-            texColor = new Color(0.25f, 0.25f, 0.1f);
         }
 
-        public override void Update(ref float time)
+        public override void Update(float time, TileGrid grid)
         {
+            base.Update(time, grid);
             Flashing(time);
         }
 
@@ -44,7 +41,7 @@ namespace AlgoritmProjekt.Objects.Environment
             {
                 ActivateMe();
             }
-            spritebatch.Draw(myTexture, myPosition, texColor * timer);
+            base.Draw(spritebatch);
         }
 
         private void Flashing(float time)
@@ -67,7 +64,7 @@ namespace AlgoritmProjekt.Objects.Environment
             if (!used)
             {
                 used = true;
-                texColor = new Color(0.75f, 0.75f, 0.4f);
+                myColor = new Color(0.75f, 0.75f, 0.4f);
             }
         }
     }

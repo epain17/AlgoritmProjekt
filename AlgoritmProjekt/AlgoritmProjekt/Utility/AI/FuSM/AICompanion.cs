@@ -4,7 +4,6 @@ using AlgoritmProjekt.Objects.Companion.FuSMStates;
 using AlgoritmProjekt.Objects.Enemies;
 using AlgoritmProjekt.Objects.PlayerRelated;
 using AlgoritmProjekt.Objects.PlayerRelated.Actions;
-using AlgoritmProjekt.Objects.Weapons;
 using AlgoritmProjekt.Utility.AI.DecisionTree;
 using AlgoritmProjekt.Utility.Handle_Levels;
 using Microsoft.Xna.Framework;

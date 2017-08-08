@@ -1,4 +1,5 @@
-﻿using AlgoritmProjekt.Utility;
+﻿using AlgoritmProjekt.Objects.GameObjects;
+using AlgoritmProjekt.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -12,33 +13,15 @@ namespace AlgoritmProjekt
     class Tile
     {
         public string myID = "DEFAULT";
-        public Color texColor;
         public bool iamOccupied = false;
         public Vector2 myPosition;
         public int myWidth, myHeight;
         protected float halfWidth, halfHeight;
         protected Texture2D myTexture;
+        protected Color texColor, neutralColor;
 
         public Tile NorthNeighbour, EastNeighbour, SouthNeighbour, WestNeighbour;
 
-
-        public void SetNorthNeighbour(Tile tile)
-        {
-            NorthNeighbour = tile;
-        }
-
-        public void SetEastNeighbour(Tile tile)
-        {
-            EastNeighbour = tile;
-        }
-        public void SetSouthNeighbour(Tile tile)
-        {
-            SouthNeighbour = tile;
-        }
-        public void SetWestNeighbour(Tile tile)
-        {
-            WestNeighbour = tile;
-        }
 
         public Vector2 MyCenter()
         {
@@ -50,7 +33,7 @@ namespace AlgoritmProjekt
             get { return new Rectangle((int)myPosition.X, (int)myPosition.Y, myWidth, myHeight); }
         }
 
-        public bool amIOccupied(Tile target)
+        public bool amIOccupied(GameObject target)
         {
             if (myHitBox.Contains(target.myPosition))
                 return true;
@@ -84,11 +67,11 @@ namespace AlgoritmProjekt
             this.myHeight = height;
             halfWidth = width / 2;
             halfHeight = height / 2;
-            texColor = new Color(0f, 0.1f, 0f);
-            texColor = Color.Red;
+            neutralColor = new Color(0f, 0.2f, 0f);
+            texColor = neutralColor;
         }
 
-        public virtual void Update(ref float time)
+        public virtual void Update(float time)
         {
 
         }
@@ -97,5 +80,38 @@ namespace AlgoritmProjekt
         {
             spritebatch.Draw(myTexture, myHitBox, texColor);
         }
+
+        public virtual void BlockMe()
+        {
+            iamOccupied = true;
+            texColor = Color.Red;
+        }
+
+        public virtual void UnblockMe()
+        {
+            iamOccupied = false;
+            texColor = neutralColor; 
+        }
+
+        public void SetNorthNeighbour(Tile tile)
+        {
+            NorthNeighbour = tile;
+        }
+
+        public void SetEastNeighbour(Tile tile)
+        {
+            EastNeighbour = tile;
+        }
+
+        public void SetSouthNeighbour(Tile tile)
+        {
+            SouthNeighbour = tile;
+        }
+
+        public void SetWestNeighbour(Tile tile)
+        {
+            WestNeighbour = tile;
+        }
+
     }
 }

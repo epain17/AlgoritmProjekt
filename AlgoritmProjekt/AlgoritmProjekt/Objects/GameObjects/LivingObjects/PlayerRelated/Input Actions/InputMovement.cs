@@ -38,14 +38,11 @@ namespace AlgoritmProjekt.Objects.PlayerRelated.Actions
         public bool ReachedDestination(Vector2 targetPos, Player player)
         {
             if (Vector2.Distance(player.myPosition, targetPos) <= 3)
-            {
-                player.myPosition = targetPos;
                 return true;
-            }
             return false;
         }
 
-        public void ChangeDirection(TileGrid grid, ref Vector2 targetPos, Vector2 playerPos)
+        public void ChangeDirection(TileGrid grid, ref Vector2 targetPos)
         {
             if (KeyMouseReader.keyState.IsKeyDown(upKey))
             {
@@ -66,6 +63,25 @@ namespace AlgoritmProjekt.Objects.PlayerRelated.Actions
             {
                 MovePlayerEast(grid, ref targetPos);
                 moving = Moving.RIGHT;
+            }
+        }
+
+        public void MoveInFacedDirection(TileGrid grid, ref Vector2 targetPos)
+        {
+            switch (moving)
+            {
+                case Moving.UP:
+                    MovePlayerNorth(grid, ref targetPos);
+                    break;
+                case Moving.LEFT:
+                    MovePlayerWest(grid, ref targetPos);
+                    break;
+                case Moving.DOWN:
+                    MovePlayerSouth(grid, ref targetPos);
+                    break;
+                case Moving.RIGHT:
+                    MovePlayerEast(grid, ref targetPos);
+                    break;
             }
         }
 

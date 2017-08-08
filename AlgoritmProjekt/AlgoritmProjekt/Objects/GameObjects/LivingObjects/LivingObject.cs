@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
+using AlgoritmProjekt.Grid;
+using AlgoritmProjekt.Utility.Handle_Levels.PCG;
 
 namespace AlgoritmProjekt.Objects.GameObjects.LivingObjects
 {
@@ -16,24 +18,26 @@ namespace AlgoritmProjekt.Objects.GameObjects.LivingObjects
                 return false;
             return true;
         }
-        public float mySpeed;
+        public float mySpeed,
+            myWeightRatio;
         public int myHP;
+        public Vector2 myDirection;
+        public float myStartSpeed;
 
-        protected Vector2 myDirection;
-
-        public LivingObject(Vector2 position, int size, int hp, float speed)
-            :base(position, size)
+        public LivingObject(Vector2 position, int width, int height, int hp, float speed)
+            : base(position, width, height)
         {
-            myPosition = position;
-            mySize = size;
-            myHP = hp;
+            myStartSpeed = speed;
             mySpeed = speed;
+            myHP = hp;
+            isBlockable = true;
+            myWeightRatio = 1;
         }
 
-        public override void Update(float time)
+        public override void Update(float time, TileGrid grid)
         {
-            base.Update(time);
-            myPosition += myDirection * mySpeed * time;
+            base.Update(time, grid);
+            myPosition += myDirection * (mySpeed * myWeightRatio) * time;
         }
 
         public override void Draw(SpriteBatch spriteBatch)

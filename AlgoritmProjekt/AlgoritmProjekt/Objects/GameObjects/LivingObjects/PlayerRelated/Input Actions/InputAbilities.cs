@@ -14,18 +14,23 @@ namespace AlgoritmProjekt.Objects.PlayerRelated.Actions
     {
         public delegate void Action();
         Action action;
-        Keys executeKey;
+        public delegate bool Requirement();
+        Requirement require;
 
-        public InputAbilities(Keys executeKey, Action action)
+        public InputAbilities(Action action, Requirement require)
         {
-            this.executeKey = executeKey;
             this.action = action;
+            this.require = require;
         }
 
-        public void Execute(PlayerStates playerStates)
+        public bool Execute(PlayerStates playerStates)
         {
-            if (KeyMouseReader.keyState.IsKeyDown(executeKey) && playerStates.CurrentStatus == PlayerStates.Status.Normal)
+            if (require())
+            {
                 action();
+                return true;
+            }
+            return false;
         }
     }
 }

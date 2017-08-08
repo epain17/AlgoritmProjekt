@@ -2,6 +2,7 @@
 using AlgoritmProjekt.Grid;
 using AlgoritmProjekt.Input;
 using AlgoritmProjekt.Objects.Companion;
+using AlgoritmProjekt.Utility;
 using AlgoritmProjekt.Utility.Handle_Levels;
 using AlgoritmProjekt.Utility.Handle_Levels.PCG;
 using Microsoft.Xna.Framework;
@@ -22,6 +23,7 @@ namespace AlgoritmProjekt.Managers
 
         List<Level> levels = new List<Level>();
         public Level CurrentLevel;
+        PCGEngine levelEngine;
         Player player;
 
         public LevelHandler(Player player, int maxLevels)
@@ -29,7 +31,8 @@ namespace AlgoritmProjekt.Managers
             this.player = player;
             this.maxLevels = maxLevels;
             levelIndex = 0;
-            levels.Add(new Level(player));
+            levelEngine = new PCGEngine(this);
+            levels.Add(new Level(player, new TileGrid(Constants.tileSize, Constants.tileSize, 50, 50)));
             IncrementLevel();
         }
 
@@ -43,6 +46,11 @@ namespace AlgoritmProjekt.Managers
         public void Draw(SpriteBatch spriteBatch)
         {
             CurrentLevel.Draw(spriteBatch);
+        }
+
+        public void AddLevel(Level level)
+        {
+            levels.Add(level);
         }
 
         public bool Winner()
@@ -62,7 +70,7 @@ namespace AlgoritmProjekt.Managers
         void IncrementLevel()
         {
             CurrentLevel = levels[levelIndex];
-            player.ResetMovement(CurrentLevel.GetNavigationMesh(), CurrentLevel.StartPosition);
+            player.ResetMovement(CurrentLevel.NavigationMesh, CurrentLevel.StartPosition);
             ++levelIndex;
         }
 

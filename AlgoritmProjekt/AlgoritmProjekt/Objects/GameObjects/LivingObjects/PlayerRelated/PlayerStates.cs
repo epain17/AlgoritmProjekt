@@ -21,7 +21,6 @@ namespace AlgoritmProjekt.Objects.PlayerRelated
 
         bool fade = true;
         float invulnerableTimer;
-        float speedMultiplier;
         float attackTimer;
 
         Player player;
@@ -29,7 +28,6 @@ namespace AlgoritmProjekt.Objects.PlayerRelated
         public PlayerStates(Player player)
         {
             this.player = player;
-            speedMultiplier = 1.5f;
             invulnerableTimer = 0;
             attackTimer = 0;
         }
@@ -45,11 +43,9 @@ namespace AlgoritmProjekt.Objects.PlayerRelated
             }
         }
 
-        private void InvulnerableState(float time)
+        private void InvulnerableCoolDown(float time)
         {
             invulnerableTimer += time;
-            if (player.mySpeed < (player.myStartSpeed * speedMultiplier))
-                player.mySpeed *= speedMultiplier;
 
             player.colorAlpha = ChangeColor(player.colorAlpha);
 
@@ -85,13 +81,10 @@ namespace AlgoritmProjekt.Objects.PlayerRelated
             switch (CurrentStatus)
             {
                 case Status.Normal:
-                    if (player.mySpeed != player.myStartSpeed)
-                        player.mySpeed = player.myStartSpeed;
-                    if (player.energy < player.maxEnergy)
-                        player.energy += 0.1f;
+                    player.OnIdle();
                     break;
                 case Status.Invulnerable:
-                    InvulnerableState(time);
+                    InvulnerableCoolDown(time);
                     break;
                 case Status.Attack:
                     AttackCoolDown(time);

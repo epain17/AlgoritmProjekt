@@ -6,7 +6,6 @@ using AlgoritmProjekt.Objects;
 using AlgoritmProjekt.Objects.Companion;
 using AlgoritmProjekt.Objects.Environment;
 using AlgoritmProjekt.Objects.PlayerRelated;
-using AlgoritmProjekt.Objects.Weapons;
 using AlgoritmProjekt.ParticleEngine.Emitters;
 using AlgoritmProjekt.Utility;
 using AlgoritmProjekt.Utility.Handle_Levels;
@@ -54,7 +53,7 @@ namespace AlgoritmProjekt.Managers
             this.screenWidth = screenWidth;
             this.screenHeight = screenHeight;
             this.tileSize = tileSize;
-            player = new Player(Vector2.Zero, tileSize, playerHP, playerSpeed);
+            player = new Player(Vector2.Zero, tileSize, tileSize, playerHP, playerSpeed);
             levels = new LevelHandler(player, maxLevels);
         }
 
@@ -62,8 +61,8 @@ namespace AlgoritmProjekt.Managers
         {
             TotalTime += time;
             camera.Update(player.myPosition);
-            player.Update(time, levels.CurrentLevel);
             levels.Update(time);
+            player.Update(time, levels.CurrentLevel.NavigationMesh);
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -78,7 +77,7 @@ namespace AlgoritmProjekt.Managers
         private void DrawFonts(SpriteBatch spriteBatch)
         {
             spriteBatch.DrawString(TextureManager.defaultFont, lifeFont + player.myHP, new Vector2(-camera.CameraPos.X, TextureManager.defaultFont.MeasureString(lifeFont).Y / 4 - camera.CameraPos.Y), Color.LimeGreen);
-            spriteBatch.DrawString(TextureManager.defaultFont, energyFont + (int)player.energy, new Vector2(-camera.CameraPos.X, TextureManager.defaultFont.MeasureString(energyFont).Y - camera.CameraPos.Y), Color.LimeGreen);
+            spriteBatch.DrawString(TextureManager.defaultFont, energyFont + (int)player.Energy, new Vector2(-camera.CameraPos.X, TextureManager.defaultFont.MeasureString(energyFont).Y - camera.CameraPos.Y), Color.LimeGreen);
             if (levels.GameOver())
                 spriteBatch.DrawString(TextureManager.defaultFont, gameOverFont, new Vector2(screenWidth / 2 - camera.CameraPos.X, screenHeight * 0.25f - camera.CameraPos.Y), Color.Red, 0, new Vector2(TextureManager.defaultFont.MeasureString(gameOverFont).X / 2, TextureManager.defaultFont.MeasureString(gameOverFont).Y / 2), 1.5f, SpriteEffects.None, 0);
         }

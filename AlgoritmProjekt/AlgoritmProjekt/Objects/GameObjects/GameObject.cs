@@ -1,4 +1,5 @@
-﻿using AlgoritmProjekt.Utility;
+﻿using AlgoritmProjekt.Grid;
+using AlgoritmProjekt.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -13,31 +14,50 @@ namespace AlgoritmProjekt.Objects.GameObjects
     {
         public Texture2D myTexture = TextureManager.solidRect;
         public Vector2 myPosition;
-        protected Vector2 origin;
-        protected int mySize;
-        protected Color myColor = Color.LimeGreen;
         public float colorAlpha = 1;
+        public Tile myCurrentTile, myPreviousTile;
+
+        protected Vector2 origin;
+        protected int 
+            myWidth,
+            myHeight;
+        protected Color myColor = Color.LimeGreen;
+        protected bool isBlockable = false;
 
         public Rectangle myHitBox()
         {
-            return new Rectangle((int)myPosition.X, (int)myPosition.Y, mySize, mySize);
+            return new Rectangle((int)myPosition.X, (int)myPosition.Y, myWidth, myHeight);
         }
 
-        public GameObject(Vector2 position, int size)
+        public GameObject(Vector2 position, int width, int height)
         {
             myPosition = position;
-            mySize = size;
-            origin = new Vector2(size / 2, size / 2);
+            myHeight = height;
+            myWidth = width;
+            origin = new Vector2(width / 2, width / 2);
         }
 
-        public virtual void Update(float time)
+        public virtual void Update(float time, TileGrid grid)
         {
+            // NOT EFFICIENT IN THE LONG RUN
+            if (isBlockable)
+            {
+                if (myCurrentTile != null)
+                {
+                    myPreviousTile = myCurrentTile;
+                    myPreviousTile.UnblockMe();
+                }
 
+                myCurrentTile = grid.ReturnTile(myPosition);
+                myCurrentTile.BlockMe();
+            }
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(myTexture, myHitBox(), null, myColor * colorAlpha, 0, origin, SpriteEffects.None, 0);
+            if (isBlockable)
+                myCurrentTile.Draw(spriteBatch);
         }
 
         

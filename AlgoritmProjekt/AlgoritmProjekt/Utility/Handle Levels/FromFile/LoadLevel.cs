@@ -2,7 +2,6 @@
 using AlgoritmProjekt.Grid;
 using AlgoritmProjekt.Objects;
 using AlgoritmProjekt.Objects.Environment;
-using AlgoritmProjekt.Objects.Weapons;
 using AlgoritmProjekt.Utility.Handle_Levels.FromFile.json;
 using AlgoritmProjekt.Utility.json;
 using Microsoft.Xna.Framework;
