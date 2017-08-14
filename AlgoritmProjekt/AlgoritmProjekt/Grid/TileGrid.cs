@@ -12,47 +12,55 @@ namespace AlgoritmProjekt.Grid
 {
     class TileGrid
     {
-        public int gridWidth, gridHeight;
-        public Tile[,] Grid;
+        public int 
+            gridWidth,
+            gridHeight,
+            tileWidth, 
+            tileHeight;
 
-        public int tileWidth, tileHeight;
+        public Tile[,] 
+            Tiles;
 
-        public TileGrid(int width, int height, int columns, int rows)
+        public TileGrid(int tileWidth, int tileHeight, int columns, int rows)
         {
-            this.tileWidth = width;
-            this.tileHeight = height;
-            this.gridWidth = columns;
+            this.tileWidth = tileWidth;
+            this.tileHeight = tileHeight;
+            gridWidth = columns;
             gridHeight = rows;
 
-            CreateTileGrid();
+            Tiles = CreateTileGrid(gridWidth, gridHeight, tileWidth, tileHeight);
         }
 
-        private void CreateTileGrid()
+        private Tile[,] CreateTileGrid(int columns, int rows, int width, int height)
         {
-            Grid = new Tile[gridWidth, gridHeight];
+            Tile[,] temp = new Tile[columns, rows];
 
-            for (int i = 0; i < gridWidth; i++)
+            // Create Tiles
+            for (int i = 0; i < columns; i++)
             {
-                for (int j = 0; j < gridHeight; j++)
+                for (int j = 0; j < rows; j++)
                 {
-                    Grid[i, j] = new Tile(new Vector2(i * tileWidth, j * tileWidth), tileWidth, tileHeight);
+                    temp[i, j] = new Tile(new Vector2(i * width, j * height), width, height);
                 }
             }
 
-            for (int i = 0; i < gridWidth; i++)
+            // Set Neighbouring Tiles
+            for (int i = 0; i < columns; i++)
             {
-                for (int j = 0; j < gridHeight; j++)
+                for (int j = 0; j < rows; j++)
                 {
                     if (j - 1 >= 0)
-                        Grid[i, j].SetNorthNeighbour(Grid[i, j - 1]);
+                        temp[i, j].SetNorthNeighbour(temp[i, j - 1]);
                     if (i + 1 < gridWidth)
-                        Grid[i, j].SetEastNeighbour(Grid[i + 1, j]);
+                        temp[i, j].SetEastNeighbour(temp[i + 1, j]);
                     if (j + 1 < gridHeight)
-                        Grid[i, j].SetSouthNeighbour(Grid[i, j + 1]);
+                        temp[i, j].SetSouthNeighbour(temp[i, j + 1]);
                     if (i - 1 >= 0)
-                        Grid[i, j].SetWestNeighbour(Grid[i - 1, j]);
+                        temp[i, j].SetWestNeighbour(temp[i - 1, j]);
                 }
             }
+
+            return temp;
         }
 
         /// <summary>
@@ -65,7 +73,7 @@ namespace AlgoritmProjekt.Grid
             int tempX, tempY;
             tempX = (int)pos.X / tileWidth;
             tempY = (int)pos.Y / tileWidth;
-            if (Grid[tempX, tempY].iamOccupied)
+            if (Tiles[tempX, tempY].iamOccupied)
                 return false;
             return true;
         }
@@ -78,7 +86,7 @@ namespace AlgoritmProjekt.Grid
         /// <returns></returns>
         public bool isTileWalkable(int x, int y)
         {
-            if (Grid[x, y].iamOccupied)
+            if (Tiles[x, y].iamOccupied)
                 return false;
             return true;
         }
@@ -88,7 +96,12 @@ namespace AlgoritmProjekt.Grid
             int tempX, tempY;
             tempX = (int)pos.X / tileWidth;
             tempY = (int)pos.Y / tileWidth;
-            return Grid[tempX, tempY].MyCenter();
+            return Tiles[tempX, tempY].MyCenter();
+        }
+
+        public Vector2 ReturnTileCenter(int x, int y)
+        {
+            return Tiles[x, y].MyCenter();
         }
 
         public Tile ReturnTile(Vector2 pos)
@@ -96,7 +109,12 @@ namespace AlgoritmProjekt.Grid
             int tempX, tempY;
             tempX = (int)pos.X / tileWidth;
             tempY = (int)pos.Y / tileWidth;
-            return Grid[tempX, tempY];
+            return Tiles[tempX, tempY];
+        }
+
+        public Tile ReturnTile(int x, int y)
+        {
+            return Tiles[x, y];
         }
 
         public void SetOccupiedGrid(GameObject target)
@@ -105,9 +123,38 @@ namespace AlgoritmProjekt.Grid
             {
                 for (int j = 0; j < gridHeight; j++)
                 {
-                    if (Grid[i, j].amIOccupied(target))
+                    if (Tiles[i, j].amIOccupied(target))
                     {
-                        Grid[i, j].iamOccupied = true;
+                        Tiles[i, j].iamOccupied = true;
+                    }
+                }
+            }
+        }
+
+
+        public void SetOccupiedGrid(Tile target)
+        {
+            for (int i = 0; i < gridWidth; i++)
+            {
+                for (int j = 0; j < gridHeight; j++)
+                {
+                    if (target.amIOccupied(Tiles[i, j]))
+                    {
+                        Tiles[i, j].iamOccupied = true;
+                    } 
+                }
+            }
+        }
+
+        public void SetOccupiedWalls()
+        {
+            for (int i = 0; i < gridWidth; i++)
+            {
+                for (int j = 0; j < gridHeight; j++)
+                {
+                    if (Tiles[i, j].myType == Tile.TileType.WALL)
+                    {
+                        Tiles[i, j].iamOccupied = true;
                     }
                 }
             }
@@ -115,13 +162,13 @@ namespace AlgoritmProjekt.Grid
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (Grid != null)
+            if (Tiles != null)
             {
                 for (int i = 0; i < gridWidth; i++)
                 {
                     for (int j = 0; j < gridHeight; j++)
                     {
-                        Grid[i, j].Draw(spriteBatch);
+                        Tiles[i, j].Draw(spriteBatch);
                     }
                 }
             }

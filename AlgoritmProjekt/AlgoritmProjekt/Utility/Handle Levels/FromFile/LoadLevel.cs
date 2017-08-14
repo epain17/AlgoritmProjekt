@@ -37,7 +37,6 @@ namespace AlgoritmProjekt.Utility
             for (int i = 0; i < jsonTiles.Count; i++)
             {
                 Tile tempTile = new Tile(new Vector2(jsonTiles[i].PositionX, jsonTiles[i].PositionY), size, size);
-                tempTile.myID = jsonTiles[i].ID;
                 tempList.Add(tempTile);
             }
             return tempList;

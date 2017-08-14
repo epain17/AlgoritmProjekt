@@ -41,6 +41,8 @@
     <Compile Include="Objects\GameObjects\GameObject.cs" />
     <Compile Include="Objects\GameObjects\LivingObjects\LivingObject.cs" />
     <Compile Include="Objects\GameObjects\StaticObjects\Environment\Floor.cs" />
+    <Compile Include="Objects\GameObjects\StaticObjects\PickUps\PickUp.cs" />
+    <Compile Include="Utility\Handle Levels\PCG\Room.cs" />
     <Compile Include="Objects\GameObjects\StaticObjects\Environment\Wall.cs" />
     <Compile Include="Objects\GameObjects\StaticObjects\PickUps\Currency.cs" />
     <Compile Include="Objects\GameObjects\StaticObjects\PickUps\Health.cs" />

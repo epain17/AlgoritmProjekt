@@ -11,11 +11,11 @@ namespace AlgoritmProjekt.Utility
         public static int totalScore;
         public static int screenWidth = 800, 
             screenHeight = 600, 
-            tileSize = 48;
+            tileSize = 12;
 
         // Game Manager
         public static int PlayerStartHP = 3,
-                          PlayerStartSpeed = 140,
+                          PlayerStartSpeed = 180,
                           MaxLevels = 10;
 
         public static string scoreFilePath = "highscore.txt";

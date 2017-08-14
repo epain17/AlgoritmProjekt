@@ -69,6 +69,8 @@ namespace AlgoritmProjekt.Characters
                 }
 
                 playerStates.HandlePlayerStates(time);
+                //if (myCurrentTile != myPreviousTile)
+                //    Console.WriteLine("Player Position: {" + myCurrentTile.myPoint.X + ", " + myCurrentTile.myPoint.Y + "}");
             }
         }
 

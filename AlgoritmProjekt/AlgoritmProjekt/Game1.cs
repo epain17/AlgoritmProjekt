@@ -65,7 +65,6 @@ namespace AlgoritmProjekt
             spriteBatch = new SpriteBatch(GraphicsDevice);
             textureManager = new TextureManager(GraphicsDevice, Content);
             
-            gameManager = new GameManager(screenWidth, screenHeight, tileSize);
             menu = new Menu(screenWidth, screenHeight, new Vector2(screenWidth / 2, screenHeight / 2));
             newScore = new NewScore(screenWidth, screenHeight);
 

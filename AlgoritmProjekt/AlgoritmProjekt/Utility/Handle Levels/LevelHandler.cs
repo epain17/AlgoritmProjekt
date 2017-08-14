@@ -23,7 +23,7 @@ namespace AlgoritmProjekt.Managers
 
         List<Level> levels = new List<Level>();
         public Level CurrentLevel;
-        PCGEngine levelEngine;
+        PCGEngine pcgEngine;
         Player player;
 
         public LevelHandler(Player player, int maxLevels)
@@ -31,8 +31,7 @@ namespace AlgoritmProjekt.Managers
             this.player = player;
             this.maxLevels = maxLevels;
             levelIndex = 0;
-            levelEngine = new PCGEngine(this);
-            levels.Add(new Level(player, new TileGrid(Constants.tileSize, Constants.tileSize, 50, 50)));
+
             IncrementLevel();
         }
 
@@ -62,15 +61,16 @@ namespace AlgoritmProjekt.Managers
 
         public bool GameOver()
         {
-            if (CurrentLevel.LoseCondition())
+            if (CurrentLevel.LoseCondition(player))
                 return true;
             return false;
         }
 
         void IncrementLevel()
         {
+            pcgEngine = new PCGEngine(this);
             CurrentLevel = levels[levelIndex];
-            player.ResetMovement(CurrentLevel.NavigationMesh, CurrentLevel.StartPosition);
+            player.ResetMovement(CurrentLevel.NavigationMesh, CurrentLevel.myStartPosition);
             ++levelIndex;
         }
 

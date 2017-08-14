@@ -18,7 +18,7 @@ namespace AlgoritmProjekt.Objects.GameObjects
         public Tile myCurrentTile, myPreviousTile;
 
         protected Vector2 origin;
-        protected int 
+        protected int
             myWidth,
             myHeight;
         protected Color myColor = Color.LimeGreen;
@@ -60,6 +60,6 @@ namespace AlgoritmProjekt.Objects.GameObjects
                 myCurrentTile.Draw(spriteBatch);
         }
 
-        
+
     }
 }

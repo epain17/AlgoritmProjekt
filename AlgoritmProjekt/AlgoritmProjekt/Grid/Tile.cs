@@ -12,7 +12,17 @@ namespace AlgoritmProjekt
 {
     class Tile
     {
-        public string myID = "DEFAULT";
+        public enum TileType
+        {
+            DEFAULT,
+            START,
+            FINISH,
+            WALL,
+            FLOOR,
+            DOOR,
+        }
+        public TileType myType = TileType.DEFAULT;
+
         public bool iamOccupied = false;
         public Vector2 myPosition;
         public int myWidth, myHeight;
@@ -21,7 +31,6 @@ namespace AlgoritmProjekt
         protected Color texColor, neutralColor;
 
         public Tile NorthNeighbour, EastNeighbour, SouthNeighbour, WestNeighbour;
-
 
         public Vector2 MyCenter()
         {
@@ -36,6 +45,13 @@ namespace AlgoritmProjekt
         public bool amIOccupied(GameObject target)
         {
             if (myHitBox.Contains(target.myPosition))
+                return true;
+            return false;
+        }
+
+        public bool amIOccupied(Tile tile)
+        {
+            if (myHitBox.Contains(tile.MyCenter()))
                 return true;
             return false;
         }
@@ -71,14 +87,28 @@ namespace AlgoritmProjekt
             texColor = neutralColor;
         }
 
-        public virtual void Update(float time)
+        public void Draw(SpriteBatch spritebatch)
         {
+            switch (myType)
+            {
+                case (TileType.DEFAULT):
+                    spritebatch.Draw(myTexture, myHitBox, texColor);
+                    break;
+                case TileType.START:
+                    spritebatch.Draw(myTexture, myHitBox, Color.Gold);
+                    break;
+                case TileType.WALL:
+                    spritebatch.Draw(myTexture, myHitBox, Color.SaddleBrown);
+                    break;
+                case TileType.FLOOR:
+                    spritebatch.Draw(myTexture, myHitBox, Color.Gray);
+                    break;
+                case TileType.FINISH:
+                    spritebatch.Draw(myTexture, myHitBox, Color.Blue);
+                    break;
 
-        }
 
-        public virtual void Draw(SpriteBatch spritebatch)
-        {
-            spritebatch.Draw(myTexture, myHitBox, texColor);
+            }
         }
 
         public virtual void BlockMe()
@@ -90,7 +120,7 @@ namespace AlgoritmProjekt
         public virtual void UnblockMe()
         {
             iamOccupied = false;
-            texColor = neutralColor; 
+            texColor = neutralColor;
         }
 
         public void SetNorthNeighbour(Tile tile)

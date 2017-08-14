@@ -49,7 +49,7 @@ namespace AlgoritmProjekt.Managers
 
         public GameManager(int screenWidth, int screenHeight, int tileSize)
         {
-            camera = new Camera(new Rectangle(0, 0, screenWidth / 2, screenHeight / 2), new Rectangle(0, 0, screenWidth * 4, screenHeight * 4));
+            camera = new Camera(new Rectangle(0, 0, screenWidth / 2, screenHeight / 2), new Rectangle(0, 0, screenWidth * 100, screenHeight * 100));
             this.screenWidth = screenWidth;
             this.screenHeight = screenHeight;
             this.tileSize = tileSize;

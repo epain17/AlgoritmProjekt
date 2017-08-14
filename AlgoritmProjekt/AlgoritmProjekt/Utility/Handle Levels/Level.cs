@@ -3,6 +3,7 @@ using AlgoritmProjekt.Grid;
 using AlgoritmProjekt.Input;
 using AlgoritmProjekt.Managers.ParticleEngine;
 using AlgoritmProjekt.Objects.Environment;
+using AlgoritmProjekt.Objects.GameObjects.StaticObjects.Environment;
 using AlgoritmProjekt.ParticleEngine.Emitters;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -17,23 +18,26 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.PCG
 {
     class Level
     {
-        public List<Enemy>
-            enemies = new List<Enemy>();
-        //public List<Item>
-        //    items = new List<Item>();
-        public readonly TileGrid 
-            WorldMesh, 
+        public readonly TileGrid
+            WorldMesh,
             NavigationMesh;
-        public Vector2 
-            StartPosition;
 
-        Player player;
-        
-        public Level(Player player, TileGrid worldMesh)
+        public Vector2 myStartPosition;
+
+        public Level(TileGrid worldMesh)
         {
-            this.player = player;
-            this.WorldMesh = worldMesh;
+            WorldMesh = worldMesh;
             NavigationMesh = new TileGrid(worldMesh.tileWidth / 3, worldMesh.tileHeight / 3, worldMesh.gridWidth * 3, worldMesh.gridHeight * 3);
+
+            for (int i = 0; i < WorldMesh.gridWidth; i++)
+            {
+                for (int j = 0; j < WorldMesh.gridHeight; j++)
+                {
+                    if (WorldMesh.ReturnTile(i, j).myType == Tile.TileType.WALL)
+                        NavigationMesh.SetOccupiedGrid(WorldMesh.ReturnTile(i, j));
+                }
+            }
+
         }
 
         public virtual void Update(float time)
@@ -51,13 +55,11 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.PCG
 
         public virtual bool WinCondition()
         {
-            //if (Vector2.Distance(player.myPosition, door.myPosition) <= 1 && door.IsActive && KeyMouseReader.KeyPressed(Keys.Enter))
-            //    return true;
 
             return false;
         }
 
-        public virtual bool LoseCondition()
+        public virtual bool LoseCondition(Player player)
         {
             if (!player.Alive())
                 return true;
@@ -70,30 +72,18 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.PCG
         }
 
         protected virtual void UpdateObjects(float time)
-        {            
+        {
 
         }
 
         protected virtual void Collisions()
         {
-            //for (int i = 0; i < companion.Projectiles.Count; i++)
-            //{
-            //    for (int k = 0; k < walls.Count; k++)
-            //    {
-            //        companion.Projectiles[i].CheckMyIntersect(walls[k]);
-            //    }
-            //}
+
         }
 
         protected virtual void RemoveDeadObjects()
-        {            
-            //for (int i = 0; i < items.Count; i++)
-            //{
-            //    if (items[i].CheckMyIntersect(player))
-            //    {
-            //        items.RemoveAt(i);
-            //    }
-            //}
+        {
+
         }
 
     }
