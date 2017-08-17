@@ -11,7 +11,7 @@ namespace AlgoritmProjekt.Utility
         public static int totalScore;
         public static int screenWidth = 800, 
             screenHeight = 600, 
-            tileSize = 12;
+            tileSize = 9;
 
         // Game Manager
         public static int PlayerStartHP = 3,

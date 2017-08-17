@@ -23,13 +23,15 @@ namespace AlgoritmProjekt.Managers
 
         List<Level> levels = new List<Level>();
         public Level CurrentLevel;
-        PCGEngine pcgEngine;
+        LevelGenerator levelGenerate;
         Player player;
 
         public LevelHandler(Player player, int maxLevels)
         {
             this.player = player;
             this.maxLevels = maxLevels;
+            levelGenerate = new LevelGenerator(this);
+
             levelIndex = 0;
 
             IncrementLevel();
@@ -68,7 +70,6 @@ namespace AlgoritmProjekt.Managers
 
         void IncrementLevel()
         {
-            pcgEngine = new PCGEngine(this);
             CurrentLevel = levels[levelIndex];
             player.ResetMovement(CurrentLevel.NavigationMesh, CurrentLevel.myStartPosition);
             ++levelIndex;

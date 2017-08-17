@@ -12,13 +12,13 @@ namespace AlgoritmProjekt.Grid
 {
     class TileGrid
     {
-        public int 
+        public int
             gridWidth,
             gridHeight,
-            tileWidth, 
+            tileWidth,
             tileHeight;
 
-        public Tile[,] 
+        public Tile[,]
             Tiles;
 
         public TileGrid(int tileWidth, int tileHeight, int columns, int rows)
@@ -114,7 +114,9 @@ namespace AlgoritmProjekt.Grid
 
         public Tile ReturnTile(int x, int y)
         {
-            return Tiles[x, y];
+            if (x < gridWidth && y < gridHeight)
+                return Tiles[x, y];
+            return null;
         }
 
         public void SetOccupiedGrid(GameObject target)
@@ -141,7 +143,7 @@ namespace AlgoritmProjekt.Grid
                     if (target.amIOccupied(Tiles[i, j]))
                     {
                         Tiles[i, j].iamOccupied = true;
-                    } 
+                    }
                 }
             }
         }

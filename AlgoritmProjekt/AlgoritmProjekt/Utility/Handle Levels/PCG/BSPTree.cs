@@ -9,81 +9,15 @@ using System.Threading.Tasks;
 
 namespace AlgoritmProjekt.Utility.Handle_Levels.PCG
 {
-    internal class BSPNode
-    {
-        internal int
-            hierarchy,
-            width,
-            height,
-            x,
-            y;
-
-        internal bool
-            isLeaf,
-            isConnected;
-
-        internal BSPNode
-            Left,
-            Right,
-            Parent;
-
-        internal BSPNode(BSPNode parent, int x, int y, int width, int height)
-        {
-            this.width = width;
-            this.height = height;
-            this.Parent = parent;
-            this.x = x;
-            this.y = y;
-            isLeaf = true;
-            if (parent != null)
-                hierarchy = parent.hierarchy + 1;
-            isConnected = false;
-            Left = null;
-            Right = null;
-        }
-
-        internal bool WithinBoundariesX(int X)
-        {
-            if (X >= x && X <= x + width)
-                return true;
-            return false;
-        }
-
-        internal bool WithinBoundariesY(int Y)
-        {
-            if (Y >= y && Y <= y + height)
-                return true;
-            return false;
-        }
-
-        internal int Area()
-        {
-            return width * height;
-        }
-
-        public int CentralX()
-        {
-            return x + width / 2;
-        }
-
-        public int CentralY()
-        {
-            return y + height / 2;
-        }
-
-    }
-
     class BSPTree
     {
-        Random random = new Random();
+        public List<Rectangle> halls = new List<Rectangle>();
+        public List<BSPNode> nodes = new List<BSPNode>();
+        public List<BSPNode> leafNodes = new List<BSPNode>();
         public BSPNode Root;
-        private int
-            minWidth,
-            minHeight,
-            layers;
-
-        public List<BSPNode> LeafNodes = new List<BSPNode>();
-        public List<BSPNode> Conjunctions = new List<BSPNode>();
+        Random random = new Random();
+        int minRoomSize = 15;
+        int maxRoomSize = 40;
 
         /// <summary>
         /// Used for creating a level
@@ -94,154 +28,226 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.PCG
         /// <param name="Partition">Set to true to partition the space, else it becomes a level with a single room</param>
         public BSPTree(int width, int height, bool Partition)
         {
-            minWidth = 8;
-            minHeight = 8;
-            Root = new BSPNode(null, 0, 0, width, height);
-            Root.hierarchy = 1;
-            LeafNodes.Add(Root);
+            nodes.Add(Root = new BSPNode(null, 0, 0, width, height));
 
             if (Partition)
             {
-                CreateTree();
+                CreateTree(Root);
 
-                foreach (BSPNode node in LeafNodes)
+                foreach (BSPNode node in leafNodes)
                 {
-                    ShrinkNode(node);
+                    TransformNodeToRoom(node);
                 }
 
-                foreach (BSPNode node in LeafNodes)
+                foreach (BSPNode node in nodes)
                 {
-                    AddConjunction(node.Parent.Left, node.Parent.Right);
-                }
-            }
-        }
-
-        private void AddConjunction(BSPNode Left, BSPNode Right)
-        {
-            if (!Left.isConnected || !Right.isConnected)
-            {
-                Conjunctions.Add(ConnectLeafNodes(Left, Right));
-            }
-
-        }
-
-        private void FindLargestChild(BSPNode Parent)
-        {
-
-        }
-
-        internal BSPNode ConnectLeafNodes(BSPNode Left, BSPNode Right)
-        {
-            Random random = new Random();
-            Left.isConnected = true;
-            Right.isConnected = true;
-
-            int hallX, hallY,
-                hallWidth = 1,
-                hallHeight = 1;
-
-            int tempX = Right.x - (Left.x + Left.width),
-                tempY = Right.y - (Left.y + Left.height);
-
-            if (tempX > tempY)
-            {
-                //Horizontal Bridge
-                hallWidth = tempX + 2;
-                hallX = Left.x + Left.width - 1;
-                hallY = 
-                    Left.CentralY() > Right.CentralY() ?
-                    Left.CentralY() : Right.CentralY();
-            }
-            else
-            {
-                //Vertical Bridge
-                hallHeight = tempY + 2;
-                hallX = 
-                    Left.CentralX() < Right.CentralX() ?
-                    Left.CentralX() + random.Next(-3, 3) : Right.CentralX() + random.Next(-3, 3);
-                hallY = Left.y + Left.height - 1;
-            }
-
-            return new BSPNode(null, hallX, hallY, hallWidth, hallHeight);
-        }
-
-        private void CreateTree()
-        {
-            int iterations = 15;
-
-            for (int i = 0; i < iterations; i++)
-            {
-                int seed;
-
-                do
-                    seed = random.Next(LeafNodes.Count);
-                while (!LeafNodes[seed].isLeaf);
-
-                bool vertical = random.Next(0, 2) == 1;
-
-                if (vertical)
-                {
-                    int newWidth = LeafNodes[seed].width / 2;
-                    if (newWidth >= minWidth)
+                    if (node.Parent != null)
                     {
-                        SplitANode(LeafNodes[seed], newWidth, true);
+                        BSPNode tempLeft = node.Parent.Left, tempRight = node.Parent.Right;
+                        Traverse(ref tempLeft, ref tempRight);
+                        CreateHall(tempLeft, tempRight);
+                    }
+                }
+
+                //foreach (BSPNode node in leafNodes)
+                //{
+                //    if (node.Parent != null)
+                //    {
+                //        if (!node.Parent.Left.isConnected && !node.Parent.Right.isConnected)
+                //        {
+                //            BSPNode tempLeft = node.Parent.Left, tempRight = node.Parent.Right;
+                //            Traverse(ref tempLeft, ref tempRight);
+                //            CreateHall(tempLeft, tempRight);
+                //        }
+                //    }
+                //}
+            }
+
+            Console.WriteLine(halls.Count());
+        }
+
+        public void Traverse(ref BSPNode left, ref BSPNode right)
+        {
+            if (left.Left != null || left.Right != null)
+            {
+                if (left.Left != null && left.Right == null)
+                {
+                    left = left.Left;
+                    Traverse(ref left, ref right);
+                }
+                else if (left.Left == null && left.Right != null)
+                {
+                    left = left.Right;
+                    Traverse(ref left, ref right);
+                }
+                else
+                {
+                    if (left.Left.size > left.Right.size)
+                    {
+                        left = left.Left;
+                        Traverse(ref left, ref right);
+                    }
+                    else
+                    {
+                        left = left.Right;
+                        Traverse(ref left, ref right);
+                    }
+                }
+            }
+
+            if (right.Left != null || right.Right != null)
+            {
+                if (right.Left != null && right.Right == null)
+                {
+                    right = right.Left;
+                    Traverse(ref left, ref right);
+                }
+                else if (right.Left == null && right.Right != null)
+                {
+                    right = right.Right;
+                    Traverse(ref left, ref right);
+                }
+                else
+                {
+                    if (right.Left.size > right.Right.size)
+                    {
+                        right = right.Left;
+                        Traverse(ref left, ref right);
+                    }
+                    else
+                    {
+                        right = right.Right;
+                        Traverse(ref left, ref right);
+                    }
+                }
+            }
+
+        }
+
+        public void CreateHall(BSPNode l, BSPNode r)
+        {
+            if (!l.isConnected || !r.isConnected)
+            {
+                Point lPoint = new Point(random.Next(l.x + 1, l.x + l.width - 2), random.Next(l.y + 1, l.y + l.height - 2));
+                Point rPoint = new Point(random.Next(r.x + 1, r.x + r.width - 2), random.Next(r.y + 1, r.y + r.height - 2));
+                l.isConnected = true;
+                r.isConnected = true;
+                int width = rPoint.X - lPoint.X;
+                int height = rPoint.Y - lPoint.Y;
+
+                if (width < 0)
+                {
+                    if (height > 0)
+                    {
+                        //no
+                        halls.Add(new Rectangle(rPoint.X, lPoint.Y, -width, 1));
+                        halls.Add(new Rectangle(lPoint.X, lPoint.Y, 1, height));
+                    }
+                    else
+                        halls.Add(new Rectangle(rPoint.X, rPoint.Y, -width, 1));
+                }
+                else if (width > 0)
+                {
+                    if (height < 0)
+                    {
+                        halls.Add(new Rectangle(lPoint.X, rPoint.Y, width, 1));
+                        halls.Add(new Rectangle(lPoint.X, rPoint.Y, 1, -height));
+                    }
+                    else if (height > 0)
+                    {
+                        //WORKS
+                        halls.Add(new Rectangle(lPoint.X, lPoint.Y, width, 1));
+                        halls.Add(new Rectangle(rPoint.X, lPoint.Y, 1, height));
+                    }
+                    else
+                    {
+                        halls.Add(new Rectangle(lPoint.X, lPoint.Y, width, 1));
                     }
                 }
                 else
                 {
-                    int newHeight = LeafNodes[seed].height / 2;
-                    if (newHeight >= minHeight)
+                    halls.Add(new Rectangle(rPoint.X, lPoint.Y, 1, height));
+                }
+            }
+        }
+
+        public void TransformNodeToRoom(BSPNode node)
+        {
+            int roomWidth, roomHeight;
+            roomWidth = random.Next(minRoomSize / 2, node.width - 1);
+            roomHeight = random.Next(minRoomSize / 2, node.height - 1);
+            node.width = roomWidth;
+            node.height = roomHeight;
+            node.x = random.Next(node.x, node.x + node.width - roomWidth);
+            node.y = random.Next(node.y, node.y + node.height - roomHeight);
+        }
+
+        private void CreateTree(BSPNode node)
+        {
+            bool didSplit = true;
+            int iterations = 6;
+
+            while (didSplit)
+            {
+                didSplit = false;
+                for (int i = 0; i < iterations; i++)
+                {
+                    if (i >= nodes.Count())
+                        didSplit = false;
+                    else if (nodes[i].Left == null && nodes[i].Right == null)
                     {
-                        SplitANode(LeafNodes[seed], newHeight, false);
+                        if (nodes[i].width > maxRoomSize || nodes[i].height > maxRoomSize || random.Next(0, 10) > 7)
+                        {
+                            if (SplitNodes(nodes[i]))
+                            {
+                                nodes.Add(nodes[i].Left);
+                                nodes.Add(nodes[i].Right);
+                                i = 0;
+                                didSplit = true;
+                            }
+                        }
                     }
                 }
             }
+
+            foreach (BSPNode n in nodes)
+            {
+                if (n.isLeaf())
+                    leafNodes.Add(n);
+            }
         }
 
-        private void SplitANode(BSPNode currentNode, int value, bool vertical)
+        public bool SplitNodes(BSPNode node)
         {
-            ClearNode(currentNode);
-            layers++;
-            if (vertical)
+            if (node.Left != null || node.Right != null)
+                return false;
+
+            bool splitH = random.NextDouble() > 0.5;
+
+            if (node.width > node.height && node.width / node.height >= 1.25)
+                splitH = false;
+            else if (node.height > node.width && node.height / node.width >= 1.25)
+                splitH = true;
+
+
+            int max = (splitH ? node.height : node.width) - minRoomSize;
+            if (max <= minRoomSize)
+                return false;
+
+            int split = random.Next(minRoomSize, max);
+
+            if (splitH)
             {
-                currentNode.Left = new BSPNode(currentNode, currentNode.x, currentNode.y, value, currentNode.height);
-                currentNode.Right = new BSPNode(currentNode, currentNode.x + value, currentNode.y, value, currentNode.height);
-                LeafNodes.Add(currentNode.Left);
-                LeafNodes.Add(currentNode.Right);
+                node.Left = new BSPNode(node, node.x, node.y, node.width, split);
+                node.Right = new BSPNode(node, node.x, node.y + split, node.width, node.height - split);
             }
             else
             {
-                currentNode.Left = new BSPNode(currentNode, currentNode.x, currentNode.y, currentNode.width, value);
-                currentNode.Right = new BSPNode(currentNode, currentNode.x, currentNode.y + value, currentNode.width, value);
-                LeafNodes.Add(currentNode.Left);
-                LeafNodes.Add(currentNode.Right);
+                node.Left = new BSPNode(node, node.x, node.y, split, node.height);
+                node.Right = new BSPNode(node, node.x + split, node.y, node.width - split, node.height);
             }
-        }
 
-        private void ShrinkNode(BSPNode node)
-        {
-            int randomWidth = node.width - random.Next(0, 6),
-                randomHeight = node.height - random.Next(0, 6);
-            if (random.Next(5) > 3)
-            {
-                node.x = (node.x + node.width) - (randomWidth);
-                node.y = (node.y + node.height) - (randomHeight);
-            }
-            node.width = randomWidth;
-            node.height = randomHeight;
-        }
-
-        private void ClearNode(BSPNode currentNode)
-        {
-            if (currentNode.isLeaf)
-            {
-                currentNode.isLeaf = false;
-                for (int i = LeafNodes.Count - 1; i >= 0; --i)
-                {
-                    if (currentNode == LeafNodes[i])
-                        LeafNodes.RemoveAt(i);
-                }
-            }
+            return true;
         }
 
     }

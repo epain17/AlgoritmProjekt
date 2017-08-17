@@ -104,7 +104,7 @@ namespace AlgoritmProjekt
                     spritebatch.Draw(myTexture, myHitBox, Color.Gray);
                     break;
                 case TileType.FINISH:
-                    spritebatch.Draw(myTexture, myHitBox, Color.Blue);
+                    spritebatch.Draw(myTexture, myHitBox, Color.Blue * 0.25f);
                     break;
 
 

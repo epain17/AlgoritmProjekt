@@ -18,9 +18,9 @@ namespace AlgoritmProjekt.Objects.GameObjects.StaticObjects.Environment
     {
         public enum PlacementType
         {
-            Walls,
             Floor,
             Corridor,
+            Test,
         }
         public PlacementType myType;
 
@@ -30,8 +30,6 @@ namespace AlgoritmProjekt.Objects.GameObjects.StaticObjects.Environment
             roomWidth,
             roomHeight;
         TileGrid grid;
-
-        public bool isConnected = false;
 
         public Vector2 RoomCenterPosition()
         {
@@ -52,6 +50,25 @@ namespace AlgoritmProjekt.Objects.GameObjects.StaticObjects.Environment
             switch (myType)
             {
                 case PlacementType.Floor:
+                    for (int i = 1; i < roomWidth; i++)
+                    {
+                        for (int j = 1; j < roomHeight; j++)
+                        {
+                            SetFloor(grid, x, y, i, j);
+                        }
+                    }
+                    break;
+
+                case PlacementType.Corridor:
+                    for (int i = 1; i <= roomWidth; i++)
+                    {
+                        for (int j = 1; j <= roomHeight; j++)
+                        {
+                            SetCorridor(grid, x, y, i, j);
+                        }
+                    }
+                    break;
+                case PlacementType.Test:
                     for (int i = 1; i < roomWidth - 1; i++)
                     {
                         for (int j = 1; j < roomHeight - 1; j++)
@@ -60,41 +77,29 @@ namespace AlgoritmProjekt.Objects.GameObjects.StaticObjects.Environment
                         }
                     }
                     break;
-
-                case PlacementType.Corridor:
-                    for (int i = 0; i < roomWidth; i++)
-                    {
-                        for (int j = 0; j < roomHeight; j++)
-                        {
-                            SetCorridor(grid, x, y, i, j);
-                        }
-                    }
-                    break;
-
-                case PlacementType.Walls:
-                    for (int i = 0; i < roomWidth; i++)
-                    {
-                        for (int j = 0; j < roomHeight; j++)
-                        {
-                            //SetWalls(grid, x, y, roomWidth, roomHeight, i, j);
-                        }
-                    }
-                    break;
+            }
+            for (int i = 0; i <= roomWidth; i++)
+            {
+                for (int j = 0; j <= roomHeight; j++)
+                {
+                    SetWalls(grid, x, y, roomWidth, roomHeight, i, j);
+                }
             }
         }
 
         private void SetCorridor(TileGrid grid, int x, int y, int i, int j)
         {
-            while (grid.ReturnTile(x + i, y + j).myType != Tile.TileType.START || grid.ReturnTile(x + i, y + j).myType != Tile.TileType.FLOOR)
+            if (grid.ReturnTile(x + i, y + j) != null && grid.ReturnTile(x + i, y + j).myType != Tile.TileType.FLOOR)
             {
-                grid.ReturnTile(x + i, y + j).myType = Tile.TileType.START;
-                if (i + 1 < roomWidth && j + 1 < roomHeight)
-                    if (i > j)
-                        i++;
-                    else
-                        j++;
-                else
-                    break;
+                grid.ReturnTile(x + i, y + j).myType = Tile.TileType.FLOOR;
+                if (grid.ReturnTile(x + i, y + j).NorthNeighbour.myType == Tile.TileType.DEFAULT)
+                    grid.ReturnTile(x + i, y + j).NorthNeighbour.myType = Tile.TileType.WALL;
+                if (grid.ReturnTile(x + i, y + j).WestNeighbour.myType == Tile.TileType.DEFAULT)
+                    grid.ReturnTile(x + i, y + j).WestNeighbour.myType = Tile.TileType.WALL;
+                if (grid.ReturnTile(x + i, y + j).SouthNeighbour.myType == Tile.TileType.DEFAULT)
+                    grid.ReturnTile(x + i, y + j).SouthNeighbour.myType = Tile.TileType.WALL;
+                if (grid.ReturnTile(x + i, y + j).EastNeighbour.myType == Tile.TileType.DEFAULT)
+                    grid.ReturnTile(x + i, y + j).EastNeighbour.myType = Tile.TileType.WALL;
             }
         }
 
@@ -102,37 +107,33 @@ namespace AlgoritmProjekt.Objects.GameObjects.StaticObjects.Environment
         {
             if (myType == PlacementType.Floor)
                 grid.ReturnTile(x + i, y + j).myType = Tile.TileType.FLOOR;
+            else if (myType == PlacementType.Test)
+                grid.ReturnTile(x + i, y + j).myType = Tile.TileType.FINISH;
+
         }
 
         private void SetWalls(TileGrid grid, int x, int y, int roomWidth, int roomHeight, int i, int j)
         {
-            if (i == 0 && grid.ReturnTile(x, y + j).myType == Tile.TileType.DEFAULT)
+            if (i == 0 && grid.ReturnTile(x, y + j) != null && grid.ReturnTile(x, y + j).myType == Tile.TileType.DEFAULT)
             {
                 grid.ReturnTile(x, y + j).myType = Tile.TileType.WALL;
             }
 
-            if (j == 0 && grid.ReturnTile(x + i, y).myType == Tile.TileType.DEFAULT)
+            if (j == 0 && grid.ReturnTile(x + i, y) != null && grid.ReturnTile(x + i, y).myType == Tile.TileType.DEFAULT)
             {
                 grid.ReturnTile(x + i, y).myType = Tile.TileType.WALL;
             }
 
-            if (i <= roomWidth && grid.ReturnTile(x + roomWidth, y + j).myType == Tile.TileType.DEFAULT)
+            if (i <= roomWidth && grid.ReturnTile(x + roomWidth, y + j) != null && grid.ReturnTile(x + roomWidth, y + j).myType == Tile.TileType.DEFAULT)
             {
                 grid.ReturnTile(x + roomWidth, y + j).myType = Tile.TileType.WALL;
             }
 
-            if (j <= roomHeight && grid.ReturnTile(x + i, y + roomHeight).myType == Tile.TileType.DEFAULT)
+            if (j <= roomHeight && grid.ReturnTile(x + i, y + roomHeight) != null && grid.ReturnTile(x + i, y + roomHeight).myType == Tile.TileType.DEFAULT)
             {
                 grid.ReturnTile(x + i, y + roomHeight).myType = Tile.TileType.WALL;
             }
         }
-
-        public void SetStartRoom()
-        {
-            myType = PlacementType.Walls;
-            grid.ReturnTile(x + (roomWidth / 2), y + (roomHeight / 2)).myType = Tile.TileType.START;
-        }
-
 
     }
 }
