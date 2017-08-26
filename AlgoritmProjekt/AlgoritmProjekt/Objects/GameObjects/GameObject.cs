@@ -29,6 +29,11 @@ namespace AlgoritmProjekt.Objects.GameObjects
             return new Rectangle((int)myPosition.X, (int)myPosition.Y, myWidth, myHeight);
         }
 
+        public Point myWorldPoint
+        {
+            get { return new Point((int)myPosition.X / myWidth, (int)myPosition.Y / myHeight); }
+        }
+
         public GameObject(Vector2 position, int width, int height)
         {
             myPosition = position;
@@ -39,7 +44,7 @@ namespace AlgoritmProjekt.Objects.GameObjects
 
         public virtual void Update(float time, TileGrid grid)
         {
-            // NOT EFFICIENT IN THE LONG RUN
+            // NOT EFFICIENT 
             if (isBlockable)
             {
                 if (myCurrentTile != null)

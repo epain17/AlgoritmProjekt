@@ -23,12 +23,16 @@ namespace AlgoritmProjekt
         }
         public TileType myType = TileType.DEFAULT;
 
-        public bool iamOccupied = false;
+        public bool iamOccupied = false,
+            isVisible,
+            isExplored;
         public Vector2 myPosition;
         public int myWidth, myHeight;
         protected float halfWidth, halfHeight;
         protected Texture2D myTexture;
         protected Color texColor, neutralColor;
+
+        public float fogIntensity = 0.8f;
 
         public Tile NorthNeighbour, EastNeighbour, SouthNeighbour, WestNeighbour;
 
@@ -85,6 +89,8 @@ namespace AlgoritmProjekt
             halfHeight = height / 2;
             neutralColor = new Color(0f, 0.2f, 0f);
             texColor = neutralColor;
+            isVisible = false;
+            isExplored = false;
         }
 
         public void Draw(SpriteBatch spritebatch)
@@ -92,22 +98,20 @@ namespace AlgoritmProjekt
             switch (myType)
             {
                 case (TileType.DEFAULT):
-                    spritebatch.Draw(myTexture, myHitBox, texColor);
+                    //spritebatch.Draw(myTexture, myHitBox, texColor);
                     break;
                 case TileType.START:
-                    spritebatch.Draw(myTexture, myHitBox, Color.Gold);
+                    spritebatch.Draw(myTexture, myHitBox, Color.Gold * fogIntensity);
                     break;
                 case TileType.WALL:
-                    spritebatch.Draw(myTexture, myHitBox, Color.SaddleBrown);
+                    spritebatch.Draw(myTexture, myHitBox, Color.DarkSlateGray * fogIntensity);
                     break;
                 case TileType.FLOOR:
-                    spritebatch.Draw(myTexture, myHitBox, Color.Gray);
+                    spritebatch.Draw(myTexture, myHitBox, Color.Gray * fogIntensity);
                     break;
                 case TileType.FINISH:
                     spritebatch.Draw(myTexture, myHitBox, Color.Blue * 0.25f);
                     break;
-
-
             }
         }
 

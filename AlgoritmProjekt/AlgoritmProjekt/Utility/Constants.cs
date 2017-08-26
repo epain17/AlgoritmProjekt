@@ -16,7 +16,7 @@ namespace AlgoritmProjekt.Utility
         // Game Manager
         public static int PlayerStartHP = 3,
                           PlayerStartSpeed = 180,
-                          MaxLevels = 10;
+                          MaxLevels = 3;
 
         public static string scoreFilePath = "highscore.txt";
     }

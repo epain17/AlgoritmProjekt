@@ -11,13 +11,12 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.PCG
 {
     class BSPTree
     {
-        public List<Rectangle> halls = new List<Rectangle>();
+        public List<BSPNode> halls = new List<BSPNode>();
         public List<BSPNode> nodes = new List<BSPNode>();
-        public List<BSPNode> leafNodes = new List<BSPNode>();
         public BSPNode Root;
         Random random = new Random();
-        int minRoomSize = 15;
-        int maxRoomSize = 40;
+        int minRoomSize = 18;
+        int maxRoomSize = 50;
 
         /// <summary>
         /// Used for creating a level
@@ -34,158 +33,178 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.PCG
             {
                 CreateTree(Root);
 
-                foreach (BSPNode node in leafNodes)
-                {
-                    TransformNodeToRoom(node);
-                }
+                int depthIndex = 0;
 
                 foreach (BSPNode node in nodes)
                 {
-                    if (node.Parent != null)
-                    {
-                        BSPNode tempLeft = node.Parent.Left, tempRight = node.Parent.Right;
-                        Traverse(ref tempLeft, ref tempRight);
-                        CreateHall(tempLeft, tempRight);
-                    }
+                    if (node.hierarchy > depthIndex)
+                        depthIndex = node.hierarchy;
+                    if (node.isLeaf())
+                        TransformNodeToRoom(node);
                 }
 
-                //foreach (BSPNode node in leafNodes)
-                //{
-                //    if (node.Parent != null)
-                //    {
-                //        if (!node.Parent.Left.isConnected && !node.Parent.Right.isConnected)
-                //        {
-                //            BSPNode tempLeft = node.Parent.Left, tempRight = node.Parent.Right;
-                //            Traverse(ref tempLeft, ref tempRight);
-                //            CreateHall(tempLeft, tempRight);
-                //        }
-                //    }
-                //}
+                while (depthIndex > 0)
+                {
+                    BSPNode prevNode = null;
+                    foreach (BSPNode node in nodes)
+                    {
+                        if (node.Parent != null && node.hierarchy == depthIndex)
+                        {
+                            if (prevNode == null)
+                            {
+                                TEST(node.Parent.Left, node.Parent.Right);
+                                prevNode = node;
+                            }
+
+                            if (prevNode.Parent != node.Parent)
+                            {
+                                TEST(node.Parent.Left, node.Parent.Right);
+                                prevNode = node;
+                            }
+                        }
+                    }
+
+                    depthIndex--;
+                }
             }
 
-            Console.WriteLine(halls.Count());
         }
 
-        public void Traverse(ref BSPNode left, ref BSPNode right)
+        public void TEST(BSPNode Left, BSPNode Right)
         {
-            if (left.Left != null || left.Right != null)
+            if (Left.isLeaf() && Right.isLeaf())
             {
-                if (left.Left != null && left.Right == null)
+                CreateHall(Left, Right);
+            }
+            else
+            {
+                if (!Left.isLeaf() && Right.isLeaf())
                 {
-                    left = left.Left;
-                    Traverse(ref left, ref right);
+                    if (Left.Left != null && Left.Right != null)
+                    {
+                        if (Left.Left.xDistanceFromCenter(Right.xCenter()) < Left.Right.xDistanceFromCenter(Right.xCenter()) &&
+                            Left.Left.yDistanceFromCenter(Right.yCenter()) < Left.Right.yDistanceFromCenter(Right.yCenter()))
+                            TEST(Left.Left, Right);
+                        else
+                            TEST(Left.Right, Right);
+                    }
+                    else if (Left.Left != null)
+                        TEST(Left.Left, Right);
+                    else
+                        TEST(Left.Right, Right);
                 }
-                else if (left.Left == null && left.Right != null)
+                else if (Left.isLeaf() && !Right.isLeaf())
                 {
-                    left = left.Right;
-                    Traverse(ref left, ref right);
+                    if (Right.Left != null && Right.Right != null)
+                    {
+                        if (Right.Left.xDistanceFromCenter(Left.xCenter()) < Right.Right.xDistanceFromCenter(Left.xCenter()) &&
+                            Right.Left.yDistanceFromCenter(Right.yCenter()) < Right.Right.yDistanceFromCenter(Left.yCenter()))
+                            TEST(Left, Right.Left);
+                        else
+                            TEST(Left, Right.Right);
+                    }
+                    else if (Right.Left != null)
+                        TEST(Left, Right.Left);
+                    else
+                        TEST(Left, Right.Right);
                 }
                 else
                 {
-                    if (left.Left.size > left.Right.size)
+                    int leftleft_RightX = Math.Abs(Left.Left.xDistanceFromCenter(Right.xCenter()));
+                    int leftleft_RightY = Math.Abs(Left.Left.yDistanceFromCenter(Right.yCenter()));
+                    int leftleft_RightTot = leftleft_RightX + leftleft_RightY;
+
+                    int leftright_RightX = Math.Abs(Left.Right.xDistanceFromCenter(Right.xCenter()));
+                    int leftright_RightY = Math.Abs(Left.Right.yDistanceFromCenter(Right.yCenter()));
+                    int leftright_RightTot = leftright_RightX + leftright_RightY;
+
+                    int rightleft_LeftX = Math.Abs(Left.Left.xDistanceFromCenter(Left.xCenter()));
+                    int rightleft_LeftY = Math.Abs(Left.Left.yDistanceFromCenter(Left.yCenter()));
+                    int rightleft_LeftTot = rightleft_LeftX + rightleft_LeftY;
+
+                    int rightright_LeftX = Math.Abs(Left.Right.xDistanceFromCenter(Left.xCenter()));
+                    int rightright_LeftY = Math.Abs(Left.Right.yDistanceFromCenter(Left.yCenter()));
+                    int rightright_LeftTot = rightright_LeftX + rightright_LeftY;
+
+                    // find left
+                    if (leftleft_RightTot < leftright_RightTot)
                     {
-                        left = left.Left;
-                        Traverse(ref left, ref right);
+                        //Find right
+                        if (rightleft_LeftTot < rightright_LeftTot)
+                            TEST(Left.Left, Right.Left);
+                        else
+                            TEST(Left.Left, Right.Right);
+
                     }
                     else
                     {
-                        left = left.Right;
-                        Traverse(ref left, ref right);
+                        //Find right
+                        if (rightleft_LeftTot < rightright_LeftTot)
+                            TEST(Left.Right, Right.Left);
+                        else
+                            TEST(Left.Right, Right.Right);
                     }
                 }
-            }
 
-            if (right.Left != null || right.Right != null)
-            {
-                if (right.Left != null && right.Right == null)
-                {
-                    right = right.Left;
-                    Traverse(ref left, ref right);
-                }
-                else if (right.Left == null && right.Right != null)
-                {
-                    right = right.Right;
-                    Traverse(ref left, ref right);
-                }
-                else
-                {
-                    if (right.Left.size > right.Right.size)
-                    {
-                        right = right.Left;
-                        Traverse(ref left, ref right);
-                    }
-                    else
-                    {
-                        right = right.Right;
-                        Traverse(ref left, ref right);
-                    }
-                }
             }
-
         }
 
         public void CreateHall(BSPNode l, BSPNode r)
         {
-            if (!l.isConnected || !r.isConnected)
-            {
-                Point lPoint = new Point(random.Next(l.x + 1, l.x + l.width - 2), random.Next(l.y + 1, l.y + l.height - 2));
-                Point rPoint = new Point(random.Next(r.x + 1, r.x + r.width - 2), random.Next(r.y + 1, r.y + r.height - 2));
-                l.isConnected = true;
-                r.isConnected = true;
-                int width = rPoint.X - lPoint.X;
-                int height = rPoint.Y - lPoint.Y;
+            Point lPoint = new Point(random.Next(l.x + 1, l.x + l.width - 2), random.Next(l.y + 1, l.y + l.height - 2));
+            Point rPoint = new Point(random.Next(r.x + 1, r.x + r.width - 2), random.Next(r.y + 1, r.y + r.height - 2));
 
-                if (width < 0)
+            int width = rPoint.X - lPoint.X;
+            int height = rPoint.Y - lPoint.Y;
+
+            if (width < 0)
+            {
+                if (height > 0)
                 {
-                    if (height > 0)
-                    {
-                        //no
-                        halls.Add(new Rectangle(rPoint.X, lPoint.Y, -width, 1));
-                        halls.Add(new Rectangle(lPoint.X, lPoint.Y, 1, height));
-                    }
-                    else
-                        halls.Add(new Rectangle(rPoint.X, rPoint.Y, -width, 1));
+                    halls.Add(new BSPNode(null, rPoint.X, lPoint.Y, -width, random.Next(2, 4)));
+                    halls.Add(new BSPNode(null, rPoint.X, lPoint.Y, random.Next(2, 4), height));
                 }
-                else if (width > 0)
+            }
+            else if (width > 0)
+            {
+                if (height < 0)
                 {
-                    if (height < 0)
-                    {
-                        halls.Add(new Rectangle(lPoint.X, rPoint.Y, width, 1));
-                        halls.Add(new Rectangle(lPoint.X, rPoint.Y, 1, -height));
-                    }
-                    else if (height > 0)
-                    {
-                        //WORKS
-                        halls.Add(new Rectangle(lPoint.X, lPoint.Y, width, 1));
-                        halls.Add(new Rectangle(rPoint.X, lPoint.Y, 1, height));
-                    }
-                    else
-                    {
-                        halls.Add(new Rectangle(lPoint.X, lPoint.Y, width, 1));
-                    }
+                    halls.Add(new BSPNode(null, lPoint.X, rPoint.Y, width, random.Next(2, 4)));
+                    halls.Add(new BSPNode(null, lPoint.X, rPoint.Y, random.Next(2, 4), -height));
+                }
+                else if (height > 0)
+                {
+                    halls.Add(new BSPNode(null, lPoint.X, lPoint.Y, width, random.Next(2, 4)));
+                    halls.Add(new BSPNode(null, rPoint.X, lPoint.Y, random.Next(2, 4), height));
                 }
                 else
                 {
-                    halls.Add(new Rectangle(rPoint.X, lPoint.Y, 1, height));
+                    halls.Add(new BSPNode(null, lPoint.X, lPoint.Y, width, random.Next(2, 4)));
                 }
+            }
+            else
+            {
+                halls.Add(new BSPNode(null, rPoint.X, lPoint.Y, random.Next(2, 4), height));
             }
         }
 
         public void TransformNodeToRoom(BSPNode node)
         {
-            int roomWidth, roomHeight;
+            int roomWidth, roomHeight, tempX, tempY;
             roomWidth = random.Next(minRoomSize / 2, node.width - 1);
             roomHeight = random.Next(minRoomSize / 2, node.height - 1);
+            tempX = random.Next(node.x, node.x + node.width - roomWidth);
+            tempY = random.Next(node.y, node.y + node.height - roomHeight);
             node.width = roomWidth;
             node.height = roomHeight;
-            node.x = random.Next(node.x, node.x + node.width - roomWidth);
-            node.y = random.Next(node.y, node.y + node.height - roomHeight);
+            node.x = tempX;
+            node.y = tempY;
         }
 
         private void CreateTree(BSPNode node)
         {
             bool didSplit = true;
-            int iterations = 6;
+            int iterations = random.Next(4, 10);
 
             while (didSplit)
             {
@@ -208,12 +227,6 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.PCG
                         }
                     }
                 }
-            }
-
-            foreach (BSPNode n in nodes)
-            {
-                if (n.isLeaf())
-                    leafNodes.Add(n);
             }
         }
 

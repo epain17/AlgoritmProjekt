@@ -133,7 +133,6 @@ namespace AlgoritmProjekt.Grid
             }
         }
 
-
         public void SetOccupiedGrid(Tile target)
         {
             for (int i = 0; i < gridWidth; i++)
@@ -162,16 +161,34 @@ namespace AlgoritmProjekt.Grid
             }
         }
 
+        public void IlluminateGrid(GameObject obj)
+        {
+            for (int i = 0; i < gridWidth; i++)
+            {
+                for (int j = 0; j < gridHeight; j++)
+                {
+                    float influence = 0;
+                    float objDistance = 0;
+                    Tile influenceOrigin = ReturnTile(obj.myPosition);
+                    objDistance = Vector2.Distance(new Vector2(Tiles[i, j].myPoint.X, Tiles[i, j].myPoint.Y)
+                        , new Vector2(influenceOrigin.myPoint.X, influenceOrigin.myPoint.Y));
+                    influence = (float)Math.Pow(0.6f, objDistance);
+                    if (objDistance < 6)
+                        Tiles[i, j].fogIntensity = influence * 4;
+                    else
+                        Tiles[i, j].fogIntensity = 0.1f;
+
+                }
+            }
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (Tiles != null)
+            for (int i = 0; i < gridWidth; i++)
             {
-                for (int i = 0; i < gridWidth; i++)
+                for (int j = 0; j < gridHeight; j++)
                 {
-                    for (int j = 0; j < gridHeight; j++)
-                    {
-                        Tiles[i, j].Draw(spriteBatch);
-                    }
+                    Tiles[i, j].Draw(spriteBatch);
                 }
             }
         }

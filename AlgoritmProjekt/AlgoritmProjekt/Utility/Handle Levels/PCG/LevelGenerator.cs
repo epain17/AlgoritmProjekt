@@ -16,10 +16,15 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.PCG
         TileGrid myGrid;
         BSPTree myBSPTree;
         Level currentLevel;
+        Random random = new Random();
+
         public LevelGenerator(LevelHandler levels)
         {
             this.levels = levels;
-            Random random = new Random();
+        }
+
+        public void GenerateDungeonLevel()
+        {
             int randomSeed;
 
             do
@@ -29,36 +34,30 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.PCG
 
             myBSPTree = new BSPTree(randomSeed, randomSeed, true);
             myGrid = new TileGrid(Constants.tileSize, Constants.tileSize, randomSeed, randomSeed);
+            currentLevel = new Level(myGrid);
 
-            Room room = null;
-
-            foreach (BSPNode node in myBSPTree.leafNodes)
+            foreach (BSPNode node in myBSPTree.nodes)
             {
-                room = new Room(Room.PlacementType.Floor, myGrid, node.x, node.y, node.width, node.height);
+                if (node.isLeaf())
+                    currentLevel.rooms.Add(new Room(Room.PlacementType.Floor, myGrid, node.x, node.y, node.width, node.height));
             }
 
-            foreach (Rectangle hall in myBSPTree.halls)
+            foreach (BSPNode hall in myBSPTree.halls)
             {
-                room = new Room(Room.PlacementType.Corridor, myGrid, hall.X, hall.Y, hall.Width, hall.Height);
+                currentLevel.rooms.Add(new Room(Room.PlacementType.Corridor, myGrid, hall.x, hall.y, hall.width, hall.height));
             }
 
-            Vector2 position = Vector2.Zero;
             BSPNode tempNode = null;
-            foreach (BSPNode node in myBSPTree.leafNodes)
+            foreach (BSPNode node in myBSPTree.nodes)
             {
                 if (tempNode == null)
                     tempNode = node;
-                else if (node.size < tempNode.size)
+                else if (node.width * node.height < tempNode.width * tempNode.height)
                     tempNode = node;
             }
-
-            position = new Vector2(tempNode.x + (tempNode.width / 2), tempNode.y + (tempNode.height / 2));
-
-            currentLevel = new Level(myGrid);
-            currentLevel.myStartPosition = myGrid.ReturnTileCenter((int)position.X, (int)position.Y);
+            currentLevel.UpdateWalls();
+            currentLevel.myStartPosition = myGrid.ReturnTileCenter(tempNode.xCenter(), tempNode.yCenter());
             levels.AddLevel(currentLevel);
         }
-
-
     }
 }

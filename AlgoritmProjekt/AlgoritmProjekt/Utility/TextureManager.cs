@@ -62,7 +62,7 @@ namespace AlgoritmProjekt.Utility
             // Colour the entire texture transparent first.             
             for (int i = 0; i < data.Length; i++)
             {
-                data[i] = new Color(0.2f, 0.2f, 0.2f, 0.25f);
+                data[i] = new Color(0.5f, 0.5f, 0.5f, 0.25f);
             }
             for (int i = 0; i < width; i++)
             {

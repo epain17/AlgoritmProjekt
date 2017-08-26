@@ -64,7 +64,8 @@ namespace AlgoritmProjekt.Objects.GameObjects.StaticObjects.Environment
                     {
                         for (int j = 1; j <= roomHeight; j++)
                         {
-                            SetCorridor(grid, x, y, i, j);
+                            if (grid.ReturnTile(x + i, y + j).myType != Tile.TileType.FLOOR)
+                                SetCorridor(grid, x, y, i, j);
                         }
                     }
                     break;
@@ -89,18 +90,15 @@ namespace AlgoritmProjekt.Objects.GameObjects.StaticObjects.Environment
 
         private void SetCorridor(TileGrid grid, int x, int y, int i, int j)
         {
-            if (grid.ReturnTile(x + i, y + j) != null && grid.ReturnTile(x + i, y + j).myType != Tile.TileType.FLOOR)
-            {
-                grid.ReturnTile(x + i, y + j).myType = Tile.TileType.FLOOR;
-                if (grid.ReturnTile(x + i, y + j).NorthNeighbour.myType == Tile.TileType.DEFAULT)
-                    grid.ReturnTile(x + i, y + j).NorthNeighbour.myType = Tile.TileType.WALL;
-                if (grid.ReturnTile(x + i, y + j).WestNeighbour.myType == Tile.TileType.DEFAULT)
-                    grid.ReturnTile(x + i, y + j).WestNeighbour.myType = Tile.TileType.WALL;
-                if (grid.ReturnTile(x + i, y + j).SouthNeighbour.myType == Tile.TileType.DEFAULT)
-                    grid.ReturnTile(x + i, y + j).SouthNeighbour.myType = Tile.TileType.WALL;
-                if (grid.ReturnTile(x + i, y + j).EastNeighbour.myType == Tile.TileType.DEFAULT)
-                    grid.ReturnTile(x + i, y + j).EastNeighbour.myType = Tile.TileType.WALL;
-            }
+            grid.ReturnTile(x + i, y + j).myType = Tile.TileType.FLOOR;
+            if (grid.ReturnTile(x + i, y + j).NorthNeighbour.myType == Tile.TileType.DEFAULT)
+                grid.ReturnTile(x + i, y + j).NorthNeighbour.myType = Tile.TileType.WALL;
+            if (grid.ReturnTile(x + i, y + j).WestNeighbour.myType == Tile.TileType.DEFAULT)
+                grid.ReturnTile(x + i, y + j).WestNeighbour.myType = Tile.TileType.WALL;
+            if (grid.ReturnTile(x + i, y + j).SouthNeighbour.myType == Tile.TileType.DEFAULT)
+                grid.ReturnTile(x + i, y + j).SouthNeighbour.myType = Tile.TileType.WALL;
+            if (grid.ReturnTile(x + i, y + j).EastNeighbour.myType == Tile.TileType.DEFAULT)
+                grid.ReturnTile(x + i, y + j).EastNeighbour.myType = Tile.TileType.WALL;
         }
 
         private void SetFloor(TileGrid grid, int x, int y, int i, int j)

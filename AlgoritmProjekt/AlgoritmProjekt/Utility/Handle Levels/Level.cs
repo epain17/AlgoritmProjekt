@@ -23,12 +23,20 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.PCG
             NavigationMesh;
 
         public Vector2 myStartPosition;
+        public List<Room> rooms = new List<Room>();
+
+        // Potential Treasure room
+
+        // Elite monster room unlocks next level
 
         public Level(TileGrid worldMesh)
         {
             WorldMesh = worldMesh;
             NavigationMesh = new TileGrid(worldMesh.tileWidth / 3, worldMesh.tileHeight / 3, worldMesh.gridWidth * 3, worldMesh.gridHeight * 3);
+        }
 
+        public void UpdateWalls()
+        {
             for (int i = 0; i < WorldMesh.gridWidth; i++)
             {
                 for (int j = 0; j < WorldMesh.gridHeight; j++)
@@ -37,12 +45,11 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.PCG
                         NavigationMesh.SetOccupiedGrid(WorldMesh.ReturnTile(i, j));
                 }
             }
-
         }
 
-        public virtual void Update(float time)
+        public virtual void Update(float time, Player player)
         {
-            UpdateObjects(time);
+            UpdateObjects(time, player);
             Collisions();
             RemoveDeadObjects();
         }
@@ -71,9 +78,10 @@ namespace AlgoritmProjekt.Utility.Handle_Levels.PCG
 
         }
 
-        protected virtual void UpdateObjects(float time)
+        protected virtual void UpdateObjects(float time, Player player)
         {
-
+            if (player.myCurrentTile != player.myPreviousTile)
+                WorldMesh.IlluminateGrid(player);
         }
 
         protected virtual void Collisions()

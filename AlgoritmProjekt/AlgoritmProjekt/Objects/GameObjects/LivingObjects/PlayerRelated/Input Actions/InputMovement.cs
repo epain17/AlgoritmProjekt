@@ -87,25 +87,25 @@ namespace AlgoritmProjekt.Objects.PlayerRelated.Actions
 
         void MovePlayerNorth(TileGrid grid, ref Vector2 targetPos)
         {
-            if (player.myCurrentTile.NorthNeighbour != null && grid.isTileWalkable(player.myCurrentTile.NorthNeighbour.myPosition))
+            if (grid.isTileWalkable(player.myCurrentTile.NorthNeighbour.myPosition))
                 targetPos = grid.ReturnTileCenter(player.myCurrentTile.NorthNeighbour.myPosition);
         }
 
         void MovePlayerEast(TileGrid grid, ref Vector2 targetPos)
         {
-            if (player.myCurrentTile.EastNeighbour != null && grid.isTileWalkable(player.myCurrentTile.EastNeighbour.myPosition))
+            if (grid.isTileWalkable(player.myCurrentTile.EastNeighbour.myPosition))
                 targetPos = grid.ReturnTileCenter(player.myCurrentTile.EastNeighbour.myPosition);
         }
 
         void MovePlayerSouth(TileGrid grid, ref Vector2 targetPos)
         {
-            if (player.myCurrentTile.SouthNeighbour != null && grid.isTileWalkable(player.myCurrentTile.SouthNeighbour.myPosition))
+            if (grid.isTileWalkable(player.myCurrentTile.SouthNeighbour.myPosition))
                 targetPos = grid.ReturnTileCenter(player.myCurrentTile.SouthNeighbour.myPosition);
         }
 
         void MovePlayerWest(TileGrid grid, ref Vector2 targetPos)
         {
-            if (player.myCurrentTile.WestNeighbour != null && grid.isTileWalkable(player.myCurrentTile.WestNeighbour.myPosition))
+            if (grid.isTileWalkable(player.myCurrentTile.WestNeighbour.myPosition))
                 targetPos = grid.ReturnTileCenter(player.myCurrentTile.WestNeighbour.myPosition);
         }
     }

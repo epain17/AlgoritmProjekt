@@ -23,14 +23,14 @@ namespace AlgoritmProjekt.Managers
 
         List<Level> levels = new List<Level>();
         public Level CurrentLevel;
-        LevelGenerator levelGenerate;
+        LevelGenerator levelGenerator;
         Player player;
 
         public LevelHandler(Player player, int maxLevels)
         {
             this.player = player;
             this.maxLevels = maxLevels;
-            levelGenerate = new LevelGenerator(this);
+            levelGenerator = new LevelGenerator(this);
 
             levelIndex = 0;
 
@@ -39,7 +39,7 @@ namespace AlgoritmProjekt.Managers
 
         public void Update(float time)
         {
-            CurrentLevel.Update(time);
+            CurrentLevel.Update(time, player);
 
             ChangeLevel();
         }
@@ -70,6 +70,7 @@ namespace AlgoritmProjekt.Managers
 
         void IncrementLevel()
         {
+            levelGenerator.GenerateDungeonLevel();
             CurrentLevel = levels[levelIndex];
             player.ResetMovement(CurrentLevel.NavigationMesh, CurrentLevel.myStartPosition);
             ++levelIndex;
@@ -77,7 +78,7 @@ namespace AlgoritmProjekt.Managers
 
         void ChangeLevel()
         {
-            if (CurrentLevel.WinCondition())
+            if (CurrentLevel.WinCondition() || KeyMouseReader.KeyPressed(Keys.O))
             {
                 IncrementLevel();
             }

@@ -58,8 +58,8 @@ namespace AlgoritmProjekt.Characters
                 base.Update(time, navigationGrid);
                 movement.ChangeDirection(navigationGrid, ref targetPos);
 
-                if (attack.Execute(playerStates))
-                    movement.MoveInFacedDirection(navigationGrid, ref targetPos);
+                //if (attack.Execute(playerStates))
+                //    movement.MoveInFacedDirection(navigationGrid, ref targetPos);
                 SetDirection(targetPos);
 
                 if (movement.ReachedDestination(targetPos, this))
@@ -69,8 +69,6 @@ namespace AlgoritmProjekt.Characters
                 }
 
                 playerStates.HandlePlayerStates(time);
-                //if (myCurrentTile != myPreviousTile)
-                //    Console.WriteLine("Player Position: {" + myCurrentTile.myPoint.X + ", " + myCurrentTile.myPoint.Y + "}");
             }
         }
 
